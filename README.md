@@ -19,3 +19,8 @@ Professor: Dr. Joel Sokol
 - Homework 12 - Discussion Cases – Case Format, Power Company Case
 - Homework 13 - Discussion Cases – Retailer Case
 - Homework 14 - Discussion Cases – Monetization Case
+
+## Resources
+
+- R Markdown - All documentation is generated with R Markdown
+  - Check out [R Markdown: The Definitive Guide](https://bookdown.org/yihui/rmarkdown/)
