@@ -1,0 +1,16 @@
+# Additional Notes
+
+The assignment has some text saying "The term $\lambda$ we used in the SVM lesson to trade off the two components of correctness and margin is called C in ksvm."
+
+This phrasing is quite misleading -- C in ksvm has the same role as lambda in the lecture videos, but they're not two names for the same coefficient.
+Actually, lambda multiplies the sum of squared coefficients -- so higher lambda means more weight to the margin -- and ksvm's C multiplies the sum of squared errors -- so higher C means more weight to correctness. 
+If you were confused by this, I'm sorry! 
+If you peer review some classmates that were confused by this, be kind -- it's very understandable.
+
+For kknn returns the fraction of the k closest responses that are 1, but with the default ("optimal") kernel, the fraction is actually weighted by distance.
+For it to be a simple fraction you would need to pass kernel="rectangular" to the kknn call.
+The same statement applies.  This would be a key point of researching the function and assumption before just running the default.
+If you see this mistake when completing peer reviews, comment on it but please don't consider it in your numeric score.
+
+- `kknn` `kernel` is `optimal` but that is actually weighted by distance
+  - For a simple fraction you need to pass `kernel=rectangular`
