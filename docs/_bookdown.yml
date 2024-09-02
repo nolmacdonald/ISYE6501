@@ -1,5 +1,5 @@
 book_filename: "ISYE6501-Notes-Fall2024"
-output_dir: "_book"  # Directory where the output will be saved
+output_dir: "./"  # Directory where the output will be saved
 delete_merged_file: true
 language:
   label:
