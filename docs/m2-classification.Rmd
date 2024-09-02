@@ -1,0 +1,17 @@
+# Module 2 - Classification
+
+## M2L1 - Introduction to Classification
+
+## M2L2 - Choosing a Classifier
+
+## M2L3 - Data Definitions
+
+## M2L4 - Support Vector Machines (SVMs)
+
+## M2L5 - SVM: What the Name Means
+
+## M2L6 - Advanced Support Vector Machines
+
+## M2L7 - Scaling and Standardization
+
+## M2L8 - K-Nearest-Neighbor (KNN) Algorithm

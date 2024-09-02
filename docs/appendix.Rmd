@@ -1,0 +1,63 @@
+# Appendix A: Glossary
+
+## Basic Machine Learning
+
+*Lessons 2.1-2.2, 2.4-2.6, 2.8, 4.1, 4.3-4.6, 6.1-6.3, 16.4*
+
+**Algorithm**: Step-by-step procedure designed to carry out a task.
+
+**Change detection**: Identifying when a significant change has taken place in a process.
+
+**Classification**: The separation of data into two or more categories, or (a point’s classification) the category a data point is put into.
+
+**Classifier**: A boundary that separates the data into two or more categories. Also (more generally) an algorithm that performs classification.
+
+**Cluster**: A group of points identified as near/similar to each other.
+
+**Cluster center**: In some clustering algorithms (like 𝑘-means clustering), the central point (often the centroid) of a cluster of data points.
+
+**Clustering**: Separation of data points into groups (“clusters”) based on nearness/similarity to each other. A common form of unsupervised learning.
+
+**CUSUM**: Change detection method that compares observed distribution mean with a threshold level of change. Short for “cumulative sum”.
+
+**Deep learning**: Neural network-type model with many hidden layers.
+
+**Dimension**: A feature of the data points (for example, height or credit score). (Note that there is also a mathematical definition for this word.)
+
+**EM algorithm**: Expectation-maximization algorithm.
+
+**Expectation-maximization algorithm (EM algorithm)**: General description of an algorithm with two steps (often iterated), one that finds the function for the expected likelihood of getting the response given current parameters, and one that finds new parameter values to maximize that probability.
+
+**Heuristic**: Algorithm that is not guaranteed to find the absolute best (optimal) solution.
+
+\newpage
+**k-means algorithm**: Clustering algorithm that defines 𝑘 clusters of data points, each corresponding to one of 𝑘 cluster centers selected by the algorithm.
+
+**k-Nearest-Neighbor (KNN)**: Classification algorithm that defines a data point’s category as a function of the nearest 𝑘 data points to it.
+
+**Kernel**: A type of function that computes the similarity between two inputs; thanks to what’s (really!) sometimes known as the “kernel trick”, nonlinear classifiers can be found almost as easily as linear ones.
+
+**Learning**: Finding/discovering patterns (or rules) in data, often that can be applied to new data.
+
+**Machine**: Apparatus that can do something; in “machine learning”, it often refers to both an algorithm and the computer it’s run on. (Fun fact: before computers were developed, the term “computers” referred to people who did calculations quickly in their heads or on paper!)
+
+**Margin**: For a single point, the distance between the point and the classification boundary; for a set of points, the minimum distance between a point in the set and the classification boundary. Also called the separation.
+
+**Machine learning**: Use of computer algorithms to learn and discover patterns or structure in data, without being programmed specifically for them.
+
+**Misclassified**: Put into the wrong category by a classifier.
+
+**Neural network**: A machine learning model that itself is modeled after the workings of neurons in the brain.
+
+**Supervised learning**: Machine learning where the “correct” answer is known for each data point in the training set.
+
+**Support vector**: In SVM models, the closest point to the classifier, among those in a category. (Note that there is a more-technical mathematical definition too.)
+
+**Support vector machine (SVM)**: Classification algorithm that uses a boundary to separate the data into two or more categories (“classes”).
+
+**SVM**: Support vector machine.
+
+**Unsupervised learning**: Machine learning where the “correct” answer is not known for the data points in the training set.
+
+**Voronoi diagram**: Graphical representation of splitting a plane with two or more special points into regions with one special point each, where each region’s points are closest to that special point.
+

@@ -1,0 +1,21 @@
+book_filename: "ISYE6501-Notes-Fall2024"
+output_dir: "_book"  # Directory where the output will be saved
+delete_merged_file: true
+language:
+  label:
+    fig: "Figure"
+    tab: "Table"
+    eq: "Equation"
+    thm: "Theorem"
+
+bibliography: ["references/references.bib"]
+csl: "references/ieee.csl"
+
+rmd_files:
+  - "index.Rmd"
+  - "m1-intro.Rmd"
+  - "m2-classification.Rmd"
+  - "m3-validation.Rmd"
+  - "m4-clustering.Rmd"
+  - "appendix.Rmd"
+  

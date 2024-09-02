@@ -1,0 +1,71 @@
+# Module 3 - Validation
+
+## Overview
+
+Module 3 will continue with basic machine learning algorithms.
+The modules will cover couple of cross-cutting concepts and the important topic of model validation.
+
+## M3L1 - Introduction to Validation 
+
+Validation
+
+- How good is the model?
+
+Data has two types of patterns
+
+- **Real Effect** - Real relationship between attributes and response
+- **Random Effect** - Random, but looks like a real effect
+
+Fitting matches both real and random effects
+
+- Real effects - Same in all data sets
+- Random effects - Different in all data sets
+
+**Example: What day of the month were you born?**
+
+- Training Data: 3, 21, 24, 24, 25, 26, 27, 30, 30, 31
+- Best Predictor: You were born on the 26th 
+  - Right in the middle of 9/10 data points
+- **This is a random effect!**
+- This model using 9/10 from 21-31 doesn't have a large error
+- If new data showed 2, 9, 11, 12, 14, 21, 24, 24, 29, 31
+  - Much larger error due to the uniform spread over the month
+- Was this just luck? (3, 21, 24, etc.)
+  - No, some random pattern would have shown up
+    - Early in month
+    - Middle of month
+    - Even/odd numbered day
+    - Day is multiple of 3
+    - Day is close to one of my kids birthdays
+    - Etc.
+
+**M3L1 - Summary**
+
+- The example proves we can't measure the model's effectiveness on data it was trained on
+- Model fit captures real and random effects
+- Only real effects are duplicated in other data
+
+*Don't judge a model based on how well it fits the training data*.
+
+Key Points on Validation
+
+- Validation is crucial to determine how good a model is and how accurately it performs on new data
+- Measuring a model's performance on the same training data used to create it is not a good approach, as it will be too optimistic
+- Any dataset contains both real effects (true relationships) and random effects (patterns that occur by chance)
+- When fitting a model to training data, it captures both real and random effects
+- However, when using the model on new data, only the real effects will persist, while the random effects will be different
+- An example is given of a silly model that predicts people's birth dates based on a random pattern in the training data, which would not generalize well
+- The key takeaway is that we cannot rely on training data performance to evaluate a model - we need a separate validation process to get an accurate assessment of its effectiveness
+
+## M3L2 - Validation and Test Data Sets
+
+## M3L3 - Splitting Data
+
+## M3L4 - Cross-Validation
+
+
+
+
+
+
+

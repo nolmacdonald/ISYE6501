@@ -1,0 +1,15 @@
+# Module 4 - Clustering
+
+## Overview
+
+Module 4 will continue with basic machine learning algorithms.
+The focus will be on clustering models.
+The modules will cover couple of cross-cutting concepts, including distance norms, and k-means clustering.
+
+## M4L1 - Introduction to Clustering
+
+## M4L2 - Distance Norms
+
+## M4L3 - K-Means Clustering
+
+## M4L4 - Practical Details for K-Means
