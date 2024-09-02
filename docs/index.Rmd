@@ -27,5 +27,3 @@ are time-consuming to run, you may cache them  -->
 <!-- ```{r important-computing, cache=TRUE} -->
 
 <!-- Setup code chunk to set current working directory -->
-
-# Test
