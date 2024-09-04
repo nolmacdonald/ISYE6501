@@ -6,4 +6,44 @@
 
 ## M1L2a - Homework Grading and Q&A
 
+### Homework Format
+
+The main focus of the homework will be your analysis of your results, **not your code.**
+For a top score, you shouldn't just run some code and display some results; rather, you should also discuss the results qualitatively, point out anything surprising, and comment on possible explanations. 
+The top recommended forms for your analysis, in order, are: pdf, html, txt, and then word doc.
+
+We recommend **not** including your name / e-mail in your homework PDF.
+We (TAs) and the system will know who you are, and submitting anonymously will not cause any problems assigning your grade later. 
+It will also avoid potential problems of bias.
+
+### Grading Homeworks
+
+Once you've submitted your homework, you will have to complete 3-Peer Reviews. 
+You are given a rubric with **scoring guidelines with possible values of 100, 90, 75, 50, and 0.**
+When doing the grading, Canvas does allow you to give options outside of the scale, but please stick to it. 
+I can see who gave the off-scale score, and it only frustrates your fellow students and makes my job a little harder.
+Also, if you have a homework marked as "late" in your grading queue, please grade it as normal. 
+We have a very small tolerance between when peer reviews are assigned and homeworks are due to allow for students who had technical issues to submit.
+
+- 100 is "All correct (perhaps except a few details) with a deeper solution than expected"
+  - This means that if students gave answers that delved deeper into the analytical methods and modeling techniques with appropriate solutions and explanations etc, then that constitutes a 100. All questions are completed. **When giving this grade, please comment what you believe the person did well and how they went above and beyond.** I cannot force you to leave a comment, but it will help stay consistent with the regrading policy that will be mentioned later.
+  
+- 90 is for "most or all correct."
+  - This means that student provided code, answered the questions asked with code output, and provided reasonable but basic explanations for their answers. There can be minor errors like slight inconsistencies or minor misunderstandings. All questions are answered. **This is the "default" grade. If a student does what is asked, and provides reasonable explanation for their work, but doesn't go above and beyond, this is their grade.** While comments here can be nice, if you have nothing else to add other than "they did everything right," you do not have to leave a comment.
+  
+- 75 is "not correct, but a reasonable attempt."
+  - There is some code, solutions, and explanation, but the explanation is faulty, incorrect, or non-existent or the solution values are completely different than outlined in the homework solutions or solutions and explanation do not make sense. At least half of the questions are answered/attempted including the coding questions. **When giving this grade, please comment what you believe the person did that was fundamentally incorrect.** This will help the student learn and will also help me in case of a regrade request.
+
+- 50 is "Not correct, insufficient effort."
+  - There is a distinct lack of effort on homework like no code, no answers, no explanations, or little of any of these. Particularly, if a student only answers a descriptive problem (one which involves answering a prompt) and does none of the coding problems, then this would also be considered insufficient effort. **When giving this grade, please comment what you believe the person did that was fundamentally incorrect and explain what part of the homework they did not do.** This will help the student learn and will also help me in case of a regrade request.
+
+- 0 is "Not Submitted"
+  - There is nothing of merit submitted. The student did not attempt the problems, just submitted random or unrelated work to try and obtain a 50. **When giving this grade, it is because the student literally had nothing there, was completely unrelated (a picture of a ham-sandwich), or basically un-attempted.** If you feel like the student was just being lazy, you most likely should give them a zero.
+  
+- Other info: Optional truly means optional. Doing an optional part does not guarantee a 100. On the other end, You can still get a 100 even if you don't do an optional part. An optional part can contribute to a deeper analysis, but isn't required nor does it guarantee it.
+- Please try to be helpful with your comments if you provide any.
+  - Also, try to provide appropriate feedback or comments based on the homework questions being asked.
+  - For example, I could say that "exploring more C values for Q2.2.1 would have shown a wider range/change in the model accuracy" or "using different kernels would result in higher model accuracy"
+    - These comments are appropriate but do not result in a drop in the student's grade since exploring different kernels was optional and we did not give a specific range of C values to look at.
+
 ## M1L3 - Modeling

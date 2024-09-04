@@ -6,10 +6,147 @@ Module 4 will continue with basic machine learning algorithms.
 The focus will be on clustering models.
 The modules will cover couple of cross-cutting concepts, including distance norms, and k-means clustering.
 
+Additional References:
+
+[@wikibookskmeans]. [Data Mining Algorithms In R/Clustering/K-Means](https://en.wikibooks.org/wiki/Data_Mining_Algorithms_In_R/Clustering/K-Means)
+
 ## M4L1 - Introduction to Clustering
+
+**Clustering:** An unsupervised machine learning technique designed to group unlabeled examples based on their similarity to each other.
+
+- Grouping data points
+- *Important to note: If the examples are labeled, the grouping is called classification*
+
+Examples of Clustering:
+
+- Targeted marketing/market segmentation
+  - Potential customers need a message that would be most likely to encourage them to buy
+- For example, if we were selling a SUV:
+  - Size
+  - Price
+  - Versatility
+  - Coolness
+- Each set of people would be a cluster
+- We would try to use data to split consumers into sets to discover what marketing they should be shown
+- You can examine a cluster and it may not always be correct, which can help you find a meaningful cluster in your data
+  - For example, we did not consider gas mileage
+- Other examples:
+  - Targeted marketing/market segmentation
+  - Personalized medicine
+  - Locating facilities - Look at where people live and provide a police station for each cluster
+  - Image analysis - CAPCHA
+  - Initial data investigation
 
 ## M4L2 - Distance Norms
 
+The choice of distance measures is important in clustering.
+Distance measures define how the similarity of the two element are calculated and influences the shape of the clusters.
+
+**Euclidean (straight-line) distance:**
+
+- Distance in Euclidean space by length of straight line segment between two points
+$$
+distance = \sqrt{\sum^n_{i=1}(x_i - y_i)^2} = \sqrt{(x_1-y_1)^2+(x_2-y_2)^2}
+$$
+
+**Rectilinear (Manhattan) Distance:**
+
+- Commonly used in city planning with a grid, hence Manhattan term
+$$
+distance = \sum^n_{i=1} |x_i-y_i| =  |x_1-y_1| + |x_2-y_2|
+$$
+
+**Minkowski (p-norm) Distance:**
+
+- We can describe both euclidean (p=2) and rectilinear (p=1) distance with p-norm (or Minkowski) distance
+$$
+distance = \sqrt[p]{\sum^n_{i=1} |x_i-y_i|^p} = \sqrt[p]{|x_1-y_1|^p + |x_2-y_2|^p}
+$$
+
+The most common values for p include 1, 2, and $\infty$ ($\infty$-norm distance).
+
+**Infinity-Norm Distance ($\infty$-norm):**
+
+The infinity norm simply measures how large the vector is by the magnitude of its largest entry.
+Simply put, it is the largest of a set of numbers in an absolute of values (the biggest). 
+
+$$
+distance = \lim_{p\to\infty} \sqrt[\infty]{\sum^n_{i=1} |x_i-y_i|^{\infty}} 
+$$
+The largest value for $\infty$ (assume p is 8) is dominated by the largest power.
+The term to the 7th power would be small compared to the 8th power.
+This means considering distance, the sum of terms is equal to the largest $|x_i-y_i|$ to the infinity power.
+
+*Note: Should include the limit to infinity, but for simplicity the equations do not all include the limit.*
+$$
+distance = \lim_{p\to\infty} \sqrt[\infty]{\sum^n_{i=1} |x_i-y_i|^{\infty}} = \sqrt[\infty]{\max_i |x_i-y_i|^{\infty}}=\max_i |x_i-y_i|
+$$
+
 ## M4L3 - K-Means Clustering
 
+The K-Means algorithm is a popular technique of representative-based clustering.
+K-Means is a simple learning algorithm for clustering analysis. 
+The goal of K-Means algorithm is to find the best division of n entities in k groups, so that the total distance between the group's members and its corresponding centroid, representative of the group, is minimized [@wikibookskmeans].
+
+Consider the K-Means algorithm defined as:
+
+$$
+\min_{y,z} \sum_i \sum_k y_{ik} \sqrt{\sum_j (x_{ij}-z_{jk})^2}
+$$
+The algorithm is subject to $\sum_k y_{ik} = 1$ for each `i` where:
+
+- $x_{ij}$ is attribute `j` of data point `i`
+- $y_{ik}$ is 1 if data point `i` is in cluster k, 0 if not
+- $z_{jk}$ is coordinate `j` of cluster center `k`
+
+Adds up all data points to cluster centers but only when the data point is in the cluster.
+
+0. Pick `k` cluster centers within range of data (e.g., Pick 3 points, `k=3`, where each point is a cluster center)
+1. Assign each data point to nearest cluster center
+2. Recalculate cluster centers (centroids of the data points in the cluster)
+
+This could result in new cluster centers with cluster points that are more applicable for another cluster.
+There is an iterative process for 1 and 2 that are repeated until there are no changes.
+Stops when no data points change clusters.
+
+**K-Means Algorithm Overview:**
+
+- Machine Learning
+- Heuristic - Fast, good, but not guaranteed to find absolute best solution
+- Expectation-Maximization (EM) Algorithm
+  - Maximizing the negative distance to a cluster center
+
 ## M4L4 - Practical Details for K-Means
+
+Using the K-Means algorithm in practice
+
+### Summary
+
+- **Handling Outliers:** K-means will assign outliers to the nearest cluster, but this can distort results. While one option is to remove outliers, a more thoughtful approach is to investigate their significance and implications for your analysis.
+- **Algorithm Limitations:** K-means is a heuristic, meaning it's not guaranteed to find the best clustering but is efficient and often finds good solutions. To improve results, it's advised to run k-means multiple times with different initial cluster centers and compare the outcomes.
+- **Determining the Number of Clusters:** The number of clusters (k) can be optimized by running the algorithm with different k values and using an "elbow diagram" to identify where increasing the number of clusters no longer significantly improves the solution. However, practical considerations should also guide this choice, depending on the context.
+- **Balancing Science and Art:** The lecture emphasizes the importance of blending data science with the "art" of analytics, where understanding the situation and making informed decisions can provide greater value than merely running algorithms.
+
+## M4L5 - Clustering for Prediction
+
+### Summary
+
+- **Clustering Recap:** Clustering involves grouping data points based on their similarity and proximity. The k-means heuristic is a common method for finding good clusterings.
+- **Predictive Clustering:** K-means clustering can be used predictively by determining which cluster a new data point should belong to, typically by finding the closest cluster center.
+- **Handling New Data Points:** If a new data point falls within an existing cluster, it is straightforward to assign it to that cluster. If not, the point is assigned to the nearest cluster center.
+- **Voronoi Diagrams:** The space around each cluster center can be divided into regions, where each region represents the area closer to that center than to any other. This is visualized using a Voronoi diagram.
+- **Historical Context:** Voronoi diagrams have been used historically, including in the analysis of a cholera outbreak in London over 150 years ago, and by mathematicians like Rene Descartes in the 1600s.
+- **Old Ideas in Analytics:** Some effective analytical techniques, like Voronoi diagrams, are not new but have been around for a long time and remain valuable.
+
+## M4L6 - Clustering v. Classification
+
+### Summary
+
+- **Classification Models:** These involve a set of data points where both their attributes and correct groupings (responses) are known. For example, in loan application data, we know whether applicants repaid their loans (blue) or not (red). Classification models use both attributes and known responses to classify new data points. This process is known as supervised learning because it uses observed responses to guide the model.
+
+- **Clustering Models:** In contrast, clustering models start with a set of data points where only the attributes are known, and the correct groupings are not known. The model must determine how to group the data points based solely on their attributes. This is known as unsupervised learning because there are no observed responses to guide the model.
+
+Supervised learning is more common in analytics (such as classification) but unsupervised learning (such as clustering) is also a valuable tool.
+
+
+
