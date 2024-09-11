@@ -1,0 +1,54 @@
+---
+title: "Homework 3: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+# date: "2024-08-27"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Question 5.1
+
+### Prompt
+
+Using crime data from the file uscrime.txt (http://www.statsci.org/data/general/uscrime.txt, description at http://www.statsci.org/data/general/uscrime.html), test to see whether there are any outliers in the last column (number of crimes per 100,000 people).  Use the grubbs.test function in the outliers package in R.
+
+## 5.1: Outliers
+
+- Use `uscrime.txt`
+- Look for outliers in the last column (number of crimes per 100,000 people)
+- Use `grubbs.test` in the `outliers` package in R
+
+\newpage
+# Question 6.1
+
+### Prompt 
+
+Describe a situation or problem from your job, everyday life, current events, etc., for which a Change Detection model would be appropriate. Applying the CUSUM technique, how would you choose the critical value and the threshold?
+
+## Change Detection Models
+
+- Change detection model in NFL
+- CUSUM technique - Choose critical value and threshold
+
+\newpage
+# Question 6.2
+
+### Prompt
+
+1.	Using July through October daily-high-temperature data for Atlanta for 1996 through 2015, use a CUSUM approach to identify when unofficial summer ends (i.e., when the weather starts cooling off) each year.  
+- You can get the data that you need from the file temps.txt or online, for example at http://www.iweathernet.com/atlanta-weather-records  or https://www.wunderground.com/history/airport/KFTY/2015/7/1/CustomHistory.html .  You can use R if you’d like, but it’s straightforward enough that an Excel spreadsheet can easily do the job too.
+2.	Use a CUSUM approach to make a judgment of whether Atlanta’s summer climate has gotten warmer in that time (and if so, when).
+
+## 6.2 Part I: CUSUM Approach for Summer Ends
+
+- Using July through October daily-high-temperature data for Atlanta for 1996 through 2015, use a CUSUM approach to identify when unofficial summer ends (i.e., when the weather starts cooling off) each year.  
+
+## 6.2 Part II: CUSUM Approach Atlanta Summer Climate
+
+- Use a CUSUM approach to make a judgment of whether Atlanta’s summer climate has gotten warmer in that time (and if so, when).
+
+
