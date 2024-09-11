@@ -1,0 +1,7 @@
+# Module 6 - Change Detection
+
+## Overview
+
+## M6L1 - Intro to Change Detection
+
+## M6L2 - Cumulative Sum (CUSUM) for Change Detection

@@ -17,5 +17,7 @@ rmd_files:
   - "m2-classification.Rmd"
   - "m3-validation.Rmd"
   - "m4-clustering.Rmd"
+  - "m5-basic-data-preparation.Rmd"
+  - "m6-change-detection.Rmd"
   - "appendix.Rmd"
   

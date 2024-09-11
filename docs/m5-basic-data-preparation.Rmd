@@ -1,0 +1,9 @@
+# Module 5 - Basic Data Preparation
+
+## Overview
+
+## M5L1 - Data Prep - Intro
+
+## M5L2 - Outlier Detection
+
+## M5L3 - Dealing with Outliers
