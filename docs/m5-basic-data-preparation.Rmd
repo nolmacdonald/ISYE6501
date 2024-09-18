@@ -2,7 +2,27 @@
 
 ## Overview
 
+Reference: [Outlier Analysis](https://charuaggarwal.net/outlierbook.pdf)
+
 ## M5L1 - Data Prep - Intro
+
+This lesson includes examples of model data and potential data issues.
+
+### Data Preparation
+
+Using specific data in our analysis
+  - Predictors (regression), factors (classification), etc.
+  
+Quantitative examples
+- Credit scores
+- Average daily temperature in Atlanta
+- Number of hot dogs sold
+- Price of stocks
+- Amount of certain chemmcial in drinking water
+
+Scale of the data
+- Household income ~10E5, Credit scores 10E2
+
 
 ## M5L2 - Outlier Detection
 

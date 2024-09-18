@@ -19,5 +19,6 @@ rmd_files:
   - "m4-clustering.Rmd"
   - "m5-basic-data-preparation.Rmd"
   - "m6-change-detection.Rmd"
+  - "m7-time-series-models.Rmd"
   - "appendix.Rmd"
   

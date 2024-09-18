@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>7 Module 7 - Time Series Models | Course Notes - Introduction to Analytics Modeling</title>
+  <meta name="description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="7 Module 7 - Time Series Models | Course Notes - Introduction to Analytics Modeling" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="7 Module 7 - Time Series Models | Course Notes - Introduction to Analytics Modeling" />
+  
+  <meta name="twitter:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+<meta name="author" content="Nolan MacDonald" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="module-6---change-detection.html"/>
+<link rel="next" href="appendix-a-glossary.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="module-1---introduction.html"><a href="module-1---introduction.html"><i class="fa fa-check"></i><b>1</b> Module 1 - Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l1---course-overview"><i class="fa fa-check"></i><b>1.1</b> M1L1 - Course Overview</a></li>
+<li class="chapter" data-level="1.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2---course-structure"><i class="fa fa-check"></i><b>1.2</b> M1L2 - Course Structure</a></li>
+<li class="chapter" data-level="1.3" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2a---homework-grading-and-qa"><i class="fa fa-check"></i><b>1.3</b> M1L2a - Homework Grading and Q&amp;A</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#homework-format"><i class="fa fa-check"></i><b>1.3.1</b> Homework Format</a></li>
+<li class="chapter" data-level="1.3.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#grading-homeworks"><i class="fa fa-check"></i><b>1.3.2</b> Grading Homeworks</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l3---modeling"><i class="fa fa-check"></i><b>1.4</b> M1L3 - Modeling</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="module-2---classification.html"><a href="module-2---classification.html"><i class="fa fa-check"></i><b>2</b> Module 2 - Classification</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l1---introduction-to-classification"><i class="fa fa-check"></i><b>2.1</b> M2L1 - Introduction to Classification</a></li>
+<li class="chapter" data-level="2.2" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l2---choosing-a-classifier"><i class="fa fa-check"></i><b>2.2</b> M2L2 - Choosing a Classifier</a></li>
+<li class="chapter" data-level="2.3" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l3---data-definitions"><i class="fa fa-check"></i><b>2.3</b> M2L3 - Data Definitions</a></li>
+<li class="chapter" data-level="2.4" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l4---support-vector-machines-svms"><i class="fa fa-check"></i><b>2.4</b> M2L4 - Support Vector Machines (SVMs)</a></li>
+<li class="chapter" data-level="2.5" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l5---svm-what-the-name-means"><i class="fa fa-check"></i><b>2.5</b> M2L5 - SVM: What the Name Means</a></li>
+<li class="chapter" data-level="2.6" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l6---advanced-support-vector-machines"><i class="fa fa-check"></i><b>2.6</b> M2L6 - Advanced Support Vector Machines</a></li>
+<li class="chapter" data-level="2.7" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l7---scaling-and-standardization"><i class="fa fa-check"></i><b>2.7</b> M2L7 - Scaling and Standardization</a></li>
+<li class="chapter" data-level="2.8" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l8---k-nearest-neighbor-knn-algorithm"><i class="fa fa-check"></i><b>2.8</b> M2L8 - K-Nearest-Neighbor (KNN) Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="module-3---validation.html"><a href="module-3---validation.html"><i class="fa fa-check"></i><b>3</b> Module 3 - Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#overview"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---introduction-to-validation"><i class="fa fa-check"></i><b>3.2</b> M3L1 - Introduction to Validation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---summary"><i class="fa fa-check"></i><b>3.2.1</b> M3L1 - Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l2---validation-and-test-data-sets"><i class="fa fa-check"></i><b>3.3</b> M3L2 - Validation and Test Data Sets</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary"><i class="fa fa-check"></i><b>3.3.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l3---splitting-data"><i class="fa fa-check"></i><b>3.4</b> M3L3 - Splitting Data</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-1"><i class="fa fa-check"></i><b>3.4.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l4---cross-validations"><i class="fa fa-check"></i><b>3.5</b> M3L4 - Cross-Validations</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-2"><i class="fa fa-check"></i><b>3.5.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="module-4---clustering.html"><a href="module-4---clustering.html"><i class="fa fa-check"></i><b>4</b> Module 4 - Clustering</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#overview-1"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l1---introduction-to-clustering"><i class="fa fa-check"></i><b>4.2</b> M4L1 - Introduction to Clustering</a></li>
+<li class="chapter" data-level="4.3" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l2---distance-norms"><i class="fa fa-check"></i><b>4.3</b> M4L2 - Distance Norms</a></li>
+<li class="chapter" data-level="4.4" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l3---k-means-clustering"><i class="fa fa-check"></i><b>4.4</b> M4L3 - K-Means Clustering</a></li>
+<li class="chapter" data-level="4.5" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l4---practical-details-for-k-means"><i class="fa fa-check"></i><b>4.5</b> M4L4 - Practical Details for K-Means</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-3"><i class="fa fa-check"></i><b>4.5.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l5---clustering-for-prediction"><i class="fa fa-check"></i><b>4.6</b> M4L5 - Clustering for Prediction</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-4"><i class="fa fa-check"></i><b>4.6.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l6---clustering-v.-classification"><i class="fa fa-check"></i><b>4.7</b> M4L6 - Clustering v. Classification</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-5"><i class="fa fa-check"></i><b>4.7.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html"><i class="fa fa-check"></i><b>5</b> Module 5 - Basic Data Preparation</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#overview-2"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l1---data-prep---intro"><i class="fa fa-check"></i><b>5.2</b> M5L1 - Data Prep - Intro</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#data-preparation"><i class="fa fa-check"></i><b>5.2.1</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l2---outlier-detection"><i class="fa fa-check"></i><b>5.3</b> M5L2 - Outlier Detection</a></li>
+<li class="chapter" data-level="5.4" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l3---dealing-with-outliers"><i class="fa fa-check"></i><b>5.4</b> M5L3 - Dealing with Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html"><i class="fa fa-check"></i><b>6</b> Module 6 - Change Detection</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#overview-3"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l1---intro-to-change-detection"><i class="fa fa-check"></i><b>6.2</b> M6L1 - Intro to Change Detection</a></li>
+<li class="chapter" data-level="6.3" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l2---cumulative-sum-cusum-for-change-detection"><i class="fa fa-check"></i><b>6.3</b> M6L2 - Cumulative Sum (CUSUM) for Change Detection</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html"><i class="fa fa-check"></i><b>7</b> Module 7 - Time Series Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l1---introduction-to-exponential-smoothing"><i class="fa fa-check"></i><b>7.1</b> M7L1 - Introduction to Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#time-series-data"><i class="fa fa-check"></i><b>7.1.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="7.1.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method"><i class="fa fa-check"></i><b>7.1.2</b> Exponential Smoothing Method</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l2---trend-and-cyclic-effects"><i class="fa fa-check"></i><b>7.2</b> M7L2 - Trend and Cyclic Effects</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method-1"><i class="fa fa-check"></i><b>7.2.1</b> Exponential Smoothing Method</a></li>
+<li class="chapter" data-level="7.2.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#trends"><i class="fa fa-check"></i><b>7.2.2</b> Trends</a></li>
+<li class="chapter" data-level="7.2.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#cylic-patterns"><i class="fa fa-check"></i><b>7.2.3</b> Cylic Patterns</a></li>
+<li class="chapter" data-level="7.2.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#models"><i class="fa fa-check"></i><b>7.2.4</b> Models</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l3---exponential-smoothing---what-the-name-means"><i class="fa fa-check"></i><b>7.3</b> M7L3 - Exponential Smoothing - What the Name Means</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#basic-single-exponential-smoothing"><i class="fa fa-check"></i><b>7.3.1</b> Basic single exponential smoothing</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l4---forcasting"><i class="fa fa-check"></i><b>7.4</b> M7L4 - Forcasting</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting"><i class="fa fa-check"></i><b>7.4.1</b> Forecasting</a></li>
+<li class="chapter" data-level="7.4.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-trend"><i class="fa fa-check"></i><b>7.4.2</b> Forecasting with Trend</a></li>
+<li class="chapter" data-level="7.4.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-multiplicative-seasonality"><i class="fa fa-check"></i><b>7.4.3</b> Forecasting with Multiplicative Seasonality</a></li>
+<li class="chapter" data-level="7.4.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#future"><i class="fa fa-check"></i><b>7.4.4</b> Future</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l5---arima"><i class="fa fa-check"></i><b>7.5</b> M7L5 - ARIMA</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#arima"><i class="fa fa-check"></i><b>7.5.1</b> ARIMA</a></li>
+<li class="chapter" data-level="7.5.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-i---differences"><i class="fa fa-check"></i><b>7.5.2</b> Part I - Differences</a></li>
+<li class="chapter" data-level="7.5.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-ii---autoregression"><i class="fa fa-check"></i><b>7.5.3</b> Part II - Autoregression</a></li>
+<li class="chapter" data-level="7.5.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-iii---moving-average"><i class="fa fa-check"></i><b>7.5.4</b> Part III - Moving Average</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l6---garch"><i class="fa fa-check"></i><b>7.6</b> M7L6 - GARCH</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance"><i class="fa fa-check"></i><b>7.6.1</b> Variance</a></li>
+<li class="chapter" data-level="7.6.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance-estimation"><i class="fa fa-check"></i><b>7.6.2</b> Variance Estimation</a></li>
+<li class="chapter" data-level="7.6.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#summary-6"><i class="fa fa-check"></i><b>7.6.3</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i><b>8</b> Appendix A: Glossary</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html#basic-machine-learning"><i class="fa fa-check"></i><b>8.1</b> Basic Machine Learning</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Course Notes - Introduction to Analytics Modeling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="module-7---time-series-models" class="section level1 hasAnchor" number="7">
+<h1><span class="header-section-number">7</span> Module 7 - Time Series Models<a href="module-7---time-series-models.html#module-7---time-series-models" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="m7l1---introduction-to-exponential-smoothing" class="section level2 hasAnchor" number="7.1">
+<h2><span class="header-section-number">7.1</span> M7L1 - Introduction to Exponential Smoothing<a href="module-7---time-series-models.html#m7l1---introduction-to-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 1 - Introduction to Exponential Smoothing (3:58)</em></p>
+<div id="time-series-data" class="section level3 hasAnchor" number="7.1.1">
+<h3><span class="header-section-number">7.1.1</span> Time Series Data<a href="module-7---time-series-models.html#time-series-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Time series data - Data where the same response is known for many time periods.</p>
+<ul>
+<li>Trends over time (e.g., stock price)</li>
+<li>Cyclical variations (e.g., temperature)</li>
+<li>Random variation (e.g., Temperatures, stock prices, blood pressure)</li>
+</ul>
+</div>
+<div id="exponential-smoothing-method" class="section level3 hasAnchor" number="7.1.2">
+<h3><span class="header-section-number">7.1.2</span> Exponential Smoothing Method<a href="module-7---time-series-models.html#exponential-smoothing-method" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Example:</strong></p>
+<ul>
+<li><span class="math inline">\(S_t\)</span>: Expected response or baseline (e.g., Blood pressure at hour t)</li>
+<li><span class="math inline">\(x_t\)</span>: The observed response (e.g., Observed blood pressure at t)</li>
+</ul>
+<p><em>Two ways to answer:</em></p>
+<ul>
+<li><span class="math inline">\(S_t=x_t\)</span>: Observed blood pressure is a real indicator of the baseline</li>
+<li><span class="math inline">\(S_t = S_{t-1}\)</span>: Today’s baseline is the same as yesterdays baseline</li>
+</ul>
+<p><strong>Solution - Exponential Smoothing Method:</strong></p>
+<p><span class="math display">\[
+S_t = \alpha x_t + (1 - \alpha) S_{t-1}
+\]</span>
+In the equation above, <span class="math inline">\(S_t\)</span> is the expected baseline response at time period <span class="math inline">\(t\)</span>.
+The observed response is defined as <span class="math inline">\(x_t\)</span> and the range for <span class="math inline">\(\alpha\)</span> is defined as <span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>.
+Tuning <span class="math inline">\(\alpha\)</span> to 0 means there is a lot of randomness in the system, while a value of 1 means there is <em>not</em> a lot of randomness in the system.</p>
+<p><strong>How to Start:</strong></p>
+<ul>
+<li>Initial condition: <span class="math inline">\(S_1 = x_1\)</span></li>
+<li>Does not deal with trends or cyclical varations</li>
+</ul>
+</div>
+</div>
+<div id="m7l2---trend-and-cyclic-effects" class="section level2 hasAnchor" number="7.2">
+<h2><span class="header-section-number">7.2</span> M7L2 - Trend and Cyclic Effects<a href="module-7---time-series-models.html#m7l2---trend-and-cyclic-effects" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 2 - Trend and Cyclic Effects (6:06)</em></p>
+<div id="exponential-smoothing-method-1" class="section level3 hasAnchor" number="7.2.1">
+<h3><span class="header-section-number">7.2.1</span> Exponential Smoothing Method<a href="module-7---time-series-models.html#exponential-smoothing-method-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math display">\[
+S_t = \alpha x_t + (1 - \alpha) S_{t-1}
+\]</span></p>
+<ul>
+<li><span class="math inline">\(0 &lt; \alpha &lt; 1\)</span>
+<ul>
+<li>Helps trade off between trusting <span class="math inline">\(x_t\)</span> when <span class="math inline">\(\alpha\)</span> is large</li>
+<li>Trusting <span class="math inline">\(S_{t-1}\)</span> when <span class="math inline">\(\alpha\)</span> is small</li>
+<li>More randomness: Trust previous estimates <span class="math inline">\(S_{t-1}\)</span>, Small <span class="math inline">\(\alpha\)</span></li>
+<li>Less randomness: Trust what you see, may indicate real change, larger <span class="math inline">\(\alpha\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="trends" class="section level3 hasAnchor" number="7.2.2">
+<h3><span class="header-section-number">7.2.2</span> Trends<a href="module-7---time-series-models.html#trends" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><span class="math inline">\(T_t\)</span>: the trend at time period t</li>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) (S_{t-1} + T_{t-1})\)</span>
+<ul>
+<li>Now includes the previous trend, <span class="math inline">\(T_{t-1}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(T_{t} = \beta (S_t - S_{t-1}) + (1-\beta)T_{t-1}\)</span>
+<ul>
+<li><span class="math inline">\(\beta\)</span> times observed trend plus <span class="math inline">\(\beta\)</span> times previous trend</li>
+<li>Initial condition: <span class="math inline">\(T_1=0\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="cylic-patterns" class="section level3 hasAnchor" number="7.2.3">
+<h3><span class="header-section-number">7.2.3</span> Cylic Patterns<a href="module-7---time-series-models.html#cylic-patterns" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Like trend - additive component of formula</li>
+<li>Alternative
+<ul>
+<li><strong>Seasonalities:</strong> Multiplicative way
+<ul>
+<li><span class="math inline">\(L\)</span>: Length of cycle</li>
+<li><span class="math inline">\(C_t\)</span>: Multiplicative seasonality factor for time t
+<ul>
+<li>Inflate or deflate the observation</li>
+</ul></li>
+</ul></li>
+<li>*New baseline formula (including trend and seasonality)</li>
+</ul></li>
+</ul>
+<p><span class="math display">\[
+S_t = \frac{\alpha x_t}{C_{t-L}} + (1-\alpha)(S_{t-1}+T_{t-1})
+\]</span>
+- Update the seasonal, or cyclic, factor in similar way
+- <span class="math inline">\(C_t = \gamma(x_t/S_t) + (1-\gamma)C_{t-L}\)</span>
+- <span class="math inline">\(C_1, \dots, C_L=1\)</span>
+- No initial cyclic effect
+- <span class="math inline">\(x_t\)</span>: Observation
+- <span class="math inline">\(S_t\)</span>: Baseline
+- <span class="math inline">\(C_{t-L}\)</span>: Previous cylic factor</p>
+<ul>
+<li>Example: Selling burgers
+<ul>
+<li>If C = 1.1 on Sunday, sales were 10% higher just because it was Sunday</li>
+<li>Of 550 sold on Sunday
+<ul>
+<li>500 = baseline value</li>
+<li>50 = 10% extra</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>Starting Conditions:</strong></p>
+<ul>
+<li>Trend: <span class="math inline">\(T_1=0\)</span>
+<ul>
+<li>Shows no initial trend</li>
+</ul></li>
+<li>Multiplicative Seasonality: Multiplying by 1
+<ul>
+<li>Shows no initial cyclic effect</li>
+<li>First L values of C set to 1</li>
+</ul></li>
+</ul>
+</div>
+<div id="models" class="section level3 hasAnchor" number="7.2.4">
+<h3><span class="header-section-number">7.2.4</span> Models<a href="module-7---time-series-models.html#models" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Exponential smooth model
+<ul>
+<li>Sometimes called single, double, triple</li>
+<li>Depends on how many seasonal aspects you include</li>
+</ul></li>
+<li>Triple exponential smooth is also called <strong>Winter’s method</strong> or <strong>Holt-Winters method</strong></li>
+</ul>
+</div>
+</div>
+<div id="m7l3---exponential-smoothing---what-the-name-means" class="section level2 hasAnchor" number="7.3">
+<h2><span class="header-section-number">7.3</span> M7L3 - Exponential Smoothing - What the Name Means<a href="module-7---time-series-models.html#m7l3---exponential-smoothing---what-the-name-means" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 3 - Exponential Smoothing - What the Name Means (3:35)</em></p>
+<ul>
+<li>Previously: Discussed exponential smoothing
+<ul>
+<li>Analyzing time series data where the same response is known for many time periods</li>
+</ul></li>
+</ul>
+<div id="basic-single-exponential-smoothing" class="section level3 hasAnchor" number="7.3.1">
+<h3><span class="header-section-number">7.3.1</span> Basic single exponential smoothing<a href="module-7---time-series-models.html#basic-single-exponential-smoothing" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><span class="math display">\[
+S_t = \alpha x_t + (1 - \alpha) S_{t-1}
+\]</span>
+<strong>Example:</strong></p>
+<ul>
+<li><span class="math inline">\(\alpha=0.5\)</span></li>
+<li><span class="math inline">\(S_t = 0.5 x_t + 0.5 S_{t-1}\)</span></li>
+<li>High observed value <span class="math inline">\(x_t\)</span>: <span class="math inline">\(S_t\)</span> not as high; pulled down by <span class="math inline">\((1-\alpha)S_{t-1}\)</span></li>
+<li>Low observed value <span class="math inline">\(x_t\)</span>: <span class="math inline">\(S_t\)</span> not as low; pulled up by <span class="math inline">\((1-\alpha)S_{t-1}\)</span></li>
+</ul>
+<p><em>This is where the name exponential smoothing comes from!</em></p>
+<ul>
+<li>Peaks and valleys are smoothed out</li>
+</ul>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<img src="figures/exponential-smoothing.png" alt="Exponential smoothing example" width="100%" />
+<p class="caption">
+Figure7.1: Exponential smoothing example
+</p>
+</div>
+<ul>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) S_{t-1}\)</span>
+<ul>
+<li><span class="math inline">\(S_{t-1} = \alpha x_{t-1} + (1-\alpha)S_{t-2}\)</span></li>
+</ul></li>
+<li>Plug in <span class="math inline">\(S_{t-1}\)</span> and we now have:
+<ul>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) [\alpha x_{t-1} + (1-\alpha)S_{t-2}]\)</span></li>
+<li><span class="math inline">\(= \alpha x_t + (1 - \alpha) \alpha x_{t-1} + (1-\alpha)^2 S_{t-2}\)</span></li>
+</ul></li>
+<li>Where now <span class="math inline">\(S_{t-2}=\alpha x_t-2 + (1-\alpha)S_{t-3}\)</span></li>
+</ul>
+<p>Continuing we have an equation for <span class="math inline">\(S_t\)</span> with observations from the past each weighted by <span class="math inline">\(1-\alpha\)</span> to an increasing exponent.</p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
+<img src="figures/exponential-formula.png" alt="Exponential equation expanded" width="100%" />
+<p class="caption">
+Figure7.2: Exponential equation expanded
+</p>
+</div>
+<ul>
+<li>Every past observation contributes to the current baseline estimate</li>
+<li>More recent observations are more important
+<ul>
+<li>Newer observations weighted more</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="m7l4---forcasting" class="section level2 hasAnchor" number="7.4">
+<h2><span class="header-section-number">7.4</span> M7L4 - Forcasting<a href="module-7---time-series-models.html#m7l4---forcasting" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 4 - Forcasting (3:39)</em></p>
+<ul>
+<li>Exponential smoothing can be used for <em>simple forecasting</em>
+<ul>
+<li>Predict what will happen next</li>
+</ul></li>
+</ul>
+<div id="forecasting" class="section level3 hasAnchor" number="7.4.1">
+<h3><span class="header-section-number">7.4.1</span> Forecasting<a href="module-7---time-series-models.html#forecasting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Remember the basic exponential smooth equation
+<ul>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) S_{t-1}\)</span></li>
+</ul></li>
+<li>Prediction
+<ul>
+<li><span class="math inline">\(S_{t+1} = \alpha x_{t+1} + (1 - \alpha) S_{t}\)</span></li>
+<li><span class="math inline">\(x_{t+1}\)</span> is <strong>unknown</strong></li>
+<li>Best guess: <span class="math inline">\(x_{t+1}=S_t\)</span></li>
+</ul></li>
+<li>Our forecast for time period t+1
+<ul>
+<li><span class="math inline">\(F_{t+1} = \alpha S_t + (1-\alpha) S_t\)</span></li>
+<li>Our guess for next time period is same as current baseline</li>
+<li><span class="math inline">\(F_{t+1} = S_t\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="forecasting-with-trend" class="section level3 hasAnchor" number="7.4.2">
+<h3><span class="header-section-number">7.4.2</span> Forecasting with Trend<a href="module-7---time-series-models.html#forecasting-with-trend" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Include the trend
+<ul>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) (S_{t-1}+T_{t-1})\)</span></li>
+<li><span class="math inline">\(T_{t} = \beta (S_t - S_{t-1}) + (1-\beta)T_{t-1}\)</span></li>
+</ul></li>
+<li>The best estimate of the next baseline
+<ul>
+<li>Most current baseline estimate</li>
+</ul></li>
+<li>The best estimate of the trend with the most current trend estimate</li>
+<li>Our forecast for time period t+1
+<ul>
+<li><span class="math inline">\(F_{t+1}=S_t + T_t\)</span></li>
+</ul></li>
+<li><span class="math inline">\(F_{t+k}=S_t + k T_t, k=1,2,\dots\)</span></li>
+</ul>
+</div>
+<div id="forecasting-with-multiplicative-seasonality" class="section level3 hasAnchor" number="7.4.3">
+<h3><span class="header-section-number">7.4.3</span> Forecasting with Multiplicative Seasonality<a href="module-7---time-series-models.html#forecasting-with-multiplicative-seasonality" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Include multiplicative seasonality
+<ul>
+<li><span class="math inline">\(S_t = \frac{\alpha x_t}{C_{t-L}} + (1-\alpha)(S_{t-1}+T_{t-1})\)</span></li>
+</ul></li>
+<li>The best estimate of the next time period’s seasonal factor
+<ul>
+<li>$C_{t+1}=C_{(t+1)-L}</li>
+</ul></li>
+<li>Forecast for the time period t+1
+<ul>
+<li><span class="math inline">\(F_{t+1}=(S_t + T_t)C_{(t+1)-L}\)</span></li>
+</ul></li>
+<li><span class="math inline">\(F_{t+k}=(S_t + kT_t)C_{(t+1)-L+(k-1)}, k=1,2,\dots\)</span></li>
+</ul>
+</div>
+<div id="future" class="section level3 hasAnchor" number="7.4.4">
+<h3><span class="header-section-number">7.4.4</span> Future<a href="module-7---time-series-models.html#future" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>How to find good values for <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(\beta\)</span>, and <span class="math inline">\(\gamma\)</span>
+<ul>
+<li>Optimization: <span class="math inline">\(\min(F_t-x_t)^2\)</span></li>
+</ul></li>
+<li>Other methods for analyzing time series data</li>
+</ul>
+</div>
+</div>
+<div id="m7l5---arima" class="section level2 hasAnchor" number="7.5">
+<h2><span class="header-section-number">7.5</span> M7L5 - ARIMA<a href="module-7---time-series-models.html#m7l5---arima" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 5 - ARIMA (6:36)</em></p>
+<div id="arima" class="section level3 hasAnchor" number="7.5.1">
+<h3><span class="header-section-number">7.5.1</span> ARIMA<a href="module-7---time-series-models.html#arima" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Auto Regressive Integrated Moving Average (ARIMA)</strong>
+- General method for measuring time-series data
+- No underlying theory discussed, in <em>Time Series Analysis</em> course</p>
+<p><strong>ARIMA - 3 Key Parts</strong></p>
+</div>
+<div id="part-i---differences" class="section level3 hasAnchor" number="7.5.2">
+<h3><span class="header-section-number">7.5.2</span> Part I - Differences<a href="module-7---time-series-models.html#part-i---differences" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Exponential Smoothing: <span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) S_{t-1}\)</span></li>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) \alpha x_{t-1} + (1 - \alpha)^2 \alpha x_{t-2} + (1 - \alpha)^3 \alpha x_{t-3}+\dots\)</span>
+<ul>
+<li>Estimate <span class="math inline">\(S_t\)</span> based on <span class="math inline">\(x_t\)</span>, <span class="math inline">\(x_{t-1}\)</span>, etc.</li>
+<li>Works well if data is stationary</li>
+</ul></li>
+<li><strong>Stationary Process</strong>: If the mean, variance and other measures all expected to be constant over time</li>
+<li>Often data is not stationary, but the difference might be stationary</li>
+<li>For example:
+<ul>
+<li>First order difference <span class="math inline">\(D_{(1)}\)</span>: Difference of consecutive observations
+<ul>
+<li><span class="math inline">\(D_{(1)t}=(x_t - x_{t-1)}\)</span></li>
+</ul></li>
+<li>Second order difference <span class="math inline">\(D_{(2)}\)</span>: Differences of the differences
+<ul>
+<li><span class="math inline">\(D_{(2)t}=(x_t - x_{t-1)}-(x_{t-1}-x_{t-2})\)</span></li>
+</ul></li>
+<li>Third order difference <span class="math inline">\(D_{(3)}\)</span>: Differences of the differences of the differences
+<ul>
+<li><span class="math inline">\(D_{(3)t}=[(x_t - x_{t-1)}-(x_{t-1}-x_{t-2})]-[(x_{t-1}-x_{t-2})-(x_{t-2}-x_{t-3})]\)</span></li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="part-ii---autoregression" class="section level3 hasAnchor" number="7.5.3">
+<h3><span class="header-section-number">7.5.3</span> Part II - Autoregression<a href="module-7---time-series-models.html#part-ii---autoregression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><p>Predicting the current value based on previous time periods’ values</p></li>
+<li><p>Regression: Predicting the value based on other factors</p></li>
+<li><p>Auto: Using earlier values to predict, only works with time series data</p></li>
+<li><p>Exponential smoothing: order-<span class="math inline">\(\infty\)</span> autogregressive model</p>
+<ul>
+<li><span class="math inline">\(S_t = \alpha x_t + (1 - \alpha) \alpha x_{t-1} + (1 - \alpha)^2 \alpha x_{t-2} + (1 - \alpha)^3 \alpha x_{t-3}+\dots\)</span></li>
+<li>Uses data all the way back</li>
+</ul></li>
+<li><p>Order-p autoregressive model: <span class="math inline">\(S_t\)</span> is a function of <span class="math inline">\({x_t, x_{t-1}, x_{t-2}, \dots, x_{t-(p-1)}}\)</span></p>
+<ul>
+<li>Go back only p time periods</li>
+</ul></li>
+<li><p>ARIMA combines <em>autoregression</em> and <em>differencing</em></p>
+<ul>
+<li>Autoregression on the differences</li>
+<li>Use p time periods of previous observations to predict d-th order differences</li>
+</ul></li>
+</ul>
+</div>
+<div id="part-iii---moving-average" class="section level3 hasAnchor" number="7.5.4">
+<h3><span class="header-section-number">7.5.4</span> Part III - Moving Average<a href="module-7---time-series-models.html#part-iii---moving-average" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Previous errors <span class="math inline">\(\epsilon_t\)</span> as predictors
+<ul>
+<li><span class="math inline">\(\epsilon_t = (\hat{x}_t-x_t)\)</span></li>
+</ul></li>
+<li>Order-q moving average
+<ul>
+<li>Go back q time periods</li>
+<li><span class="math inline">\(\epsilon_t, \epsilon_{t-1}, \epsilon_{t-2}, \dots, \epsilon_{t-q}\)</span></li>
+</ul></li>
+</ul>
+<p>ARIMA(p,d,q) Model</p>
+<p><span class="math display">\[
+D_{(d)t}=\mu + \sum_{i=1}^p a_i D_{(d)t-i} -\sum_{i=1}^q \theta_i(\hat{x}_{t-i}-x_{t-i})
+\]</span></p>
+<ul>
+<li><p>dth-order differences</p></li>
+<li><p>pth-order autoregression</p></li>
+<li><p>qth-order moving average</p></li>
+<li><p>General model</p>
+<ul>
+<li>Add seasonality</li>
+</ul></li>
+<li><p>Specific values of p, d, and q</p>
+<ul>
+<li><code>ARIMA(0,0,0)</code>: White noise</li>
+<li><code>ARIMA(0,1,0)</code>: Random walk</li>
+<li><code>ARIMA(p,0,0)</code>: AR (Autoregressive) model</li>
+<li><code>ARIMA(0,0,q)</code>: MA (Moving Average) model</li>
+<li><code>ARIMA(0,1,1)</code>: Basic exponential smoothing model</li>
+</ul></li>
+<li><p>Short-term forecasting</p>
+<ul>
+<li>Better than exponential smoothing
+<ul>
+<li>When the data is more stable, with fewer peaks, valleys, and outliers</li>
+</ul></li>
+</ul></li>
+<li><p>Need 40 past data points for ARIMA to work well</p></li>
+</ul>
+<p><strong>Summary</strong>: ARIMA models help estimate or forecast a value</p>
+</div>
+</div>
+<div id="m7l6---garch" class="section level2 hasAnchor" number="7.6">
+<h2><span class="header-section-number">7.6</span> M7L6 - GARCH<a href="module-7---time-series-models.html#m7l6---garch" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 6 - GARCH (2:56)</em></p>
+<p><strong>Generalized Autoregressive Conditional Heteroscedasticity (GARCH)</strong>
+- Estimate or forecast the variance</p>
+<div id="variance" class="section level3 hasAnchor" number="7.6.1">
+<h3><span class="header-section-number">7.6.1</span> Variance<a href="module-7---time-series-models.html#variance" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Estimate the amount of error</li>
+<li>Example:
+<ul>
+<li>Forecast demand for pickup trucks</li>
+<li>Variance - How much forecast might be higher or lower than true value</li>
+</ul></li>
+</ul>
+</div>
+<div id="variance-estimation" class="section level3 hasAnchor" number="7.6.2">
+<h3><span class="header-section-number">7.6.2</span> Variance Estimation<a href="module-7---time-series-models.html#variance-estimation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Important in investment
+<ul>
+<li>Traditional portfolio optimization model
+<ul>
+<li>Balances the expected return of a set of investments with amount of volatility</li>
+</ul></li>
+</ul></li>
+<li>Types of portfolios
+<ul>
+<li>Riskier: Higher expected return</li>
+<li>Less-risky: Lower expected return</li>
+</ul></li>
+<li>Variance: A Proxy for the amount of volatility or risk</li>
+<li><strong>GARCH</strong>: A common approach for estimating variance</li>
+</ul>
+<p><strong>ARIMA Model</strong>:</p>
+<p><span class="math display">\[
+D_{(d)t}=\mu + \sum_{i=1}^p a_i D_{(d)t-i} -\sum_{i=1}^q \theta_i(\hat{x}_{t-i}-x_{t-i})
+\]</span></p>
+<p><strong>GARCH Model</strong>:</p>
+<p><span class="math display">\[
+\sigma_t^2 = \omega + \sum_{i=1}^p \beta_i \sigma_{t-i}^2 + \sum_{i=1}^q \gamma_i \epsilon^2_{t-i}
+\]</span></p>
+<p><strong>Two differences from ARIMA</strong>:</p>
+<ul>
+<li>Variances/squared errors
+<ul>
+<li>Not observations/linear errors</li>
+</ul></li>
+<li>Raw variances
+<ul>
+<li>Not differences of variances</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-6" class="section level3 hasAnchor" number="7.6.3">
+<h3><span class="header-section-number">7.6.3</span> Summary<a href="module-7---time-series-models.html#summary-6" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Three methods - Analyzing time series</p>
+<ul>
+<li>Exponential smoothing</li>
+<li>ARIMA</li>
+<li>GARCH</li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="module-6---change-detection.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-a-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ISYE6501-Notes-Fall2024.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
