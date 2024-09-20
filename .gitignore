@@ -50,3 +50,6 @@ rsconnect/
 
 # Rendered README
 README.html
+
+# Keep solutions local
+/solutions/
