@@ -3,7 +3,7 @@ title: "Homework 3: ISYE 6501 - Introduction to Analytics Modeling"
 output: pdf_document
 bibliography: docs/references.bib
 csl: docs/ieee.csl
-# date: "2024-08-27"
+# date: "2024-09-12"
 ---
 
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}

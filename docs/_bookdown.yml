@@ -3,10 +3,10 @@ output_dir: "./"  # Directory where the output will be saved
 delete_merged_file: true
 language:
   label:
-    fig: "Figure"
-    tab: "Table"
-    eq: "Equation"
-    thm: "Theorem"
+    fig: "Figure "
+    tab: "Table "
+    eq: "Equation "
+    thm: "Theorem "
 
 bibliography: ["references/references.bib"]
 csl: "references/ieee.csl"
@@ -20,5 +20,6 @@ rmd_files:
   - "m5-basic-data-preparation.Rmd"
   - "m6-change-detection.Rmd"
   - "m7-time-series-models.Rmd"
+  - "m8-basic-regression.Rmd"
   - "appendix.Rmd"
   

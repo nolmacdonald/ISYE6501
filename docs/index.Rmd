@@ -7,17 +7,17 @@ documentclass: book
 bibliography: ["references/references.bib"]
 csl: "references/ieee.csl"
 link-citations: yes
-# github-repo: rstudio/bookdown-demo
 description: "Course notes for Introduction to Analytics Modeling (ISYE 6501)"
 output:
   bookdown::gitbook:  # For HTML output
     split_by: chapter
+    mathjax: local # For HTML
   bookdown::pdf_book: # For PDF output
     latex_engine: xelatex
     keep_tex: yes
     highlight: tango
     includes:
-      in_header: preamble.tex
+      in_header: preamble.tex # Ensure this line is only present once
 ---
 
 <!-- By default, all bookdown merges all Rmd files by order of filenames e.g., 01-intro, 02-literature -->

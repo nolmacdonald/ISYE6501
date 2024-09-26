@@ -8,7 +8,6 @@ setwd("~/projects/ISYE6501/HW3")
 data <- read.table("data/uscrime.txt", stringsAsFactors = FALSE, header = TRUE)
 
 # Create a dataframe for ONLY crime rate per 100,000 people
-# Create a dataframe for ONLY crime rate per 100,000 people
 crime_data <- data.frame(Crime = data$Crime)
 
 # Show summary or distribution of dataset
