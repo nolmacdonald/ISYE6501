@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>8 Module 8 - Basics of Regression | Course Notes - Introduction to Analytics Modeling</title>
+  <meta name="description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="8 Module 8 - Basics of Regression | Course Notes - Introduction to Analytics Modeling" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="8 Module 8 - Basics of Regression | Course Notes - Introduction to Analytics Modeling" />
+  
+  <meta name="twitter:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+<meta name="author" content="Nolan MacDonald" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="module-7---time-series-models.html"/>
+<link rel="next" href="appendix-a-glossary.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="module-1---introduction.html"><a href="module-1---introduction.html"><i class="fa fa-check"></i><b>1</b> Module 1 - Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l1---course-overview"><i class="fa fa-check"></i><b>1.1</b> M1L1 - Course Overview</a></li>
+<li class="chapter" data-level="1.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2---course-structure"><i class="fa fa-check"></i><b>1.2</b> M1L2 - Course Structure</a></li>
+<li class="chapter" data-level="1.3" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2a---homework-grading-and-qa"><i class="fa fa-check"></i><b>1.3</b> M1L2a - Homework Grading and Q&amp;A</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#homework-format"><i class="fa fa-check"></i><b>1.3.1</b> Homework Format</a></li>
+<li class="chapter" data-level="1.3.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#grading-homeworks"><i class="fa fa-check"></i><b>1.3.2</b> Grading Homeworks</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l3---modeling"><i class="fa fa-check"></i><b>1.4</b> M1L3 - Modeling</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="module-2---classification.html"><a href="module-2---classification.html"><i class="fa fa-check"></i><b>2</b> Module 2 - Classification</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l1---introduction-to-classification"><i class="fa fa-check"></i><b>2.1</b> M2L1 - Introduction to Classification</a></li>
+<li class="chapter" data-level="2.2" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l2---choosing-a-classifier"><i class="fa fa-check"></i><b>2.2</b> M2L2 - Choosing a Classifier</a></li>
+<li class="chapter" data-level="2.3" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l3---data-definitions"><i class="fa fa-check"></i><b>2.3</b> M2L3 - Data Definitions</a></li>
+<li class="chapter" data-level="2.4" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l4---support-vector-machines-svms"><i class="fa fa-check"></i><b>2.4</b> M2L4 - Support Vector Machines (SVMs)</a></li>
+<li class="chapter" data-level="2.5" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l5---svm-what-the-name-means"><i class="fa fa-check"></i><b>2.5</b> M2L5 - SVM: What the Name Means</a></li>
+<li class="chapter" data-level="2.6" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l6---advanced-support-vector-machines"><i class="fa fa-check"></i><b>2.6</b> M2L6 - Advanced Support Vector Machines</a></li>
+<li class="chapter" data-level="2.7" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l7---scaling-and-standardization"><i class="fa fa-check"></i><b>2.7</b> M2L7 - Scaling and Standardization</a></li>
+<li class="chapter" data-level="2.8" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l8---k-nearest-neighbor-knn-algorithm"><i class="fa fa-check"></i><b>2.8</b> M2L8 - K-Nearest-Neighbor (KNN) Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="module-3---validation.html"><a href="module-3---validation.html"><i class="fa fa-check"></i><b>3</b> Module 3 - Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#overview"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---introduction-to-validation"><i class="fa fa-check"></i><b>3.2</b> M3L1 - Introduction to Validation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---summary"><i class="fa fa-check"></i><b>3.2.1</b> M3L1 - Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l2---validation-and-test-data-sets"><i class="fa fa-check"></i><b>3.3</b> M3L2 - Validation and Test Data Sets</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary"><i class="fa fa-check"></i><b>3.3.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l3---splitting-data"><i class="fa fa-check"></i><b>3.4</b> M3L3 - Splitting Data</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-1"><i class="fa fa-check"></i><b>3.4.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l4---cross-validations"><i class="fa fa-check"></i><b>3.5</b> M3L4 - Cross-Validations</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-2"><i class="fa fa-check"></i><b>3.5.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="module-4---clustering.html"><a href="module-4---clustering.html"><i class="fa fa-check"></i><b>4</b> Module 4 - Clustering</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#overview-1"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l1---introduction-to-clustering"><i class="fa fa-check"></i><b>4.2</b> M4L1 - Introduction to Clustering</a></li>
+<li class="chapter" data-level="4.3" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l2---distance-norms"><i class="fa fa-check"></i><b>4.3</b> M4L2 - Distance Norms</a></li>
+<li class="chapter" data-level="4.4" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l3---k-means-clustering"><i class="fa fa-check"></i><b>4.4</b> M4L3 - K-Means Clustering</a></li>
+<li class="chapter" data-level="4.5" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l4---practical-details-for-k-means"><i class="fa fa-check"></i><b>4.5</b> M4L4 - Practical Details for K-Means</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-3"><i class="fa fa-check"></i><b>4.5.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l5---clustering-for-prediction"><i class="fa fa-check"></i><b>4.6</b> M4L5 - Clustering for Prediction</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-4"><i class="fa fa-check"></i><b>4.6.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l6---clustering-v.-classification"><i class="fa fa-check"></i><b>4.7</b> M4L6 - Clustering v. Classification</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-5"><i class="fa fa-check"></i><b>4.7.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html"><i class="fa fa-check"></i><b>5</b> Module 5 - Basic Data Preparation</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#overview-2"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l1---data-prep---intro"><i class="fa fa-check"></i><b>5.2</b> M5L1 - Data Prep - Intro</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#data-preparation"><i class="fa fa-check"></i><b>5.2.1</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l2---outlier-detection"><i class="fa fa-check"></i><b>5.3</b> M5L2 - Outlier Detection</a></li>
+<li class="chapter" data-level="5.4" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l3---dealing-with-outliers"><i class="fa fa-check"></i><b>5.4</b> M5L3 - Dealing with Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html"><i class="fa fa-check"></i><b>6</b> Module 6 - Change Detection</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#overview-3"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l1---intro-to-change-detection"><i class="fa fa-check"></i><b>6.2</b> M6L1 - Intro to Change Detection</a></li>
+<li class="chapter" data-level="6.3" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l2---cumulative-sum-cusum-for-change-detection"><i class="fa fa-check"></i><b>6.3</b> M6L2 - Cumulative Sum (CUSUM) for Change Detection</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html"><i class="fa fa-check"></i><b>7</b> Module 7 - Time Series Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l1---introduction-to-exponential-smoothing"><i class="fa fa-check"></i><b>7.1</b> M7L1 - Introduction to Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#time-series-data"><i class="fa fa-check"></i><b>7.1.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="7.1.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method"><i class="fa fa-check"></i><b>7.1.2</b> Exponential Smoothing Method</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l2---trend-and-cyclic-effects"><i class="fa fa-check"></i><b>7.2</b> M7L2 - Trend and Cyclic Effects</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method-1"><i class="fa fa-check"></i><b>7.2.1</b> Exponential Smoothing Method</a></li>
+<li class="chapter" data-level="7.2.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#trends"><i class="fa fa-check"></i><b>7.2.2</b> Trends</a></li>
+<li class="chapter" data-level="7.2.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#cylic-patterns"><i class="fa fa-check"></i><b>7.2.3</b> Cylic Patterns</a></li>
+<li class="chapter" data-level="7.2.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#models"><i class="fa fa-check"></i><b>7.2.4</b> Models</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l3---exponential-smoothing---what-the-name-means"><i class="fa fa-check"></i><b>7.3</b> M7L3 - Exponential Smoothing - What the Name Means</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#basic-single-exponential-smoothing"><i class="fa fa-check"></i><b>7.3.1</b> Basic single exponential smoothing</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l4---forcasting"><i class="fa fa-check"></i><b>7.4</b> M7L4 - Forcasting</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting"><i class="fa fa-check"></i><b>7.4.1</b> Forecasting</a></li>
+<li class="chapter" data-level="7.4.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-trend"><i class="fa fa-check"></i><b>7.4.2</b> Forecasting with Trend</a></li>
+<li class="chapter" data-level="7.4.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-multiplicative-seasonality"><i class="fa fa-check"></i><b>7.4.3</b> Forecasting with Multiplicative Seasonality</a></li>
+<li class="chapter" data-level="7.4.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#future"><i class="fa fa-check"></i><b>7.4.4</b> Future</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l5---arima"><i class="fa fa-check"></i><b>7.5</b> M7L5 - ARIMA</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#arima"><i class="fa fa-check"></i><b>7.5.1</b> ARIMA</a></li>
+<li class="chapter" data-level="7.5.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-i---differences"><i class="fa fa-check"></i><b>7.5.2</b> Part I - Differences</a></li>
+<li class="chapter" data-level="7.5.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-ii---autoregression"><i class="fa fa-check"></i><b>7.5.3</b> Part II - Autoregression</a></li>
+<li class="chapter" data-level="7.5.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-iii---moving-average"><i class="fa fa-check"></i><b>7.5.4</b> Part III - Moving Average</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l6---garch"><i class="fa fa-check"></i><b>7.6</b> M7L6 - GARCH</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance"><i class="fa fa-check"></i><b>7.6.1</b> Variance</a></li>
+<li class="chapter" data-level="7.6.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance-estimation"><i class="fa fa-check"></i><b>7.6.2</b> Variance Estimation</a></li>
+<li class="chapter" data-level="7.6.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#summary-6"><i class="fa fa-check"></i><b>7.6.3</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html"><i class="fa fa-check"></i><b>8</b> Module 8 - Basics of Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l1---introduction-to-regression"><i class="fa fa-check"></i><b>8.1</b> M8L1 - Introduction to Regression</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#regression"><i class="fa fa-check"></i><b>8.1.1</b> Regression</a></li>
+<li class="chapter" data-level="8.1.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#simple-linear-regression-slr"><i class="fa fa-check"></i><b>8.1.2</b> Simple Linear Regression (SLR)</a></li>
+<li class="chapter" data-level="8.1.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-7"><i class="fa fa-check"></i><b>8.1.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l2---maximum-likelihood-and-information-criteria"><i class="fa fa-check"></i><b>8.2</b> M8L2 - Maximum Likelihood and Information Criteria</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#likelihood"><i class="fa fa-check"></i><b>8.2.1</b> Likelihood</a></li>
+<li class="chapter" data-level="8.2.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-example"><i class="fa fa-check"></i><b>8.2.2</b> Maximum Likelihood Example</a></li>
+<li class="chapter" data-level="8.2.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-fitting"><i class="fa fa-check"></i><b>8.2.3</b> Maximum Likelihood Fitting</a></li>
+<li class="chapter" data-level="8.2.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#akaike-information-criterion-aic"><i class="fa fa-check"></i><b>8.2.4</b> Akaike Information Criterion (AIC)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#aic-example"><i class="fa fa-check"></i><b>8.3</b> AIC Example</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#corrected-aic-aic_c"><i class="fa fa-check"></i><b>8.3.1</b> Corrected AIC (<span class="math inline">\(AIC_C\)</span>)</a></li>
+<li class="chapter" data-level="8.3.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#bayesian-information-criterion-bic"><i class="fa fa-check"></i><b>8.3.2</b> Bayesian Information Criterion (BIC)</a></li>
+<li class="chapter" data-level="8.3.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-8"><i class="fa fa-check"></i><b>8.3.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l3---using-regression"><i class="fa fa-check"></i><b>8.4</b> M8L3 - Using Regression</a></li>
+<li class="chapter" data-level="8.5" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l4---causation-vs.-correlation"><i class="fa fa-check"></i><b>8.5</b> M8L4 - Causation vs. Correlation</a></li>
+<li class="chapter" data-level="8.6" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l5---transformations-and-interactions"><i class="fa fa-check"></i><b>8.6</b> M8L5 - Transformations and Interactions</a></li>
+<li class="chapter" data-level="8.7" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l6---output"><i class="fa fa-check"></i><b>8.7</b> M8L6 - Output</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i><b>9</b> Appendix A: Glossary</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html#basic-machine-learning"><i class="fa fa-check"></i><b>9.1</b> Basic Machine Learning</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Course Notes - Introduction to Analytics Modeling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="module-8---basics-of-regression" class="section level1 hasAnchor" number="8">
+<h1><span class="header-section-number">8</span> Module 8 - Basics of Regression<a href="module-8---basics-of-regression.html#module-8---basics-of-regression" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Module 8 will cover the basics of regression, along with the concepts of estimating a model’s quality and distinguishing between correlation and causation.</p>
+<div id="m8l1---introduction-to-regression" class="section level2 hasAnchor" number="8.1">
+<h2><span class="header-section-number">8.1</span> M8L1 - Introduction to Regression<a href="module-8---basics-of-regression.html#m8l1---introduction-to-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 1 - Introduction to Regression (5:12)</em></p>
+<div id="regression" class="section level3 hasAnchor" number="8.1.1">
+<h3><span class="header-section-number">8.1.1</span> Regression<a href="module-8---basics-of-regression.html#regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Regression is one of the most common models in analytics.
+Regression can answer two types of questions.</p>
+<ul>
+<li>How do systems work? Examples:
+<ul>
+<li>Value of a home run</li>
+<li>Effect of economic factors on presidential election</li>
+<li>Impact of education on income</li>
+<li>Key factors in car purchasing</li>
+</ul></li>
+<li>What will happen in the future? Examples:
+<ul>
+<li>Height of a child at adulthood</li>
+<li>Oil price 1.5 years from now</li>
+<li>Housing demand in next 6 months</li>
+<li>Remaining lifetime of insurance applicant</li>
+</ul></li>
+</ul>
+</div>
+<div id="simple-linear-regression-slr" class="section level3 hasAnchor" number="8.1.2">
+<h3><span class="header-section-number">8.1.2</span> Simple Linear Regression (SLR)<a href="module-8---basics-of-regression.html#simple-linear-regression-slr" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Linear regression with one predictor</li>
+<li>Look for linear relationship between predictor and response</li>
+</ul>
+<p>Example: Effect of unemployment on new car sales</p>
+<ul>
+<li><span class="math inline">\(y\)</span>: Response (new car sales)</li>
+<li><span class="math inline">\(x_1\)</span>: Predictor (workforce participation)</li>
+</ul>
+<p><strong>Regression Equation:</strong>
+<span class="math display" id="eq:regression">\[\begin{equation}
+  y = a_0 + a_1x_1
+  \tag{8.1}
+\end{equation}\]</span></p>
+<p><strong>Regression Equation with <span class="math inline">\(m\)</span> Predictors:</strong>
+<span class="math display" id="eq:regression-m">\[\begin{equation}
+  \begin{split}
+      y &amp;= a_0 + a_1x_1 + a_2x_2 + \dots +  + a_mx_m \\
+      &amp;= a_0 + \sum_{j=1}^m a_jx_j
+  \end{split}
+  \tag{8.2}
+\end{equation}\]</span></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<img src="figures/linear-regression.png" alt="Linear regression with one predictor" width="100%" />
+<p class="caption">
+Figure 8.1: Linear regression with one predictor
+</p>
+</div>
+<p>Measure the quality of the line’s fit with squared errors.</p>
+<ul>
+<li><span class="math inline">\(y_i\)</span>: Cars sold for data point <span class="math inline">\(i\)</span></li>
+<li><span class="math inline">\(\hat{y}_i\)</span>: Model’s prediction of cars sold</li>
+</ul>
+<p><strong>Data point <span class="math inline">\(i\)</span> Prediction Error:</strong>
+<span class="math display" id="eq:pred-error">\[\begin{equation}
+  y_i - \hat{y}_i = y_i - (a_0 + a_1x_{i1})
+  \tag{8.3}
+\end{equation}\]</span></p>
+<p><strong>Sum of Squared Errors:</strong>
+<span class="math display" id="eq:sq-errors">\[\begin{equation}
+  \begin{split}
+    &amp; \sum_{i=1}^n (y_i - \hat{y}_i)^2 \\
+    &amp;= \sum_{i=1}^n (y_i - \big(a_0 + a_1x_{i1})\big)^2
+  \end{split}
+  \tag{8.4}
+\end{equation}\]</span></p>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
+<img src="figures/linear-regression-error.png" alt="Linear regression prediction error" width="100%" />
+<p class="caption">
+Figure 8.2: Linear regression prediction error
+</p>
+</div>
+<p>Why the sum of squared errors?</p>
+<ul>
+<li>See lesson on estimating model quality</li>
+</ul>
+<p>Best-fit regression line</p>
+<ul>
+<li>Determine line fit by sum of squared errors</li>
+<li>Minimizes sum of squared errors</li>
+<li>Defined by <span class="math inline">\(a_0\)</span> and <span class="math inline">\(a_1\)</span></li>
+</ul>
+<p>Underlying math</p>
+<ul>
+<li>Sum of squared errors - Minimize convex quadratic function
+<ul>
+<li>Set partial derivatives to zero</li>
+<li>Solve simultaneous equations</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-7" class="section level3 hasAnchor" number="8.1.3">
+<h3><span class="header-section-number">8.1.3</span> Summary<a href="module-8---basics-of-regression.html#summary-7" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Linear regression
+<ul>
+<li>Answers two questions
+<ul>
+<li>How do systems work?</li>
+<li>What will happen in the future</li>
+</ul></li>
+</ul></li>
+</ul>
+<p><strong>Key Equations:</strong></p>
+<ul>
+<li>Regression Equation: Eq. <a href="module-8---basics-of-regression.html#eq:regression">(8.1)</a></li>
+<li>Regression Equation with <span class="math inline">\(m\)</span> Predictors: Eq. <a href="module-8---basics-of-regression.html#eq:regression-m">(8.2)</a></li>
+<li>Data point <span class="math inline">\(i\)</span> Prediction Error: Eq. <a href="module-8---basics-of-regression.html#eq:pred-error">(8.3)</a></li>
+<li>Sum of Squared Errors: Eq. <a href="module-8---basics-of-regression.html#eq:sq-errors">(8.4)</a></li>
+</ul>
+</div>
+</div>
+<div id="m8l2---maximum-likelihood-and-information-criteria" class="section level2 hasAnchor" number="8.2">
+<h2><span class="header-section-number">8.2</span> M8L2 - Maximum Likelihood and Information Criteria<a href="module-8---basics-of-regression.html#m8l2---maximum-likelihood-and-information-criteria" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 2 - Maximum Likelihood and Information Criteria (7:56)</em></p>
+<p>I this lesson, we cover how to measure the quality of a model’s fit.</p>
+<div id="likelihood" class="section level3 hasAnchor" number="8.2.1">
+<h3><span class="header-section-number">8.2.1</span> Likelihood<a href="module-8---basics-of-regression.html#likelihood" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Likelihood:</strong></p>
+<ul>
+<li>Basic measure of quality is <strong>likelihood</strong></li>
+<li>Assume the data is the correct value and we have information about the variance</li>
+<li>Measure the probability (density) for any parameter set</li>
+<li>Maximum likelihood (highest probability density)
+<ul>
+<li>Parameters that give the highest probability</li>
+</ul></li>
+</ul>
+</div>
+<div id="maximum-likelihood-example" class="section level3 hasAnchor" number="8.2.2">
+<h3><span class="header-section-number">8.2.2</span> Maximum Likelihood Example<a href="module-8---basics-of-regression.html#maximum-likelihood-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Example:</p>
+<ul>
+<li>Error ~ $N(0, ^2), i.i.d.
+<ul>
+<li><strong>i.i.d.</strong> - Independent and identically distributed random variables</li>
+</ul></li>
+<li>Observations: <span class="math inline">\(z_1,\dots,z_n\)</span></li>
+<li>Model estimates: <span class="math inline">\(y_1,\dots,y_n\)</span></li>
+</ul>
+<p><strong>Probability Density for Observing <span class="math inline">\(z_i\)</span> if true value is <span class="math inline">\(y_i\)</span>:</strong>
+<span class="math display" id="eq:prob-density">\[\begin{equation}
+  \frac{1}{\sigma \sqrt{2\pi}}\exp^{\frac{(z_i-y_i)^2}{2\sigma^2}}
+  \tag{8.5}
+\end{equation}\]</span></p>
+<p><strong>Joint Density over all <span class="math inline">\(n\)</span> terms:</strong>
+<span class="math display" id="eq:joint-density">\[\begin{equation}
+  \begin{split}
+    &amp; \prod_{i=1}^n \frac{1}{\sigma \sqrt{2\pi}}\exp^{\frac{(z_i-y_i)^2}{2\sigma^2}} \\
+    &amp;= \bigg(\frac{1}{\sigma \sqrt{2\pi}}\bigg)^n\exp^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(z_i-y_i)^2}
+  \end{split}
+  \tag{8.6}
+\end{equation}\]</span></p>
+<p>Joint density is the product because the errors are all independent.
+Since the exponential function gets larger as exponent gets larger we can find the largest value of the whole expression by the largest exponent.
+We can remove the constants and we are left with a negative sum of the squared errors.
+If errors are normally distributed and independent and identically distributed (i.i.d.) then the set of parameters that minimizes the sum of squared errors is the maximum likelihood fit.</p>
+<ul>
+<li>Error ~ $N(0, ^2), i.i.d.</li>
+<li>Observations: <span class="math inline">\(z_1,\dots,z_n\)</span></li>
+<li>Model estimates: <span class="math inline">\(y_1,\dots,y_n\)</span></li>
+<li>MLE (Maximum Likelihood Example)
+<ul>
+<li>The set of parameters that minimizes the sum of squared errors (explained above)</li>
+</ul></li>
+</ul>
+<p><strong>Maximum Likelihood Fit:</strong>
+<span class="math display" id="eq:max-likelihood">\[\begin{equation}
+  \max \bigg(\frac{1}{\sigma \sqrt{2\pi}}
+  \bigg)^n\exp^{-\frac{1}{2\sigma^2}\sum_{i=1}^n(z_i-y_i)^2}
+  \rightarrow \min \sum_{i=1}^n (z_i-y_i)^2
+  \tag{8.7}
+\end{equation}\]</span></p>
+<p>In the case of basic linear regression:</p>
+<ul>
+<li><span class="math inline">\(y_i = a_0 + \sum_{j=1}^m a_j x_{ij}\)</span></li>
+<li><span class="math inline">\(\sum_{i=1}^n (z_i-y_i)^2\)</span></li>
+<li>Minimize <span class="math inline">\(\sum_{i=1}^n (z_i-y_i)^2\)</span> over the parameters <span class="math inline">\(a_0,\dots,a_m\)</span></li>
+</ul>
+<p><strong>Maximum Likelihood of Basic Linear Regression:</strong>
+<span class="math display" id="eq:max-likelihood-linear-regression">\[\begin{equation}
+  \min \sum_{i=1}^n \big(z_i - (a_0 + \sum_{j=1}^m a_j x_{ij}) \big)^2
+  \tag{8.8}
+\end{equation}\]</span></p>
+<p>Can use likelihood to compare to different models with the likelihood ratio, the ratio of likelihoods and conducting a hypothesis test.</p>
+</div>
+<div id="maximum-likelihood-fitting" class="section level3 hasAnchor" number="8.2.3">
+<h3><span class="header-section-number">8.2.3</span> Maximum Likelihood Fitting<a href="module-8---basics-of-regression.html#maximum-likelihood-fitting" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Simple example:</strong></p>
+<ul>
+<li>Regression with independent normally distributed errors</li>
+</ul>
+<p><strong>Can get complex fast:</strong></p>
+<ul>
+<li>Different estimation formulas</li>
+<li>Different assumptions about the error</li>
+</ul>
+<p><strong>Good statistical software:</strong></p>
+<ul>
+<li>Can handle more complexity than simple regression</li>
+</ul>
+</div>
+<div id="akaike-information-criterion-aic" class="section level3 hasAnchor" number="8.2.4">
+<h3><span class="header-section-number">8.2.4</span> Akaike Information Criterion (AIC)<a href="module-8---basics-of-regression.html#akaike-information-criterion-aic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Akaike information criterion (AIC)</strong> is an estimator of prediction error and thereby relative quality of statistical models for a given set of data.</p>
+<ul>
+<li>Provide collection of models for the data</li>
+<li>AIC estimates quality of each model, relative to other models</li>
+<li>Provides a means for model selection</li>
+</ul>
+<p><strong>Akaike Information Criterion (AIC):</strong>
+<span class="math display" id="eq:aic">\[\begin{equation}
+  AIC = 2k - 2\ln(L^*)
+  \tag{8.9}
+\end{equation}\]</span></p>
+<ul>
+<li><span class="math inline">\(L^*\)</span>: Maximum likelihood value</li>
+<li><span class="math inline">\(k\)</span>: Number of parameters being estimated</li>
+<li><span class="math inline">\(2k\)</span> is a <em>penalty term</em>, balances likelihood with simplicity
+<ul>
+<li>Helps avoid overfitting</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="aic-example" class="section level2 hasAnchor" number="8.3">
+<h2><span class="header-section-number">8.3</span> AIC Example<a href="module-8---basics-of-regression.html#aic-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><strong>Regression with AIC:</strong>
+<span class="math display" id="eq:aic-regression">\[\begin{equation}
+  \begin{split}
+    AIC &amp;= 2k - 2\ln(L^*) \\
+    &amp;= 2k-2\ln\bigg(\bigg(\frac{1}{\sigma \sqrt{2\pi}}
+    \bigg)^n\exp^{-\frac{1}{2\sigma^2}\sum_{i=1}^n\big(z_i-
+    (a_0 + \sum_{j=1}^m a_jx_{ij})\big)^2}\bigg) \\
+    &amp;= 2(m+1)-2\ln\bigg(\bigg(\frac{1}{\sigma \sqrt{2\pi}}
+    \bigg)^n\exp^{-\frac{1}{2\sigma^2}\sum_{i=1}^n\big(z_i-
+    (a_0 + \sum_{j=1}^m a_jx_{ij})\big)^2}\bigg)
+  \end{split}
+  \tag{8.10}
+\end{equation}\]</span></p>
+<ul>
+<li>Prefer models with smaller AIC</li>
+<li>Making AIC encourages fewer parameters <span class="math inline">\(k\)</span> and higher likelihood</li>
+<li>Nice properties if there are infinitely many data points
+<ul>
+<li>We aren’t going to have infinitely many data points and good luck storing it</li>
+</ul></li>
+<li>For smaller data sets we need a correction</li>
+</ul>
+<div id="corrected-aic-aic_c" class="section level3 hasAnchor" number="8.3.1">
+<h3><span class="header-section-number">8.3.1</span> Corrected AIC (<span class="math inline">\(AIC_C\)</span>)<a href="module-8---basics-of-regression.html#corrected-aic-aic_c" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Corrected AIC (<span class="math inline">\(AIC_C\)</span>) is used for smaller data sets</p>
+<p><span class="math display" id="eq:aic-c">\[\begin{equation}
+  \begin{split}
+    AIC_C &amp;= AIC + \frac{2k(k+1)}{n-k-1} \\
+    &amp;= 2k - 2\ln(L^*) + \frac{2k(k+1)}{n-k-1}
+  \end{split}
+  \tag{8.11}
+\end{equation}\]</span></p>
+<p><strong><span class="math inline">\(AIC_C\)</span> Example:</strong></p>
+<ul>
+<li>Model 1: AIC = 75</li>
+<li>Model 2: AIC = 80</li>
+</ul>
+<p><strong>Relative likelihood:</strong>
+<span class="math display" id="eq:aic-c-rel-likelihood">\[\begin{equation}
+  \begin{split}
+    &amp; \exp^{\frac{(AIC_1-AIC_2)}{2}} \\
+    &amp; \exp^{\frac{(75-80)}{2}} \approx 8.2\%
+  \end{split}
+  \tag{8.12}
+\end{equation}\]</span></p>
+<ul>
+<li>Model 2 is 8.2% as likely as Model 1 to be better</li>
+<li>This means the first model is probably better</li>
+</ul>
+</div>
+<div id="bayesian-information-criterion-bic" class="section level3 hasAnchor" number="8.3.2">
+<h3><span class="header-section-number">8.3.2</span> Bayesian Information Criterion (BIC)<a href="module-8---basics-of-regression.html#bayesian-information-criterion-bic" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>When fitting models, it is possible to increase the maximum likelihood by adding parameters, but doing so may result in overfitting.
+Both BIC and AIC attempt to resolve this problem by introducing a penalty term for the number of parameters in the model; the penalty term is larger in BIC than in AIC for sample sizes greater than 7.</p>
+<p><strong>Bayesian Information Criterion (BIC):</strong>
+<span class="math display" id="eq:bic">\[\begin{equation}
+  AIC = k\ln(n) - 2\ln(L^*)
+  \tag{8.13}
+\end{equation}\]</span></p>
+<ul>
+<li><span class="math inline">\(L^*\)</span>: Maximum likelihood value</li>
+<li><span class="math inline">\(k\)</span>: Number of parameters being estimated</li>
+<li><span class="math inline">\(n\)</span>: Number of data points</li>
+</ul>
+<p>BIC is similar to AIC.</p>
+<ul>
+<li>BIC’s penalty term &gt; AIC’s penalty term
+<ul>
+<li>BIC encourages models with fewer parameters than AIC does</li>
+</ul></li>
+<li><em>Only use BIC when there are more data points than parameters</em></li>
+</ul>
+<p>When comparing two models on the same data set by BIC their is a rule of thumb.</p>
+<p><strong>BIC Rule of Thumb Comparing Models:</strong></p>
+<ul>
+<li><span class="math inline">\(|BIC_1-BIC_2 &gt; 10\)</span>
+<ul>
+<li>Smaller-BIC model is <em>“very likely”</em> better</li>
+</ul></li>
+<li><span class="math inline">\(6 &lt; |BIC_1-BIC_2 &lt; 10\)</span>
+<ul>
+<li>Smaller-BIC model is <em>“likely”</em> better</li>
+</ul></li>
+<li><span class="math inline">\(2 &lt; |BIC_1-BIC_2 &lt; 6\)</span>
+<ul>
+<li>Smaller-BIC model is <em>“somewhat likely”</em> better</li>
+</ul></li>
+<li><span class="math inline">\(0 &lt; |BIC_1-BIC_2 &lt; 2\)</span>
+<ul>
+<li>Smaller-BIC model is <em>“slightly likely”</em> better</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-8" class="section level3 hasAnchor" number="8.3.3">
+<h3><span class="header-section-number">8.3.3</span> Summary<a href="module-8---basics-of-regression.html#summary-8" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>No hard-and-fast rule for using AIC or BIC or maximum likelihood
+<ul>
+<li>The AIC is a frequentist point-of-view and BIC is a bayesian point-of-view that get into the philosophy of statistics (beyond scope of course)</li>
+</ul></li>
+<li>All three can give valuable information</li>
+<li>Looking at all three can help you decide which is best</li>
+</ul>
+<p><strong>Key Equations:</strong></p>
+<ul>
+<li>Probability Density for Observing <span class="math inline">\(z_i\)</span> if true value is <span class="math inline">\(y_i\)</span>: Eq. <a href="module-8---basics-of-regression.html#eq:prob-density">(8.5)</a></li>
+<li>Joint Density over all <span class="math inline">\(n\)</span> terms: Eq. <a href="module-8---basics-of-regression.html#eq:joint-density">(8.6)</a></li>
+<li>Maximum Likelihood Fit: Eq. <a href="module-8---basics-of-regression.html#eq:max-likelihood">(8.7)</a></li>
+<li>Maximum Likelihood with Basic Linear Regression: Eq. <a href="module-8---basics-of-regression.html#eq:max-likelihood-linear-regression">(8.8)</a></li>
+<li>Akaike Information Criterion (AIC): Eq. <a href="module-8---basics-of-regression.html#eq:aic">(8.9)</a></li>
+<li>AIC with Regression: Eq. <a href="module-8---basics-of-regression.html#eq:aic-regression">(8.10)</a></li>
+<li>Corrected AIC (<span class="math inline">\(AIC_C\)</span>): Eq. <a href="module-8---basics-of-regression.html#eq:aic-c">(8.11)</a></li>
+<li><span class="math inline">\(AIC_C\)</span> Relative Likelihood: Eq. <a href="module-8---basics-of-regression.html#eq:aic-c-rel-likelihood">(8.12)</a></li>
+<li>Bayesian Information Criterion (BIC): Eq. <a href="module-8---basics-of-regression.html#eq:bic">(8.13)</a></li>
+</ul>
+</div>
+</div>
+<div id="m8l3---using-regression" class="section level2 hasAnchor" number="8.4">
+<h2><span class="header-section-number">8.4</span> M8L3 - Using Regression<a href="module-8---basics-of-regression.html#m8l3---using-regression" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 3 - Using Regression (3:33)</em></p>
+</div>
+<div id="m8l4---causation-vs.-correlation" class="section level2 hasAnchor" number="8.5">
+<h2><span class="header-section-number">8.5</span> M8L4 - Causation vs. Correlation<a href="module-8---basics-of-regression.html#m8l4---causation-vs.-correlation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 4 - Causation vs. Correlation (6:10)</em></p>
+</div>
+<div id="m8l5---transformations-and-interactions" class="section level2 hasAnchor" number="8.6">
+<h2><span class="header-section-number">8.6</span> M8L5 - Transformations and Interactions<a href="module-8---basics-of-regression.html#m8l5---transformations-and-interactions" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 5 - Transformations and Interactions (2:17)</em></p>
+</div>
+<div id="m8l6---output" class="section level2 hasAnchor" number="8.7">
+<h2><span class="header-section-number">8.7</span> M8L6 - Output<a href="module-8---basics-of-regression.html#m8l6---output" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 6 - Output (5:05)</em></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="module-7---time-series-models.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-a-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ISYE6501-Notes-Fall2024.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

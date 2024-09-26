@@ -53,3 +53,6 @@ README.html
 
 # Keep solutions local
 /solutions/
+
+# Local mathjax for html
+docs/libs/mathjax-local
