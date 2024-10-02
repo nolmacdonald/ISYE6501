@@ -1,0 +1,534 @@
+---
+title: "Homework 5: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+urlcolor: blue
+# date: "2024-09-26"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Question 8.1
+
+### Prompt
+
+Describe a situation or problem from your job, everyday life, current events, etc., for which a linear regression model would be appropriate. List some (up to 5) predictors that you might use.
+
+### Solution
+
+Considering american football in the National Football League (NFL), the most
+important outcome is winning. 
+NFL teams or analysts may consider what are the greatest factors to win games.
+Linear regression would be appropriate to provide insights on the predictors 
+that have the greatest impact on win or loss outcomes.
+This can be particularly useful when considering the importance of players
+to retain on the roster, where salary cap budgets should be distributed, 
+or how to construct a team roster with drafting players.
+
+Modeling with linear regression to determine metrics that have the greatest
+impact on win or loss outcomes should consider predictors from both offense and 
+defense. 
+Using play-by-play data from `nflfastR` [@nflfastR], several predictors can be
+obtained dating back to the 1999 season that will assist in using a linear
+regression model. 
+Some predictors that should be considered include:
+
+- **EPA per Dropback:** Expected Points Added (EPA) per dropback is an advanced statistic that measures the efficiency of a quarterback per-dropback. This allows for providing insight into the effectiveness of a QB's contribution towards the team's scoring potential.
+- **Pass Yards:** Evaluates the amount of yards thrown through the air and can provide insight on the success of both the QB and well as the receiver unit on offense.
+- **Rush Yards:** Evaluates the amount yards run on the ground and can evaluate the performance of the running back as well as offensive line play.
+- **Pass Yards Allowed:** Amount of yards allowed through the air, which can provide insight on the performance of the secondary on defense to prevent scoring.
+- **Rush Yards Allowed:** Amount of yards allowed on the ground, which can assist in determining the performance of the defensive line preventing scoring.
+
+Overall, the goal is to win, and the outcome is determined by scoring.
+Dependent upon the performance of the offense, points can be scored to win games.
+Dependent upon the defense, scoring can be prevented to win games.
+To elaborate on this, using NFL play-by-play data from the last decade 
+(2014-2023), as well literature on exploring wins with 
+`nflfastR` [@ryan2020exploring], a linear regression model is formed using 
+`lm()` from the stats package to identify the most important predictors for 
+NFL wins. The code is developed with R, but is redacted due to it not being 
+required and to keep the document relatively short.
+
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# Load libraries we will need
+library(tidyverse)
+library(ggplot2)
+library(ggimage)
+library(moments)
+library(tidymodels)
+library(nflfastR)
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW5")
+```
+
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# This code chunk creates a dataframe that stores win, loss, tie, point differential info for all regular season games
+  pbp <- load_pbp(2014:2023)
+  # Create outcomes dataframe
+  outcomes <- pbp %>%
+    filter(case_when(
+    season >= 1999 & season <= 2020 ~ week <= 17,
+    season >= 2021 & season <= 2023 ~ week <= 18,
+    TRUE ~ FALSE  # In case seasons outside the specified range are included
+    )) %>%
+    group_by(season, game_id, home_team) %>%
+    summarize(
+      home_win = if_else(sum(result) > 0, 1, 0),
+      home_tie = if_else(sum(result) == 0, 1, 0),
+      home_diff = last(result),
+      home_pts_for = last(home_score),
+      home_pts_against = last(away_score)
+    ) %>%
+    group_by(season, home_team) %>%
+    summarize(
+      home_games = n(),
+      home_wins = sum(home_win),
+      home_ties = sum(home_tie),
+      home_diff = sum(home_diff),
+      home_pts_for = sum(home_pts_for),
+      home_pts_against = sum(home_pts_against)
+    ) %>%
+    ungroup() %>%
+    left_join(
+      # away games
+      pbp %>%
+        filter(week <= 17) %>%
+        group_by(season, game_id, away_team) %>%
+        summarize(
+          away_win = if_else(sum(result) < 0, 1, 0),
+          away_tie = if_else(sum(result) == 0, 1, 0),
+          away_diff = last(result)*-1,
+          away_pts_for = last(away_score),
+          away_pts_against = last(home_score)
+        ) %>%
+        group_by(season, away_team) %>%
+        summarize(
+          away_games = n(),
+          away_wins = sum(away_win),
+          away_ties = sum(away_tie),
+          away_diff = sum(away_diff),
+          away_pts_for = sum(away_pts_for),
+          away_pts_against = sum(away_pts_against)
+        ) %>%
+        ungroup(),
+      by = c("season", "home_team" = "away_team")
+    ) %>%
+    rename(team = "home_team") %>%
+    mutate(
+      games = home_games + away_games,
+      wins = home_wins + away_wins,
+      losses = games - wins,
+      ties = home_ties + away_ties,
+      win_percentage = (wins + 0.5 * ties) / games,
+      point_diff = home_diff + away_diff,
+      points_for = home_pts_for + away_pts_for,
+      points_against = home_pts_against + away_pts_against,
+      pythag_wins = (points_for^2.37 / (points_for^2.37 + points_against^2.37))*16
+    ) %>%
+    select(
+      season, team, games, wins, losses, ties, win_percentage, point_diff, points_for, points_against, pythag_wins
+    )
+```
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# This code chunk creates a dataframe that stores season long offensive and defensive stats
+
+# Create metrics dataframe
+  metrics <- pbp %>% 
+    filter(
+      week <= 17 & pass == 1 & !is.na(epa) | 
+      week <= 17 & rush == 1 & !is.na(epa)
+      ) %>% 
+    group_by(season, posteam) %>% 
+      summarize(
+        n_pass = sum(pass),
+        n_rush = sum(rush),
+        pass_yards = sum(yards_gained*pass, na.rm = TRUE),
+        rush_yards = sum(yards_gained*rush, na.rm = TRUE),
+        epa_per_pass = sum(epa*pass)/n_pass,
+        epa_per_rush = sum(epa*rush)/n_rush,
+        success_per_pass = sum(pass*epa>0)/n_pass,
+        success_per_rush = sum(rush*epa>0)/n_rush,
+        y_per_pass = sum(yards_gained*pass, na.rm = TRUE)/n_pass,
+        y_per_rush = sum(yards_gained*rush, na.rm = TRUE)/n_rush
+      ) %>% 
+    left_join(
+      pbp %>%
+        filter(
+      week <= 17 & pass == 1 & !is.na(epa) | 
+      week <= 17 & rush == 1 & !is.na(epa)
+      ) %>% 
+    group_by(season, defteam) %>% 
+      summarize(
+        def_n_pass=sum(pass),
+        def_n_rush=sum(rush),
+        def_pass_yards = sum(yards_gained * pass, na.rm = TRUE),
+        def_rush_yards = sum(yards_gained * rush, na.rm = TRUE),
+        def_epa_per_pass=sum(-epa*pass)/def_n_pass,
+        def_epa_per_rush=sum(-epa*rush)/def_n_rush,
+        def_success_per_pass=sum(pass*epa>0)/def_n_pass,
+        def_success_per_rush=sum(rush*epa>0)/def_n_rush,
+        def_y_per_pass = sum(yards_gained*pass, na.rm = TRUE)/def_n_pass,
+        def_y_per_rush = sum(yards_gained*rush, na.rm = TRUE)/def_n_rush
+      ),
+    by = c("season", "posteam" = "defteam")
+    ) %>% 
+    rename(team = "posteam") %>% 
+    select(-n_pass, -n_rush, -def_n_pass, -def_n_rush)
+```
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# Create dataframe for season long outcomes and stats
+  df <- outcomes %>% 
+    left_join(metrics, by = c("season", "team"))
+```
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# Source linear regression code
+source("regression_code.R")
+```
+```{r echo = FALSE, warning = FALSE, message=FALSE}
+# Create simple linear regression based on all variables of interest and store r squared
+# value of each fit in dataframe called r_squareds
+  
+# Create empty df
+r_squareds <- c()
+
+# Loop through variables and store results
+for(i in 12:27) {
+  input = colnames(df)[i]
+  fit <- lm(data = df, wins ~ get(input))
+  crit <- aa_critique_fit(fit)
+  r2 <- crit$R2
+  r_squareds = rbind(r_squareds, data.frame(input, r2))
+}
+```
+
+```{r eval=TRUE, echo = FALSE, warning = FALSE, message=FALSE}
+r_squareds$metric <- r_squareds$input
+
+r_squareds$metric <- c(
+  "pass_yards" = "Pass Yards",
+  "rush_yards" = "Rush Yards", 
+  "epa_per_pass" = "EPA per Dropback", 
+  "epa_per_rush" = "EPA per Rush",
+  "success_per_pass" = "Success Rate per Dropback",
+  "success_per_rush" = "Success Rate per Rush", 
+  "y_per_pass" = "Yards per Dropback",
+  "y_per_rush" = "Yards per Rush",
+  "def_pass_yards" = "Pass Yards Allowed",
+  "def_rush_yards" = "Rush Yards Allowed", 
+  "def_epa_per_pass" = "Def EPA per Dropback",
+  "def_epa_per_rush" = "Def EPA per Rush", 
+  "def_success_per_pass" = "Def Success Rate per Dropback",
+  "def_success_per_rush" = "Def Success Rate per Rush", 
+  "def_y_per_pass" = "Def Yards per Dropback",
+  "def_y_per_rush" = "Def Yards per Rush")
+
+
+r_squareds <- r_squareds[order(r_squareds$r2), ]
+
+lm_plot <- ggplot(r_squareds, aes(x = r2, y = metric, fill=metric)) +  # Set y to metric
+  geom_bar(stat = "identity") +
+  scale_fill_grey() + 
+  geom_text(aes(label = round(r2, 3)), hjust = -0.1, size=4, fontface="bold") +
+  labs(title = "R-squared Linear Regression",
+       subtitle = "NFL Win Relationships | 2014-2023 NFL Seasons",
+       x = "R-squared Value",
+       y = "Predictors",
+       caption = "Data: @nflfastR | Linear Regression Model: lm {stats}"
+       ) +
+  scale_x_continuous(limits = c(0, 0.6)) +
+  scale_y_discrete(limits = r_squareds$metric) +  # Ensure y-axis uses the metric names
+  theme_minimal() +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 14,
+                                  hjust = 0,
+                                  face = "bold",
+                                  color = "black"),
+        plot.subtitle = element_text(size = 10,
+                                     hjust = -0.175,
+                                     color = "black"),
+        )
+
+lm_plot
+```
+
+Pass efficiency predictors are shown in the figure to have the strongest 
+relationships to winning.
+This makes sense as typically the leader of the offense, the QB, must have 
+above-average efficiency to win a game.
+From the R-squared values in the figure above, we can determine that the
+win and loss outcomes are most impacted by the performance of the 
+quarterback (QB) and passing efficiency predictors.
+
+\newpage
+# Question 8.2
+
+### Prompt
+
+Using crime data from http://www.statsci.org/data/general/uscrime.txt (file `uscrime.txt`, description at http://www.statsci.org/data/general/uscrime.html), use regression (a useful R function is `lm` or `glm`) to predict the observed crime rate in a city with the following data:
+
+- `M = 14.0`
+- `So = 0`
+- `Ed = 10.0`
+- `Po1 = 12.0`
+- `Po2 = 15.5`
+- `LF = 0.640`
+- `M.F = 94.0`
+- `Pop = 150`
+- `NW = 1.1`
+- `U1 = 0.120`
+- `U2 = 3.6`
+- `Wealth = 3200`
+- `Ineq = 20.1`
+- `Prob = 0.04`
+- `Time = 39.0`
+
+Show your model (factors used and their coefficients), the software output, and the quality of fit. 
+
+*Note that because there are only 47 data points and 15 predictors, you’ll probably notice some overfitting. We’ll see ways of dealing with this sort of problem later in the course.*
+
+### Solution
+
+First before utilizing the data set, the description should be recognized to identify exactly what is being worked with in the problem.
+The data set for `uscrime.txt` uses aggregate data on 47 states of the USA for 1960.
+The data set provided by [@uscrime] contains the following colunns:
+
+- `M`: Percentage of males aged 14–24 in total state population
+- `So`: Indicator variable for a southern state
+- `Ed`: Mean years of schooling of the population aged 25 years or over
+- `Po1`: Per capita expenditure on police protection in 1960
+- `Po2`: Per capita expenditure on police protection in 1959
+- `LF`: Labour force participation rate of civilian urban males in the age-group 14-24
+- `M.F`: Number of males per 100 females
+- `Pop`: State population in 1960 in hundred thousands
+- `NW`: Percentage of nonwhites in the population
+- `U1`: Unemployment rate of urban males 14–24
+- `U2`: Unemployment rate of urban males 35–39
+- `Wealth`: Wealth: median value of transferable assets or family income
+- `Ineq`: Income inequality: percentage of families earning below half the median income
+- `Prob`: Probability of imprisonment: ratio of number of commitments to number of offenses
+- `Time`: Average time in months served by offenders in state prisons before their first release
+- `Crime`: Crime rate: number of offenses per 100,000 population in 1960
+
+As described in the prompt, useful R functions include `lm` and `glm`.
+These regression packages are contained in the `stats` package, which is part of base R and are loaded by default.
+
+### Initial Approach
+
+Initially to approach the problem, I set my current working directory to `HW5` and load the `uscrime.txt` data set into a table.
+Using `head()` I display the data to determine if the import was successful and observe the data set.
+Observing the data, there are 16 columns (variables) that contain 47 rows of data (for all 47 states in 1960) that are described in the list of variables stated above.
+
+```{r, message=FALSE}
+# Import libraries
+# lm and glm are in the stats package loaded by default
+library(ggplot2) # Plot functions
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW5")
+
+# Load the crime data into a table
+data <- read.table("data/uscrime.txt", stringsAsFactors = FALSE, header = TRUE)
+
+# View the imported data to check import but only first few rows
+head(data, 5)
+```
+
+Both packages, `lm` and `glm` are functions for linear regression.
+The purpose of `lm` is to fit linear models, used to carry out regression, single stratum analysis of variance, and analysis of covariance [@lmFunction].
+The `glm` function is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution [@glmFunction].
+
+Using the Crime data, it should be noted the response variable is `Crime` 
+and the remainding 15 variables are predictors.
+The first approach is implementation of the `lm` model from the R stats package.
+The `lm` model is developed by considering the US crime data and 
+several arguments that are available.
+By referencing the `lm {stats}` documentation, a formula and data are required
+arguments (`lm(formula, data)`).
+
+### Forming the Linear Regression Model
+
+The model formula defines the **model factors** for prediction.
+Essentially, this indicates multiple linear regression, where the relationship
+of crime rate or `Crime` is determined with the 15 variables or predictors.
+The model factors used to predict crime are defined as:
+```
+Crime ~ M + So + Ed + Po1 + Po2 + LF + M.F + Pop + NW + U1 + U2 + Wealth + Ineq + Prob + Time
+```
+
+In the code below, the model factors or `formula` arguments is defined with a
+shorthand expression that is equivalent to the model factors.
+The formula is defined by the expression `Crime~.`, which refers to `Crime`
+as the response variable to predict, or the crime rate. 
+The `~` indicates separating `Crime` from all other variables in the dataframe, 
+indicated by `.`. 
+
+A summary of the `lm` model is provided by using 
+`summary(lm_crime)`.
+
+```{r, message=FALSE}
+# Predict observed crime rate
+# Crime~. separates Crime (response variable) from predictors
+model <- lm(Crime~., data=data)
+summary(model)
+```
+
+### Evaluating the Linear Regression Model
+
+First, the prompt discusses to show the model coefficients.
+The summary of the model, `summary(model)` provides the **model coefficients** 
+or estimated effects of each predictor on crime rate in the `Estimate` column.
+
+There is additional important information in the summary, 
+or **software output** that is noteworthy.
+Standard error of each estimate is tabulated in `Std. Error`.
+The `t value` is the estimate divided by the standard error, or the t-statistic.
+`Pr(>|t|)` is the p-value for each coefficient.
+It is also important to note that values with asterisks (`*`) indicate higher 
+significance with more asterisks, such as `***`.
+
+The `Multiple R-Squared` value of 0.8031 is displaying a 80.31% variance in the
+crime rate.
+R-Squared values range from 0 to 1, with 1 indicating the fit is perfect.
+`Multiple R-Squared` has a value of 0.8031 which suggests a good fit,
+while `Adjusted R-squared` has a lower value of 0.7078, which is not as good,
+but can still be a reasonable fit.
+In this case of predicting the crime rate, `Adjusted R-squared` is important.
+`Adjusted R-squared` normalizes `Multiple R-Squared` taking into account the
+number of data points and predictors that were utilized in the model.
+
+For the linear regression model, the hypothesis for testing whether each
+variable is related to the crime rate is if $p \leq 0.05$, where linearity
+is assumed [@okoye2024r].
+Observing the data, predictors `So, LF, M.F, Pop, NW, Wealth, Time` do not
+appear to have a significant impact on the crime rate.
+These predictors are determined to have insignificance due to the high p-value,
+indicated in the summary as `Pr(>|t|)`. 
+The p-value can be interpreted as a probability where the smaller values 
+indicate it is unlikely to observe a significant association between the 
+predictor and response due to chance [@gareth2013].
+This also indicates that the very low p-value (3.539e-07) for
+`F-statistic: 8.429 on 15 and 31 DF` indicates the model is statistically 
+significant.
+In summary, observing smaller p-values infers there is an association between
+the predictor and the response.
+
+### Observing the Relationship between Crime and Predictors
+
+To observe the relationship between `Crime` and each of the 15 predictors, 
+a matrix scatter plots is developed with `ggplot` and `gridExtra`.
+Remember, `ggplot` was imported earlier, so `gridExtra` is the only library
+that will need to be loaded.
+First, a list of the predictor variables is defined as `predictors`.
+The list of predictors is then utilized to generate scatter plots.
+A function is created to create a single scatter plot so that mapping can be
+utilized to create all 15 plots at once and be placed in a matrix for a single
+image.
+
+```{r, eval = FALSE, message=FALSE, warning=FALSE}
+library(gridExtra)
+
+# Create a list of predictor variables
+predictors <- c("M", "So", "Ed", "Po1", "Po2", "LF", "M.F", "Pop", "NW", "U1", 
+                "U2", "Wealth", "Ineq", "Prob", "Time")
+
+# Function to create a scatter plot with regression line for each predictor
+plot_predictor <- function(predictor) {
+  ggplot(data, aes_string(x = predictor, y = "Crime")) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE, color = "red") +
+    theme_minimal() +
+    labs(title = paste("Crime vs", predictor))
+}
+
+# Create plots for all predictors
+plots <- map(predictors, plot_predictor)
+
+# Arrange plots in a grid
+scatter <- grid.arrange(grobs = plots, ncol = 4)
+scatter
+```
+```{r echo = FALSE, warning = FALSE, message = FALSE, results = 'hide', preview = TRUE}
+library(gridExtra)
+
+# Create a list of predictor variables
+predictors <- c("M", "So", "Ed", "Po1", "Po2", "LF", "M.F", "Pop", "NW", "U1", 
+                "U2", "Wealth", "Ineq", "Prob", "Time")
+
+# Function to create a scatter plot with regression line for each predictor
+plot_predictor <- function(predictor) {
+  ggplot(data, aes_string(x = predictor, y = "Crime")) +
+    geom_point(alpha = 0.5) +
+    geom_smooth(method = "lm", se = FALSE, color = "red") +
+    theme_minimal() +
+    labs(title = paste("Crime vs", predictor))
+}
+
+# Create plots for all predictors
+plots <- map(predictors, plot_predictor)
+
+# Arrange plots in a grid
+scatter <- grid.arrange(grobs = plots, ncol = 4)
+scatter
+```
+
+### Predicting Crime Rate
+
+To predict the crime rate, the linear regression model coefficients need
+to be extracted.
+The coefficients observed in the summary's `Estimate` column are extracted by
+using `coef(model)`.
+The coefficients represent the change in predicted crime rate.
+Using the extracted coefficients with the provided city data, the predicted
+crime rate can be quantified.
+The new city data provided in the prompt is defined in a dataframe to be
+utilized with the model predictions.
+Model predictions are performed with `predict(object, ...)` from the R stats 
+package. 
+To use `predict`, the `object` argument is for the `lm` model to utilize for
+prediction. 
+In this case, `object` is the `lm` model defined as `model`.
+An additional argument, `newdata`, is defined to specify the first place to look
+for explanatory variables to be used for prediction [@predictFunction].
+
+```{r, message=FALSE}
+# Extract the coeffiecients
+coefficients <- coef(model)
+
+# Create a data frame with the given city data from the prompt
+new_city <- data.frame(
+  M = 14.0, So = 0, Ed = 10.0, Po1 = 12.0, Po2 = 15.5,
+  LF = 0.640, M.F = 94.0, Pop = 150, NW = 1.1,
+  U1 = 0.120, U2 = 3.6, Wealth = 3200, Ineq = 20.1,
+  Prob = 0.04, Time = 39.0
+)
+
+# Predict the crime rate with predict {stats}
+predicted_crime_rate <- predict(model, newdata = new_city)
+paste0("Predicted Crime Rate per 100,000 Population:", predicted_crime_rate)
+```
+
+Utilizing the model coefficients, a prediction of the crime rate for a new city
+is determined. The predicted crime rate result is 155 offenses per 
+100,000 population in 1960 considering the provided city data.
+
+### Conclusion
+
+In conclusion, a linear regression model is developed to evaluate crime rate.
+The model suggested a reasonable fit after evaluating the Multiple R-Squared 
+value and the Adjusted R-Squared value. Additional evaluation of resulting
+p-values of the linear regression model suggested which variables are
+correlated to crime rate. The high p-values for predictors 
+`So, LF, M.F, Pop, NW, Wealth, Time` provided insight that they do not
+appear to have a significant impact on the crime rate.
+
+\newpage
+# References
+
+
+
+
+
