@@ -21,5 +21,6 @@ rmd_files:
   - "m6-change-detection.Rmd"
   - "m7-time-series-models.Rmd"
   - "m8-basic-regression.Rmd"
+  - "m9-data-prep-pca.Rmd"
   - "appendix.Rmd"
   

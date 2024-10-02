@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>9 Module 9 - Data Preparation and Principle Component Analysis (PCA) | Course Notes - Introduction to Analytics Modeling</title>
+  <meta name="description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="9 Module 9 - Data Preparation and Principle Component Analysis (PCA) | Course Notes - Introduction to Analytics Modeling" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="9 Module 9 - Data Preparation and Principle Component Analysis (PCA) | Course Notes - Introduction to Analytics Modeling" />
+  
+  <meta name="twitter:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+<meta name="author" content="Nolan MacDonald" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="module-8---basics-of-regression.html"/>
+<link rel="next" href="appendix-a-glossary.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="module-1---introduction.html"><a href="module-1---introduction.html"><i class="fa fa-check"></i><b>1</b> Module 1 - Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l1---course-overview"><i class="fa fa-check"></i><b>1.1</b> M1L1 - Course Overview</a></li>
+<li class="chapter" data-level="1.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2---course-structure"><i class="fa fa-check"></i><b>1.2</b> M1L2 - Course Structure</a></li>
+<li class="chapter" data-level="1.3" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2a---homework-grading-and-qa"><i class="fa fa-check"></i><b>1.3</b> M1L2a - Homework Grading and Q&amp;A</a>
+<ul>
+<li class="chapter" data-level="1.3.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#homework-format"><i class="fa fa-check"></i><b>1.3.1</b> Homework Format</a></li>
+<li class="chapter" data-level="1.3.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#grading-homeworks"><i class="fa fa-check"></i><b>1.3.2</b> Grading Homeworks</a></li>
+</ul></li>
+<li class="chapter" data-level="1.4" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l3---modeling"><i class="fa fa-check"></i><b>1.4</b> M1L3 - Modeling</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="module-2---classification.html"><a href="module-2---classification.html"><i class="fa fa-check"></i><b>2</b> Module 2 - Classification</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l1---introduction-to-classification"><i class="fa fa-check"></i><b>2.1</b> M2L1 - Introduction to Classification</a></li>
+<li class="chapter" data-level="2.2" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l2---choosing-a-classifier"><i class="fa fa-check"></i><b>2.2</b> M2L2 - Choosing a Classifier</a></li>
+<li class="chapter" data-level="2.3" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l3---data-definitions"><i class="fa fa-check"></i><b>2.3</b> M2L3 - Data Definitions</a></li>
+<li class="chapter" data-level="2.4" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l4---support-vector-machines-svms"><i class="fa fa-check"></i><b>2.4</b> M2L4 - Support Vector Machines (SVMs)</a></li>
+<li class="chapter" data-level="2.5" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l5---svm-what-the-name-means"><i class="fa fa-check"></i><b>2.5</b> M2L5 - SVM: What the Name Means</a></li>
+<li class="chapter" data-level="2.6" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l6---advanced-support-vector-machines"><i class="fa fa-check"></i><b>2.6</b> M2L6 - Advanced Support Vector Machines</a></li>
+<li class="chapter" data-level="2.7" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l7---scaling-and-standardization"><i class="fa fa-check"></i><b>2.7</b> M2L7 - Scaling and Standardization</a></li>
+<li class="chapter" data-level="2.8" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l8---k-nearest-neighbor-knn-algorithm"><i class="fa fa-check"></i><b>2.8</b> M2L8 - K-Nearest-Neighbor (KNN) Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="module-3---validation.html"><a href="module-3---validation.html"><i class="fa fa-check"></i><b>3</b> Module 3 - Validation</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#overview"><i class="fa fa-check"></i><b>3.1</b> Overview</a></li>
+<li class="chapter" data-level="3.2" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---introduction-to-validation"><i class="fa fa-check"></i><b>3.2</b> M3L1 - Introduction to Validation</a>
+<ul>
+<li class="chapter" data-level="3.2.1" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---summary"><i class="fa fa-check"></i><b>3.2.1</b> M3L1 - Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l2---validation-and-test-data-sets"><i class="fa fa-check"></i><b>3.3</b> M3L2 - Validation and Test Data Sets</a>
+<ul>
+<li class="chapter" data-level="3.3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary"><i class="fa fa-check"></i><b>3.3.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l3---splitting-data"><i class="fa fa-check"></i><b>3.4</b> M3L3 - Splitting Data</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-1"><i class="fa fa-check"></i><b>3.4.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l4---cross-validations"><i class="fa fa-check"></i><b>3.5</b> M3L4 - Cross-Validations</a>
+<ul>
+<li class="chapter" data-level="3.5.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-2"><i class="fa fa-check"></i><b>3.5.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="module-4---clustering.html"><a href="module-4---clustering.html"><i class="fa fa-check"></i><b>4</b> Module 4 - Clustering</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#overview-1"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l1---introduction-to-clustering"><i class="fa fa-check"></i><b>4.2</b> M4L1 - Introduction to Clustering</a></li>
+<li class="chapter" data-level="4.3" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l2---distance-norms"><i class="fa fa-check"></i><b>4.3</b> M4L2 - Distance Norms</a></li>
+<li class="chapter" data-level="4.4" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l3---k-means-clustering"><i class="fa fa-check"></i><b>4.4</b> M4L3 - K-Means Clustering</a></li>
+<li class="chapter" data-level="4.5" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l4---practical-details-for-k-means"><i class="fa fa-check"></i><b>4.5</b> M4L4 - Practical Details for K-Means</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-3"><i class="fa fa-check"></i><b>4.5.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.6" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l5---clustering-for-prediction"><i class="fa fa-check"></i><b>4.6</b> M4L5 - Clustering for Prediction</a>
+<ul>
+<li class="chapter" data-level="4.6.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-4"><i class="fa fa-check"></i><b>4.6.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.7" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l6---clustering-v.-classification"><i class="fa fa-check"></i><b>4.7</b> M4L6 - Clustering v. Classification</a>
+<ul>
+<li class="chapter" data-level="4.7.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-5"><i class="fa fa-check"></i><b>4.7.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html"><i class="fa fa-check"></i><b>5</b> Module 5 - Basic Data Preparation</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#overview-2"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l1---data-prep---intro"><i class="fa fa-check"></i><b>5.2</b> M5L1 - Data Prep - Intro</a>
+<ul>
+<li class="chapter" data-level="5.2.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#data-preparation"><i class="fa fa-check"></i><b>5.2.1</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="5.3" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l2---outlier-detection"><i class="fa fa-check"></i><b>5.3</b> M5L2 - Outlier Detection</a></li>
+<li class="chapter" data-level="5.4" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l3---dealing-with-outliers"><i class="fa fa-check"></i><b>5.4</b> M5L3 - Dealing with Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html"><i class="fa fa-check"></i><b>6</b> Module 6 - Change Detection</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#overview-3"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l1---intro-to-change-detection"><i class="fa fa-check"></i><b>6.2</b> M6L1 - Intro to Change Detection</a></li>
+<li class="chapter" data-level="6.3" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l2---cumulative-sum-cusum-for-change-detection"><i class="fa fa-check"></i><b>6.3</b> M6L2 - Cumulative Sum (CUSUM) for Change Detection</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html"><i class="fa fa-check"></i><b>7</b> Module 7 - Time Series Models</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l1---introduction-to-exponential-smoothing"><i class="fa fa-check"></i><b>7.1</b> M7L1 - Introduction to Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="7.1.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#time-series-data"><i class="fa fa-check"></i><b>7.1.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="7.1.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method"><i class="fa fa-check"></i><b>7.1.2</b> Exponential Smoothing Method</a></li>
+</ul></li>
+<li class="chapter" data-level="7.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l2---trend-and-cyclic-effects"><i class="fa fa-check"></i><b>7.2</b> M7L2 - Trend and Cyclic Effects</a>
+<ul>
+<li class="chapter" data-level="7.2.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method-1"><i class="fa fa-check"></i><b>7.2.1</b> Exponential Smoothing Method</a></li>
+<li class="chapter" data-level="7.2.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#trends"><i class="fa fa-check"></i><b>7.2.2</b> Trends</a></li>
+<li class="chapter" data-level="7.2.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#cylic-patterns"><i class="fa fa-check"></i><b>7.2.3</b> Cylic Patterns</a></li>
+<li class="chapter" data-level="7.2.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#models"><i class="fa fa-check"></i><b>7.2.4</b> Models</a></li>
+</ul></li>
+<li class="chapter" data-level="7.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l3---exponential-smoothing---what-the-name-means"><i class="fa fa-check"></i><b>7.3</b> M7L3 - Exponential Smoothing - What the Name Means</a>
+<ul>
+<li class="chapter" data-level="7.3.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#basic-single-exponential-smoothing"><i class="fa fa-check"></i><b>7.3.1</b> Basic single exponential smoothing</a></li>
+</ul></li>
+<li class="chapter" data-level="7.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l4---forcasting"><i class="fa fa-check"></i><b>7.4</b> M7L4 - Forcasting</a>
+<ul>
+<li class="chapter" data-level="7.4.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting"><i class="fa fa-check"></i><b>7.4.1</b> Forecasting</a></li>
+<li class="chapter" data-level="7.4.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-trend"><i class="fa fa-check"></i><b>7.4.2</b> Forecasting with Trend</a></li>
+<li class="chapter" data-level="7.4.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-multiplicative-seasonality"><i class="fa fa-check"></i><b>7.4.3</b> Forecasting with Multiplicative Seasonality</a></li>
+<li class="chapter" data-level="7.4.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#future"><i class="fa fa-check"></i><b>7.4.4</b> Future</a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l5---arima"><i class="fa fa-check"></i><b>7.5</b> M7L5 - ARIMA</a>
+<ul>
+<li class="chapter" data-level="7.5.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#arima"><i class="fa fa-check"></i><b>7.5.1</b> ARIMA</a></li>
+<li class="chapter" data-level="7.5.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-i---differences"><i class="fa fa-check"></i><b>7.5.2</b> Part I - Differences</a></li>
+<li class="chapter" data-level="7.5.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-ii---autoregression"><i class="fa fa-check"></i><b>7.5.3</b> Part II - Autoregression</a></li>
+<li class="chapter" data-level="7.5.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-iii---moving-average"><i class="fa fa-check"></i><b>7.5.4</b> Part III - Moving Average</a></li>
+</ul></li>
+<li class="chapter" data-level="7.6" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l6---garch"><i class="fa fa-check"></i><b>7.6</b> M7L6 - GARCH</a>
+<ul>
+<li class="chapter" data-level="7.6.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance"><i class="fa fa-check"></i><b>7.6.1</b> Variance</a></li>
+<li class="chapter" data-level="7.6.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance-estimation"><i class="fa fa-check"></i><b>7.6.2</b> Variance Estimation</a></li>
+<li class="chapter" data-level="7.6.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#summary-6"><i class="fa fa-check"></i><b>7.6.3</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html"><i class="fa fa-check"></i><b>8</b> Module 8 - Basics of Regression</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l1---introduction-to-regression"><i class="fa fa-check"></i><b>8.1</b> M8L1 - Introduction to Regression</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#regression"><i class="fa fa-check"></i><b>8.1.1</b> Regression</a></li>
+<li class="chapter" data-level="8.1.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#simple-linear-regression-slr"><i class="fa fa-check"></i><b>8.1.2</b> Simple Linear Regression (SLR)</a></li>
+<li class="chapter" data-level="8.1.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-7"><i class="fa fa-check"></i><b>8.1.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l2---maximum-likelihood-and-information-criteria"><i class="fa fa-check"></i><b>8.2</b> M8L2 - Maximum Likelihood and Information Criteria</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#likelihood"><i class="fa fa-check"></i><b>8.2.1</b> Likelihood</a></li>
+<li class="chapter" data-level="8.2.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-example"><i class="fa fa-check"></i><b>8.2.2</b> Maximum Likelihood Example</a></li>
+<li class="chapter" data-level="8.2.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-fitting"><i class="fa fa-check"></i><b>8.2.3</b> Maximum Likelihood Fitting</a></li>
+<li class="chapter" data-level="8.2.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#akaike-information-criterion-aic"><i class="fa fa-check"></i><b>8.2.4</b> Akaike Information Criterion (AIC)</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#aic-example"><i class="fa fa-check"></i><b>8.3</b> AIC Example</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#corrected-aic-aic_c"><i class="fa fa-check"></i><b>8.3.1</b> Corrected AIC (<span class="math inline">\(AIC_C\)</span>)</a></li>
+<li class="chapter" data-level="8.3.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#bayesian-information-criterion-bic"><i class="fa fa-check"></i><b>8.3.2</b> Bayesian Information Criterion (BIC)</a></li>
+<li class="chapter" data-level="8.3.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-8"><i class="fa fa-check"></i><b>8.3.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l3---using-regression"><i class="fa fa-check"></i><b>8.4</b> M8L3 - Using Regression</a></li>
+<li class="chapter" data-level="8.5" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l4---causation-vs.-correlation"><i class="fa fa-check"></i><b>8.5</b> M8L4 - Causation vs. Correlation</a></li>
+<li class="chapter" data-level="8.6" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l5---transformations-and-interactions"><i class="fa fa-check"></i><b>8.6</b> M8L5 - Transformations and Interactions</a></li>
+<li class="chapter" data-level="8.7" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l6---output"><i class="fa fa-check"></i><b>8.7</b> M8L6 - Output</a></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html"><i class="fa fa-check"></i><b>9</b> Module 9 - Data Preparation and Principle Component Analysis (PCA)</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l1---box-cox-transformations"><i class="fa fa-check"></i><b>9.1</b> M9L1 - Box-Cox Transformations</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#normality-assumption"><i class="fa fa-check"></i><b>9.1.1</b> Normality Assumption</a></li>
+<li class="chapter" data-level="9.1.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#dealing-with-heteroscedasticity"><i class="fa fa-check"></i><b>9.1.2</b> Dealing with Heteroscedasticity</a></li>
+<li class="chapter" data-level="9.1.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-9"><i class="fa fa-check"></i><b>9.1.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l2---detrending"><i class="fa fa-check"></i><b>9.2</b> M9L2 - Detrending</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#detrending-data"><i class="fa fa-check"></i><b>9.2.1</b> Detrending Data</a></li>
+<li class="chapter" data-level="9.2.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#how-to-detrend"><i class="fa fa-check"></i><b>9.2.2</b> How to Detrend</a></li>
+<li class="chapter" data-level="9.2.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-10"><i class="fa fa-check"></i><b>9.2.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l3---intro-to-principal-component-analysis"><i class="fa fa-check"></i><b>9.3</b> M9L3 - Intro to Principal Component Analysis</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example"><i class="fa fa-check"></i><b>9.3.1</b> Motivational Example</a></li>
+<li class="chapter" data-level="9.3.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example---potential-issues"><i class="fa fa-check"></i><b>9.3.2</b> Motivational Example - Potential Issues</a></li>
+<li class="chapter" data-level="9.3.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>9.3.3</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="9.3.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-11"><i class="fa fa-check"></i><b>9.3.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l4---using-principal-component-analysis"><i class="fa fa-check"></i><b>9.4</b> M9L4 - Using Principal Component Analysis</a>
+<ul>
+<li class="chapter" data-level="9.4.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca"><i class="fa fa-check"></i><b>9.4.1</b> Principle Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="9.4.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---linear-transformation"><i class="fa fa-check"></i><b>9.4.2</b> PCA - Linear Transformation</a></li>
+<li class="chapter" data-level="9.4.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---regression"><i class="fa fa-check"></i><b>9.4.3</b> PCA - Regression</a></li>
+<li class="chapter" data-level="9.4.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-12"><i class="fa fa-check"></i><b>9.4.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.5" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l5---eigenvalues-and-eigenvectors"><i class="fa fa-check"></i><b>9.5</b> M9L5 - Eigenvalues and Eigenvectors</a>
+<ul>
+<li class="chapter" data-level="9.5.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#eigenvalues-and-eigenvectors"><i class="fa fa-check"></i><b>9.5.1</b> Eigenvalues and Eigenvectors</a></li>
+<li class="chapter" data-level="9.5.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca-1"><i class="fa fa-check"></i><b>9.5.2</b> Principle Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="9.5.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-13"><i class="fa fa-check"></i><b>9.5.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.6" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l6---pca-the-good-and-bad"><i class="fa fa-check"></i><b>9.6</b> M9L6 - PCA: The Good and Bad</a>
+<ul>
+<li class="chapter" data-level="9.6.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca-review"><i class="fa fa-check"></i><b>9.6.1</b> PCA Review</a></li>
+<li class="chapter" data-level="9.6.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-is-good"><i class="fa fa-check"></i><b>9.6.2</b> Example: PCA is Good</a></li>
+<li class="chapter" data-level="9.6.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-can-also-be-bad"><i class="fa fa-check"></i><b>9.6.3</b> Example: PCA Can Also Be Bad</a></li>
+<li class="chapter" data-level="9.6.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-14"><i class="fa fa-check"></i><b>9.6.4</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html"><i class="fa fa-check"></i><b>10</b> Appendix A: Glossary</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="appendix-a-glossary.html"><a href="appendix-a-glossary.html#basic-machine-learning"><i class="fa fa-check"></i><b>10.1</b> Basic Machine Learning</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Course Notes - Introduction to Analytics Modeling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="module-9---data-preparation-and-principle-component-analysis-pca" class="section level1 hasAnchor" number="9">
+<h1><span class="header-section-number">9</span> Module 9 - Data Preparation and Principle Component Analysis (PCA)<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#module-9---data-preparation-and-principle-component-analysis-pca" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Module 9 covers advanced data preparation techniques,
+including principal component analysis.</p>
+<div id="m9l1---box-cox-transformations" class="section level2 hasAnchor" number="9.1">
+<h2><span class="header-section-number">9.1</span> M9L1 - Box-Cox Transformations<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l1---box-cox-transformations" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 1 - Box-Cox Transformations (3:46)</em></p>
+<ul>
+<li>Transform data before using it</li>
+<li>Box-Cox transformation</li>
+</ul>
+<div id="normality-assumption" class="section level3 hasAnchor" number="9.1.1">
+<h3><span class="header-section-number">9.1.1</span> Normality Assumption<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#normality-assumption" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Some models assume data is normally distributed
+<ul>
+<li>Results have bias when assumption is wrong</li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-1"></span>
+<img src="figures/m9-normality-assumption.png" alt="Normality Assumption" width="100%" />
+<p class="caption">
+Figure 9.1: Normality Assumption
+</p>
+</div>
+</div>
+<div id="dealing-with-heteroscedasticity" class="section level3 hasAnchor" number="9.1.2">
+<h3><span class="header-section-number">9.1.2</span> Dealing with Heteroscedasticity<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#dealing-with-heteroscedasticity" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Box-Cox Transformation</strong></p>
+<ul>
+<li>Logarithmic transformation
+<ul>
+<li>Stretches out the smaller range to enlarge its variability</li>
+<li>Shrinks the larger range to reduce its variability</li>
+</ul></li>
+<li><span class="math inline">\(t(y) = (y^{\lambda}-1)/\lambda\)</span>
+<ul>
+<li><span class="math inline">\(t(y)\)</span> can become close to normal distribution</li>
+</ul></li>
+<li>Software can do it for you
+<ul>
+<li>Check whether you need the transformation (e.g., Q-Q plot)</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-9" class="section level3 hasAnchor" number="9.1.3">
+<h3><span class="header-section-number">9.1.3</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-9" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Box-Cox: George Box and David Cox</li>
+<li>Box-Cox: Useful for transforming a response to eliminate heteroscedasticity</li>
+</ul>
+</div>
+</div>
+<div id="m9l2---detrending" class="section level2 hasAnchor" number="9.2">
+<h2><span class="header-section-number">9.2</span> M9L2 - Detrending<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l2---detrending" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 2 - Detrending (3:40)</em></p>
+<div id="detrending-data" class="section level3 hasAnchor" number="9.2.1">
+<h3><span class="header-section-number">9.2.1</span> Detrending Data<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#detrending-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p><strong>Time series data:</strong></p>
+<ul>
+<li>Trend: increase or decrease of data over time
+<ul>
+<li>For example:
+<ul>
+<li>Price of gold over time</li>
+</ul></li>
+</ul></li>
+</ul>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-2"></span>
+<img src="figures/m9-detrending-data.png" alt="Detrending Data - Price of Gold Over Time" width="100%" />
+<p class="caption">
+Figure 9.2: Detrending Data - Price of Gold Over Time
+</p>
+</div>
+<p><strong>Detrending:</strong></p>
+<ul>
+<li>Response</li>
+<li>Predictors</li>
+<li>Factor-based model
+<ul>
+<li>Regression, SVM, etc.</li>
+</ul></li>
+</ul>
+</div>
+<div id="how-to-detrend" class="section level3 hasAnchor" number="9.2.2">
+<h3><span class="header-section-number">9.2.2</span> How to Detrend<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#how-to-detrend" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Factor-by-factor
+<ul>
+<li>one-dimensional regression: <span class="math inline">\(y = a_o + a_1x\)</span></li>
+</ul></li>
+<li>For example - simple linear regression for gold prices
+<ul>
+<li>Price = -45,600 + 23.2 × Year</li>
+<li>De-trended price = Actual price - (-45,600 + 23.2 x Year)</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-10" class="section level3 hasAnchor" number="9.2.3">
+<h3><span class="header-section-number">9.2.3</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-10" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Detrending Approach
+<ul>
+<li>Simple</li>
+<li>Works well to remove trend effects for time series data</li>
+<li>Helpful in factor-based analysis</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="m9l3---intro-to-principal-component-analysis" class="section level2 hasAnchor" number="9.3">
+<h2><span class="header-section-number">9.3</span> M9L3 - Intro to Principal Component Analysis<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l3---intro-to-principal-component-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 3 - Intro to Principal Component Analysis (4:43)</em></p>
+<ul>
+<li>Feature extraction
+<ul>
+<li>Principal Component Analysis (PCA)</li>
+<li>For high-dimensional and correlated data</li>
+</ul></li>
+</ul>
+<div id="motivational-example" class="section level3 hasAnchor" number="9.3.1">
+<h3><span class="header-section-number">9.3.1</span> Motivational Example<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Dealing with a model with a lot of facts
+<ul>
+<li>Which of them are the most important?</li>
+</ul></li>
+<li>Example:
+<ul>
+<li>Does the past performance of any particular stocks indicate how well the overall market will perform in the next day?</li>
+</ul></li>
+<li>Possible data sources
+<ul>
+<li>6000+ securities</li>
+<li>Focus on days without major external events
+<ul>
+<li>wars</li>
+<li>terrorist attacks</li>
+<li>election results</li>
+<li>natural disasters</li>
+<li>etc.</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+<div id="motivational-example---potential-issues" class="section level3 hasAnchor" number="9.3.2">
+<h3><span class="header-section-number">9.3.2</span> Motivational Example - Potential Issues<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example---potential-issues" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>6000+ predictors require many years of daily data
+<ul>
+<li>But underlying situation may have changed with time
+<ul>
+<li>Can we reduce the amount of data needed?</li>
+</ul></li>
+</ul></li>
+<li>High correlation between some of the predictors
+<ul>
+<li>Companies in the same sector tend to move together</li>
+</ul></li>
+</ul>
+<p><strong>Address both issues via Principal Component Analysis (PCA)</strong></p>
+</div>
+<div id="principal-component-analysis-pca" class="section level3 hasAnchor" number="9.3.3">
+<h3><span class="header-section-number">9.3.3</span> Principal Component Analysis (PCA)<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principal-component-analysis-pca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>PCA transforms data
+<ul>
+<li>Removes correlations within the data</li>
+<li>Ranks coordinates by importance</li>
+</ul></li>
+<li>Concentrate on the first n principal components
+<ul>
+<li>Reduces effect of randomness</li>
+<li>Earlier principal components are likely to have higher signal-to-noise ratio</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-11" class="section level3 hasAnchor" number="9.3.4">
+<h3><span class="header-section-number">9.3.4</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-11" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Principal Component Analysis (PCA)
+<ul>
+<li>For high-dimensional and correlated data</li>
+<li>PCA attempts to remove these correlations, and rank coordinates by importance</li>
+</ul></li>
+<li>Future
+<ul>
+<li>Math behind PCA</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="m9l4---using-principal-component-analysis" class="section level2 hasAnchor" number="9.4">
+<h2><span class="header-section-number">9.4</span> M9L4 - Using Principal Component Analysis<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l4---using-principal-component-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 4 - Using Principal Component Analysis (4:44)</em></p>
+<div id="principle-component-analysis-pca" class="section level3 hasAnchor" number="9.4.1">
+<h3><span class="header-section-number">9.4.1</span> Principle Component Analysis (PCA)<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li><span class="math inline">\(X\)</span>: Initial matrix of data</li>
+<li><span class="math inline">\(x_{ij}\)</span> is the jth data factor of point <span class="math inline">\(i\)</span>
+<ul>
+<li>Scale such that <span class="math inline">\(\frac{1}{m}\sum_i x_{ij} = \mu_j = 0\)</span></li>
+</ul></li>
+<li>Find all of the eigenvectors of <span class="math inline">\(X^T X\)</span>
+<ul>
+<li><span class="math inline">\(V\)</span>: Matrix of eigenvectors (sorted by eigenvalue)</li>
+<li><span class="math inline">\(V = [V_1, V_2, \dots]\)</span>, where <span class="math inline">\(V_j\)</span> is the jth eigenvector of <span class="math inline">\(X^T X\)</span></li>
+</ul></li>
+<li>PCA - Linear Transformation
+<ul>
+<li>First component is <span class="math inline">\(XV_1\)</span>, second is <span class="math inline">\(XV_2\)</span>, etc.</li>
+<li>kth new factor value for the ith data point: <span class="math inline">\(t_{ik}=\sum_{j=1}^m x_{ij} v_{jk}\)</span></li>
+</ul></li>
+</ul>
+</div>
+<div id="pca---linear-transformation" class="section level3 hasAnchor" number="9.4.2">
+<h3><span class="header-section-number">9.4.2</span> PCA - Linear Transformation<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---linear-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>PCA eliminates correlation between factors</li>
+<li>Want fewer variables in your model?
+<ul>
+<li>Only include the first <span class="math inline">\(n\)</span> principal components</li>
+</ul></li>
+<li>Our math assumed we were looking for a linear transformation</li>
+<li>Dealing with nonlinear functions
+<ul>
+<li>Using Kernels</li>
+<li>Similar to SVM modeling</li>
+</ul></li>
+</ul>
+</div>
+<div id="pca---regression" class="section level3 hasAnchor" number="9.4.3">
+<h3><span class="header-section-number">9.4.3</span> PCA - Regression<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---regression" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Interpret the new model in terms of original factors</p>
+<p>Example (Regression): PCA finds new L factors {<span class="math inline">\(t_{ik}\)</span>}, then regression finds
+coefficients <span class="math inline">\(b_0, b_1, \dots, b_L\)</span></p>
+<p><span class="math display" id="eq:pca-regression">\[\begin{equation}
+  \begin{split}
+      y_i &amp;= b_0 + \sum_{k=1}^L b_k t_ik  \\
+      &amp;= b_0 + \sum_{k=1}^L b_k [\sum_{j=1}^m x_{ij} v_{jk}] \\
+      &amp;= b_0 + \sum_{j=1}^m x_{ij} [\sum_{k=1}^L b_k v_{jk}]\\
+      &amp;= b_0 + \sum_{j=1}^m x_{ij} [a_j]
+  \end{split}
+  \tag{9.1}
+\end{equation}\]</span></p>
+<p>Implied regression coefficient for <span class="math inline">\(x_j\)</span>:
+<span class="math display" id="eq:regression-coeff">\[\begin{equation}
+  a_j = \sum^L_{k=1} b_k v_{jk}
+\tag{9.2}
+\end{equation}\]</span></p>
+</div>
+<div id="summary-12" class="section level3 hasAnchor" number="9.4.4">
+<h3><span class="header-section-number">9.4.4</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-12" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Principal Component Analysis (PCA)
+<ul>
+<li>For high-dimensional and correlated data</li>
+<li>PCA attempts to remove these correlations, and rank coordinates by importance</li>
+<li>PCA can be explained over the original factor space</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div id="m9l5---eigenvalues-and-eigenvectors" class="section level2 hasAnchor" number="9.5">
+<h2><span class="header-section-number">9.5</span> M9L5 - Eigenvalues and Eigenvectors<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l5---eigenvalues-and-eigenvectors" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 5 - Eigenvalues and Eigenvectors (2:09)</em></p>
+<div id="eigenvalues-and-eigenvectors" class="section level3 hasAnchor" number="9.5.1">
+<h3><span class="header-section-number">9.5.1</span> Eigenvalues and Eigenvectors<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#eigenvalues-and-eigenvectors" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>A: Square Matrix</p>
+<ul>
+<li><span class="math inline">\(v\)</span>: Vector such that <span class="math inline">\(Av = \lambda v\)</span></li>
+<li><span class="math inline">\(v\)</span>: Eigenvector of A</li>
+<li><span class="math inline">\(\lambda\)</span>: Eigenvalue of A
+<ul>
+<li><span class="math inline">\(\det(A-\lambda I) = 0\)</span></li>
+</ul></li>
+<li>Given <span class="math inline">\(\lambda\)</span>, solve <span class="math inline">\(Av = \lambda v\)</span> to find corresponding eigenvalue <span class="math inline">\(v\)</span></li>
+</ul>
+</div>
+<div id="principle-component-analysis-pca-1" class="section level3 hasAnchor" number="9.5.2">
+<h3><span class="header-section-number">9.5.2</span> Principle Component Analysis (PCA)<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca-1" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Scaled matrix <span class="math inline">\(X\)</span> of data</p>
+<ul>
+<li><span class="math inline">\(x_{ij} =\)</span> jth value for data point <span class="math inline">\(i\)</span>, after scaling</li>
+</ul>
+<p>Find eigenvectors <span class="math inline">\(v_1 \dots v_n\)</span> of <span class="math inline">\((X^T X)\)</span></p>
+<p>Find the principal components</p>
+<ul>
+<li>Multiply <span class="math inline">\(X\)</span> by the eigenvectors</li>
+<li><span class="math inline">\(Xv_1, Xv_2, \dots Xv_n\)</span> are the principal components
+<ul>
+<li>Transformed set of orthogonal coordinate directions</li>
+</ul></li>
+</ul>
+</div>
+<div id="summary-13" class="section level3 hasAnchor" number="9.5.3">
+<h3><span class="header-section-number">9.5.3</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-13" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Finding eigenvalues and eigenvectors of a square matrix</li>
+<li>Application to Principal Component Analysis (PCA)</li>
+</ul>
+</div>
+</div>
+<div id="m9l6---pca-the-good-and-bad" class="section level2 hasAnchor" number="9.6">
+<h2><span class="header-section-number">9.6</span> M9L6 - PCA: The Good and Bad<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l6---pca-the-good-and-bad" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p><em>Lecture 6 - PCA: The Good and Bad (3:11)</em></p>
+<div id="pca-review" class="section level3 hasAnchor" number="9.6.1">
+<h3><span class="header-section-number">9.6.1</span> PCA Review<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca-review" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Change of coordinates
+<ul>
+<li>Create uncorrelated factors</li>
+<li>Sorted by amount of variability explained</li>
+</ul></li>
+<li>Allows the use of small(er) number of variables
+<ul>
+<li>Usually pick the ones that explain the most variability</li>
+</ul></li>
+</ul>
+</div>
+<div id="example-pca-is-good" class="section level3 hasAnchor" number="9.6.2">
+<h3><span class="header-section-number">9.6.2</span> Example: PCA is Good<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-is-good" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-3"></span>
+<img src="figures/m9-pca-good.png" alt="Example: Good PCA" width="100%" />
+<p class="caption">
+Figure 9.3: Example: Good PCA
+</p>
+</div>
+</div>
+<div id="example-pca-can-also-be-bad" class="section level3 hasAnchor" number="9.6.3">
+<h3><span class="header-section-number">9.6.3</span> Example: PCA Can Also Be Bad<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-can-also-be-bad" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="figure" style="text-align: center"><span style="display:block;" id="fig:unnamed-chunk-4"></span>
+<img src="figures/m9-pca-bad.png" alt="Example: Bad PCA" width="100%" />
+<p class="caption">
+Figure 9.4: Example: Bad PCA
+</p>
+</div>
+</div>
+<div id="summary-14" class="section level3 hasAnchor" number="9.6.4">
+<h3><span class="header-section-number">9.6.4</span> Summary<a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-14" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<ul>
+<li>Sometimes PCA can be good</li>
+<li>Sometimes PCA can be bad</li>
+<li>Often it can be a helpful approach to try</li>
+</ul>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="module-8---basics-of-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-a-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ISYE6501-Notes-Fall2024.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>
