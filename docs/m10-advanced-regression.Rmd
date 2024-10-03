@@ -1,0 +1,37 @@
+# Module 10 - Advanced Regression
+
+Module 10 covers advanced topics in regression, 
+including tree-based approaches that can be used more generally.
+
+## M10L1 - Introduction to CART
+
+*Lecture 1 - Introduction to Cart (5:57)*
+
+## M10L2 - Branching
+
+*Lecture 2 - Branching (3:42)*
+
+## M10L3 - Random Forests
+
+*Lecture 3 - Random Forests (3:58)*
+
+## M10L3A - Explainability/Interpretability
+
+*Lecture 3A - Explainability/Interpretability (5:36)*
+
+## M10L4 - Logistic Regression
+
+*Lecture 4 - Logistic Regression (6:30)*
+
+## M10L5 - Confusion Matrices
+
+*Lecture 5 - Confusion Matrices (5:05)*
+
+## M10L6 - Situationally-Driven Comparison
+
+*Lecture 6 - Situationally-Driven Comparison (3:46)*
+
+## M10L7 - Advanced Topics in Regression
+
+*Lecture 7 - Advanced Topics in Regression (5:02)*
+

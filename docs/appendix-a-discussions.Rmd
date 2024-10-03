@@ -1,0 +1,219 @@
+# Appendix B: Discussion Questions
+
+## Discussion Question 1.1
+
+Why do we prefer a larger margin in hard-classification SVM?
+(Among other reasons, think about the correctness and certainty of data).
+What about in a soft-classification setting: what's the benefit of a bigger 
+margin (possibly with more error in classifying your known data) vs. a smaller 
+margin (possibly with less error in classifying your known data), and 
+what's the benefit in the opposite direction (smaller margin)?
+
+## Discussion Question 1.2
+
+Give examples of some situations where would you suggest scaling 
+(where there are set minimum and maximum possible values) and some where you 
+would suggest standardization (where, as a normal distribution, 
+there isn't a set minimum and maximum possible value). 
+[Note: the terms "scaling" and "standardization" are unfortunately not 
+standardized themselves! Some people use "scaling" to refer to a normal 
+distribution, and some people use "standardization" to refer to scaling on 
+an interval. Unfortunately, there's nothing we can do about that.]
+
+## Discussion Question 1.3
+
+In what sort of situations would SVM be better than KNN (and why), and in what 
+sort of situations would KNN be better than SVM (and why)? 
+Please think about this yourself, and discuss your own thoughts -- 
+I don't just want someone to do a Google (or DuckDuckGo, etc.) search 
+for an answer!
+
+Some possible things to think about:
+
+- Think about how data points might be clustered.
+- What if one class of point is much more common than the other in the data 
+you're using to build the model? [Preview: this data is called the 
+"training data", as we'll see soon.]
+- What does it mean (for KNN and for SVM) if you see that the classification of 
+your points is very mixed (lots of red scattered within blue, and lots of blue scattered within red)?
+- What do you think the SVM/KNN implications are if part of what you want 
+to get out of a model is how likely it is that the classification of a new 
+data point is correct?
+
+## Discussion Question 1.4
+
+Why is scaling helpful before using KNN?
+
+## Discussion Question 2.1
+
+If several models of almost-equal predictive quality are evaluated on the same 
+set of validation data in order to select the model that performs best, 
+is it likely that the truly best-predictive model will be chosen?
+
+## Discussion Question 2.2
+
+Suppose you've run a bunch of models on validation data and you've picked the 
+one that does best. 
+Then you use test data to estimate how good that model is.
+
+A. Why is it likely that the goodness estimate from the test data isn't as 
+good as the validation data suggests?
+
+B. What if you run all of the models on the test data, and a different one 
+looks best; should you switch your decision about which model to use?
+
+## Discussion Question 2.3
+
+What is the fundamental difference between classification and clustering? 
+Give an example of when to use each.
+
+## Discussion Question 3.1
+
+What do you think is the hardest type of outlier to identify, and why?
+
+## Discussion Question 3.2
+
+Once you've determined that a point is an outlier, it can be important to try to determine whether the outlier is (1) bad/incorrect data, and should be thrown out; (2) good/correct data but not relevant to the question at and and can be thrown out; or (3) good/correct data that is relevant to the question and therefore should be retained. 
+Give examples of all three types of data.
+
+## Discussion Question 3.3
+
+When using CUSUM, when might you want to use higher or lower values of C? 
+When might you want to use higher or lower values of T?
+
+## Discussion Question 3.4
+
+Give examples of when you might use a change-detection model.
+
+## Discussion Question 4.1
+
+Give examples of time-series data 
+(including ones that you might've dealt with at work).
+
+## Discussion Question 4.2
+
+When would it be important to predict the variance of something? 
+Give specific examples.
+
+## Discussion Question 4.3
+
+How far in advance is an exponential-smoothing model accurate for forecasting? 
+Explain.
+
+## Discussion Question 5.1
+
+Regression and SVM lines have the same sort of formula: 
+$$
+  y = a_0 + a_1x_1 + a_2x_2+\dots
+$$
+For which of these models is the line affected more by points close to the line,
+and for which is the line affected more by points farther from the line? 
+As a followup, can you think of pairs of similar situations where in one case 
+you'd care more about the points closer to the line, and in the other case 
+you'd care more about points farther from the line?
+
+## Discussion Question 5.2
+
+Consider two regression models: one designed to estimate something 
+involving physical properties and one designed to estimate something 
+involving human behavior. 
+Which do you expect to have a higher R-squared?
+
+## Discussion Question 5.3
+
+How might you go about checking to see if a predictor has a 
+linear or nonlinear relationship with the response?
+
+## Discussion Question 6.1
+
+Give some examples of when you might want to detrend data.
+
+## Discussion Question 6.2
+
+Suppose you start with a dataset that has predictor variables 
+$x_1, x_2, \dots, x_m$ and you use PCA to transform them to variables
+$z_1, z_2, \dots, z_m$.
+If you run a linear regression on the original $x$-variables to get a 
+predictive model $y_x = a_0 + a_1x_1 + a_2x_2 + \dots + a_mx_m$
+and you run another linear regression on the transformed variables to get 
+another predictive model $y_z = b_0 + b_1z_1 + b_2z_2 + \dots + b_mz_m$, 
+which, if either, linear regression model will have a hhigher $R^2$ and why?
+
+## Discussion Question 6.3
+
+Suppose, before building a model (use linear regression as an example), 
+you use PCA to identify the first principal component of your data, 
+and use just that one component in your model. 
+Explain (1) why you *have not* reduced the number of original features 
+you're using in the model, (2) why you *have* reduced the dimension of the data
+you're using in the model, and 
+(3) why you might want use just one principal component.
+
+## Discussion Question 7.1
+
+In practice, software doesn't fit a full model at each node of the trees (it would take too long); instead, it might just take the average value of all the data points at the node.  In the case of a regression tree, how is that similar to using a regression with no predictor variables?
+
+## Discussion Question 7.2
+
+Consider these examples of three types of questions:
+
+- Classification: Will it rain tomorrow? (We might use SVM or KNN)
+- Probability estimation: What's the probability it will rain tomorrow? (We might use logistic regression)
+- Amount estimation: How much rain will there be tomorrow (We might use linear regression)
+
+Give more examples of three related questions, one where we might use SVM, 
+one where we might use logistic regression, and one where we might use 
+linear regression.
+
+## Discussion Question 7.3
+
+Just like in the previous question, consider these three types of questions: 
+
+
+- Classification: Will it rain tomorrow? (We might use SVM or KNN)
+- Probability estimation: What's the probability it will rain tomorrow? 
+(We might use logistic regression)
+- Amount estimation: How much rain will there be tomorrow (We might use linear regression)
+
+Think about the response variable in the input data, and about the model output.
+
+In classification, the response for each input data point will be either 
+"yes" or "no" (or, 0 or 1, or some other binary pair of values). 
+The output of an SVM or KNN classification model will be the same: either 
+"yes" or "no".
+
+In amount estimation, the response for each input data point will be an amount 
+of something. 
+The output of a linear regression model will be the same sort of information.
+
+But for probability estimation, there's a difference: the output of a 
+logistic regression model will be a probability between 0 and 1, but the 
+response for each input data point will be either "1" (it happened) or 
+"0" (it didn't happen). 
+For example, the training/test/validation data for a model asking 
+"what's the probability it will rain?" will all be past days where 
+it either did rain (1) or didn't rain (0).
+
+What do you think the implications are of the input data and the output data 
+being different types? 
+[This is a harder question than the previous one; 
+try to reason through together piece by piece.]
+
+## Discussion Question 7.4
+
+There's an inherent tradeoff between models that fit more closely to data 
+and models that fit less closely to data.
+Think back to the lessons on validation, where we saw that every model fits 
+to both real patterns in the data (which are the same in other data) and 
+random patterns (which are different in other data).
+
+If your model fits more to the data, you're getting stronger fits to the 
+real patterns, but you're also getting more fits to random patterns 
+("overfitting"). 
+On the other hand, if your model fits less to the data, you're getting 
+less-strong fits to the real patterns ("underfitting"), 
+but you're also getting less fit to random patterns.
+
+Suppose you have a model that performs much worse on validation data than on 
+training data. Suggest some ways you could address the problem 
+(some might relate to the mini-summary above, and some might not).
