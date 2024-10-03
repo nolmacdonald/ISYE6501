@@ -341,8 +341,8 @@ Both packages, `lm` and `glm` are functions for linear regression.
 The purpose of `lm` is to fit linear models, used to carry out regression, single stratum analysis of variance, and analysis of covariance [@lmFunction].
 The `glm` function is used to fit generalized linear models, specified by giving a symbolic description of the linear predictor and a description of the error distribution [@glmFunction].
 
-Using the Crime data, it should be noted the response variable is `Crime` 
-and the remainding 15 variables are predictors.
+Using the Crime data, it should be noted the response variable is `Crime`
+and the remaining 15 variables are predictors.
 The first approach is implementation of the `lm` model from the R stats package.
 The `lm` model is developed by considering the US crime data and 
 several arguments that are available.
