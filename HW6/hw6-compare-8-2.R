@@ -176,6 +176,8 @@ rsq_cv_first <- 1 - SSres_cv_first / SStot # cross-validated
 glm_model <- glm(Crime ~ . , data=data, family="gaussian")
 cat(paste("\nglm Model Summary (15 Predictors):"))
 print(summary(glm_model))
+predicted_crime_glm <- predict(glm_model, newdata = new_city)
+cat(paste("Predicted Crime Rate (glm):", predicted_crime_glm), "\n")
 
 # glm Model Summary (15 Predictors):
 #   Call:
@@ -215,6 +217,8 @@ glm_model2 <- glm(Crime ~ M + Ed + Po1 + U2 + Ineq + Prob ,
                   data=data, family="gaussian")
 cat(paste("\nglm Model 2 Summary (6 Predictors):"))
 print(summary(glm_model2))
+predicted_crime_glm2 <- predict(glm_model2, newdata = new_city)
+cat(paste("Predicted Crime Rate (glm):", predicted_crime_glm2), "\n")
 
 # glm Model 2 Summary (6 Predictors):
 #   Call:
