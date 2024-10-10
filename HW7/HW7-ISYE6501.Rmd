@@ -1,0 +1,573 @@
+---
+title: "Homework 7: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+urlcolor: blue
+# date: "2024-10-02"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Question 10.1
+
+### Prompt
+
+Using the same crime data set `uscrime.txt` as in Questions 8.2 and 9.1, 
+find the best model you can using:
+
+(a) a regression tree model, and 
+(b) a random forest model
+
+In R, you can use the `tree` package or the `rpart` package, and the 
+`randomForest` package.
+For each model, describe one or two qualitative takeaways you get from 
+analyzing the results (i.e., don’t just stop when you have a good model, 
+but <u>interpret</u> it too).
+
+## Solution
+
+### Approach
+
+The initial approach to the problem is by importing the
+crime data and inspecting the data set.
+First, I set my current working directory to `HW7` 
+and loaded the `uscrime.txt` data set into a table.
+Using `head()` I display the data to determine if the import was successful and observe the data set.
+Observing the data, there are 16 columns (variables) that contain 47 rows of data (for all 47 states in 1960).
+
+```{r, message=FALSE}
+# Load packages
+library(rpart) # Regression tree model
+library(rpart.plot) # Plotting regression tree
+
+# Set seed so results are reproducible
+set.seed(123)
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW7")
+
+# Load the US crime data data into a table
+data <- read.table("data/uscrime.txt", stringsAsFactors = FALSE, header = TRUE)
+cat(paste("\nUS Crime Data:\n"))
+print(head(data, 5))
+```
+
+### Regression Tree Model
+
+To find the best regression tree model, the `rpart` package is used to fit a regression tree.
+`rpart` is a package that can be utilized for recursive
+partitioning and regression trees [@rpartFunction].
+
+Using the US crime data from `uscrime.txt`, a model can be
+created by first defining a formula.
+By using the `formula = Crime ~ .` defines `Crime` as the
+response variable and to include all 15 predictor variables.
+In addition, `rpart` requires the consideration of the type of response.
+Since the data should be utilized to predict crime rate,
+we are looking for a continuous response model (rather than 
+binary), which is defined as the *anova model* [@rpartFunction].
+This leads to developing a regression tree model and
+fitting the regression tree by defining
+`rpart(Crime ~ ., data = data, method = "anova")`.
+
+```{r, message=FALSE, warning = FALSE}
+# Fit the regression tree model
+rpart_tree_model <- rpart(Crime ~ ., data = data, method = "anova")
+
+# Print the summary of the model
+summary(rpart_tree_model)
+```
+
+### Regression Tree Predictions
+
+```{r, message=FALSE}
+# Make predictions
+rpart_predictions <- predict(rpart_tree_model)
+
+# Calculate Mean Squared Error (MSE)
+rpart_mse <- mean((data$Crime - rpart_predictions)^2)
+cat("Mean Squared Error:", rpart_mse, "\n")
+```
+
+The mean squared error is quite high, and could be improved. Before
+discussing improvements, the regression tree should be visualized.
+
+\newpage
+### Regression Tree
+
+To visualize the regression tree, a plot is created by using
+`rpart.plot`. The plot is configured for the continuous data
+with `type = 4` to label all nodes, not just leaves
+[@rpartplotFunction]. The title is added after the plot is
+generated using `title` to adjust the whitespace between the
+tree and the plot title.
+
+```{r, message=FALSE, fig.show="hold", out.width="95%", fig.align="center", fig.cap="US Crime Regression Tree"}
+# Plot the tree with rpart.plot
+rpart.plot(rpart_tree_model, 
+           type = 4,          # Type of plot
+           extra = 101,      # Show fitted values at nodes
+           under = TRUE,     # Show splits under nodes
+           box.palette = "RdYlGn", # Continuous
+           shadow.col = "gray",     # Add shadow effect
+           nn = TRUE)        # Add node numbers
+
+# Add the title manually with less space between tree with "line"
+title(main = "Regression Tree for Crime Data",
+      # Center the title
+      adj = 0.5, 
+      # Adjust whitespace between title and tree
+      line = 3)
+```
+
+
+### Tree Pruning
+
+With the initial regression tree fit using `rpart`,
+the complexity parameter (CP) table should be examined.
+Examining the CP table will assist in determining the optimal
+level for tree pruning. To determine the optimal CP value cross-validation should be
+used to determine which CP value minimizes the error.
+The reasoning behind the importance of cross-validation is that
+building regression trees on the training data set may produce
+good results, but is likely to overfit the data which leads
+to poor test set performance [@gareth2013].
+
+To implement cross-validation, the `caret` package is used
+in conjunction with the initial fit from the `rpart` regression
+tree model.
+The `caret` package uses `trainControl` with `number = 5` to
+perform 5-fold cross-validation.
+After cross-validation is performed, the model can be tuned
+by first creating a grid to find the optimal CP value.
+Using crime data, `train_control`,
+and the tuning grid, the model is re-fit with cross-validation.
+With the refit model, the optimal CP value can be determined
+from `model_cv$bestTune$cp`. Using the optimal CP value,
+the regression tree can be pruned. The optimal CP value
+determined is printed below.
+```{r, message=FALSE, warning = FALSE}
+library(caret)
+
+# Fit the regression tree model
+rpart_tree_model <- rpart(Crime ~ ., data = data, method = "anova")
+
+# 5-fold cross-validation
+train_control <- trainControl(method = "cv", number = 5)
+
+# Tune the model using cross-validation to find the optimal CP
+tune_grid <- expand.grid(cp = seq(0.01, 0.1, by = 0.01))
+
+# Fit the model with cross-validation
+model_cv <- train(Crime ~ ., data = data, method = "rpart", 
+                  trControl = train_control, tuneGrid = tune_grid)
+
+# Prune the initial tree using the optimal CP value
+pruned_tree_model <- prune(rpart_tree_model, cp = model_cv$bestTune$cp)
+
+# Print the best CP value based on cross-validation
+cat("\nOptimal CP value for pruning:", model_cv$bestTune$cp, "\n")
+
+summary(pruned_tree_model)
+```
+
+\newpage
+### Pruned Regression Tree
+
+The regression tree was refit above with 5-fold cross-validation
+to determine the optimal CP value.
+With the optimal CP value, the regression tree was pruned.
+To visualize the tree, the code below
+generates a pruned regression tree to observe.
+```{r, message=FALSE, fig.show="hold", out.width="95%", fig.align="center", fig.cap="US Crime Pruned Regression Tree"}
+# Visualize the pruned tree
+# Plot the tree with rpart.plot
+rpart.plot(pruned_tree_model, 
+           # main = "Regression Tree for Crime Data", 
+           type = 4,          # Type of plot
+           extra = 101,      # Show fitted values at terminal nodes
+           under = TRUE,     # Show splits under nodes
+           box.palette = "RdYlGn", # "Blues",  # Continuous
+           shadow.col = "gray",     # Add shadow effect
+           nn = TRUE)        # Add node numbers
+
+# Add the title manually with less space between tree with "line"
+title(main = "Pruned Regression Tree for Crime Data",
+      # Center the title
+      adj = 0.5, 
+      # Adjust whitespace between title and tree
+      line = 3)
+```
+### Random Forest Model
+
+Finding the best random forest model is determined by utilizing
+the `randomForest` package.
+Random forests are a combination of tree predictors where each
+tree depends on the values of a random vector sampled
+independently with analogous distribution for all trees in the
+forest [@breiman2001random].
+`randomForest` implements the random forest algorithm by Breiman
+for classification and regression [@randomForestFunction].
+
+```{r, message=FALSE, warning = FALSE}
+library(randomForest)
+# Create the random forest model
+rf_model <- randomForest(Crime ~ .,
+                         data = data,
+                         # Calc. variable importance
+                         importance = TRUE,
+                         ntree = 500)  # Number of trees
+
+summary(rf_model)
+```
+
+\newpage
+### Variable Importance
+
+With a random forest model formulated, check the variable importance, which will print out data
+for each variable for `%IncMSE` and `IncNodePurity`.
+
+The first column, `%IncMSE`, is the percent increase in mean
+squared error. The percent increase in mean squared error
+reflects how much the mean squared error (MSE) increases if the
+predictor is excluded. If the variable is important, excluding
+the values will decrease the accuracy of the model. A higher
+`%IncMSE` indicates that the variable is more important.
+Observing the results, `Po1`, `Po2` and `Prob` are the most
+important predictors to determine crime rate, while `M`, `Pop`
+`U1` are not significant predictors to help predictions.
+
+The second column, `IncNodePurity`, is the increase in node
+purity. Node purity is a term that refers to how well a decision
+tree splits the data, as every split has the goal to make each
+resulting node as pure as possible. `IncNodePurity` measures the
+total decrease in node impurity that a predictor causes across
+all trees in the forst. The larger the value, the more significant the predictor. `Po1`, `Po2` and `Prob` are the
+most important predictors. `So`, `U1` and `U2` are the least
+significant.
+
+```{r, message=FALSE, warning = FALSE}
+# Check variable importance
+importance(rf_model)
+```
+
+The importance of predictors are discussed above by values
+associated with `%IncMSE` and `IncNodePurity`. To visualize
+the calculated values and their significance, a plot is generated
+below that shows variable important.
+The plot is generated with `varImpPlot` to create a dotchart of variable importance as measured by a random forest [@varImpPlotFunction]. The plotting function uses `sort` to
+arrange the importance of predictors in descending order.
+The title is included after the plot function to allow for
+adjusting the vertical whitespace between the plot
+and the title.
+
+```{r, message=FALSE, fig.show="hold", out.width="100%", fig.align="center", fig.cap="Predictor Significance for Random Forest Tree"}
+
+# Plot variable importance
+varImpPlot(rf_model,
+           sort = TRUE,
+           main = "",  # No main title
+           col = "red",
+           # Adjust label sizes
+           cex = 0.8)
+
+# Add the title manually with less space between plots
+title(main = "Variable Importance for Crime Rate",
+      # Center the title
+      adj = 0.5, 
+      # Adjust whitespace between title and tree
+      line = 0)
+```
+
+Observing the plot, it can be determined that the most important
+predictors are `Po1` and `Po2` both from `%IncMSE` and `IncNodePurity`.
+
+```{r, message=FALSE, warning = FALSE}
+# Define cross-validation method
+train_control <- trainControl(method = "cv", number = 5)  # 5-fold cross-validation
+
+# Train the model with cross-validation
+tuned_rf <- train(Crime ~ .,
+                  data = data,
+                  method = "rf",
+                  trControl = train_control,
+                  importance = TRUE,
+                  ntree = 500,
+                  tuneLength = 5)
+print(tuned_rf)
+
+# Plot the performance of different hyperparameter combinations
+plot(tuned_rf)
+```
+
+```{r, message=FALSE, fig.show="hold", out.width="100%", fig.align="center", fig.cap="Predictor Significance for Random Forest Tree with 5-fold Cross-Validation"}
+# Extract the best model after cross-validation
+best_rf <- tuned_rf$finalModel
+# Plot variable importance
+varImpPlot(best_rf,
+           sort = TRUE,
+           main = "",  # No main title
+           col = "red",
+           # Adjust label sizes
+           cex = 0.8)
+
+# Add the title manually with less space between plots
+title(main = "Variable Importance for Crime Rate",
+      # Center the title
+      adj = 0.5, 
+      # Adjust whitespace between title and tree
+      line = 0)
+```
+
+
+\newpage
+# Question 10.2
+
+### Prompt
+
+Describe a situation or problem from your job, everyday life, current events, 
+etc., for which a logistic regression model would be appropriate. 
+List some (up to 5) predictors that you might use.
+
+### Solution
+
+## NFL 4th Down Conversion
+
+Consider the National Football League (NFL), where you have 4 downs
+to convert a certain amount of yards. A logistic regression model
+would be appropriate in predicting whether a team will convert a 4th
+down attempt, defined as success or failure.
+The logistic regression model is appropriate considering this is
+a binary outcome where success is 1 and failure is 0. 
+Some of the potential predictors include:
+
+- **Yards to Gain:** The number of yards needed to convert is important
+as longer distances decrease the probability of conversion.
+- **Field Position:** Depending where the attempt on the field is being
+made, this could indicate the team willingness to attempt converting
+a 4th down attempt to convert.
+- **Down and Distance Tendency:** This predictors considers the
+frequency a team attempts 4th down in a similar situation. A prepared
+team with aggressive strategies could have a higher chance of success.
+- **Quarterback Passer Rating:** The success of the quarterback
+is essential to offensive performance and could indicate a higher
+chance of success for plays on 4th down.
+- **Defensive Strength of the Opposing Team:** Strength of the defense
+could be considered as a stronger team could have a great potential
+to stop a 4th down conversion. This is typically measured by metrics
+like opponent 4th down stop rate or overall defensive efficiency.
+
+\newpage
+# Question 10.3
+
+### Prompt
+
+**Part I:**
+
+Using the German Credit data set `germancredit.txt` from 
+http://archive.ics.uci.edu/ml/machine-learning-databases/statlog/german/ 
+(description at http://archive.ics.uci.edu/ml/datasets/Statlog+%28German+Credit+Data%29), 
+use logistic regression to find a good predictive model for whether credit applicants are good credit risks or not.  
+Show your model (factors used and their coefficients), the software output, and the quality of fit.  
+You can use the glm function in R. To get a logistic regression (logit) model on data where the response is either zero or one, 
+use `family=binomial(link=”logit”)` in your `glm` function call.
+
+**Part II:**
+
+Because the model gives a result between 0 and 1, it requires setting a 
+threshold probability to separate between “good” and “bad” answers.  
+In this data set, they estimate that incorrectly identifying a bad customer 
+as good, is 5 times worse than incorrectly classifying a good customer as bad.  
+Determine a good threshold probability based on your model.
+
+## Solution: Part I
+
+### Approach
+
+The German Credit data set [@germancredit] is utilized to use
+logistic regression to find a good predictive model for whether
+credit applicants are good credit risks or not. Logistic regression models or logit models can be utilized to
+model the combination of categorical variables [@okoye2024r].
+
+To approach this problem, the seed is set with `set.seed(123)`
+so that the results are reproducible.
+Next, the working directory is set to easily load `germancredit.txt`
+stored in `data/`.
+German credit data is imported from the text file and the first
+5 rows of the data are printed to inspect.
+
+```{r, message=FALSE}
+# Set seed so results are reproducible
+set.seed(123)
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW7")
+
+# Load the german credit data into a table 999 obs. of 21 variables
+data <- read.table("data/germancredit.txt", stringsAsFactors = FALSE, header = FALSE)
+print(head(data, 5))
+```
+
+### Implement Logistic Regression Model
+
+With the data confirmed to be imported correctly, a logistic
+regression model needs to be implemented. The prompt specifies to use
+the `glm` model, which is used to fit generalized linear models,
+specified by a symbolic description of the predictor and error
+distribution [@glmFunction]. The logistic regression model should
+utilize `logit` which is defined in the `glm` function by family
+objects, which provide specifying details of the models
+[@familyFunction].
+
+To implement the `logit` logistic regression model, the binomial
+family is specified, corresponding to logistic regression models.
+German credit data classifies an applicant in `V21` as a "good risk"
+with a value of 1, and as a "bad risk with a value of 2.
+The binomial family recognizes classification values as 0 or 1,
+so the data must first be prepared by converting the response variable
+data in `V21` to binary values. This means that values of 1 for
+"good risk" should be converted to 0 and values of 2 for "bad risk"
+should be converted to 1.
+
+With the response variable converted to binary values, the
+`glm` logistic regression value using 
+`family = binomial(link = "logit")` is implemented.
+An initial fit of the logistic regression model is performed.
+To summarize the model, the software output is printed by using
+`print(summary_model)`.
+
+```{r, message=FALSE}
+# Convert the response variable (V21) to binary to use logit
+# Good risk = 1 needs to be converted to 0
+data$V21[data$V21==1] <- 0
+# Bad risk = 2 needs to be converted to 1
+data$V21[data$V21==2] <- 1
+
+# Fit the logistic regression model
+model <- glm(V21 ~ ., data = data, family = binomial(link = "logit"))
+
+# Display the model summary
+summary_model <- summary(model)
+print(summary_model)
+```
+
+In the model summary, the **coefficients** are listed under the column,
+`Estimate`.
+
+### Model Accuracy
+
+To calculate the accuracy of the model, the `predict()` function
+can be utilized to generate predictions from the logistic regression
+model. Using `type = "response"` returns probabilities instead of log
+odds. Probabilities are between 0 and 1, which allows using
+`ifelse(... > 0.5, 1, 0)` to assign values above 0.5 as 1 and below
+0.5 as 0 such that there are binary results of good and bad risks.
+The accuracy is determined by the mean of comparing the predictions
+to the original data in `data$V21`. The resulting accuracy is 0.786
+or 78.6%.
+
+```{r, message=FALSE}
+# Calculate the model's accuracy
+# Return probabilities between 0 and 1 - "response"
+# Convert probabilities into binary predictions ifelse(... > 0.5, 1, 0)
+predictions <- ifelse(predict(model, type = "response") > 0.5, 1, 0)
+accuracy <- mean(predictions == data$V21)
+cat("Logistic Regression Model Accuracy:", accuracy)
+```
+
+### Model Pseudo R-Squared
+
+For the logistic regression model, Pseudo's R-squared is calculated,
+where the pseudo R-squared measure compares the model to a null model
+(model with only an intercept, no predictors).
+The null model is created with `null_model <- glm(V21 ~ 1` as there
+are no predictors.
+The R-squared value is then calculated by subtracting 1 from the ratio 
+of model deviance to null model deviance.
+Pseudo R-squared is the proportional reduction in deviance due
+to the inclusion of predictors. This means that if the model
+is not better than the null model, the ratio is close to 1, and
+Pseudo R-squared is close to 0.
+If the model is significantly better than the null model, Pseudo's
+R-squared is closer to 1.
+
+```{r, message=FALSE}
+# Calculate Pseudo's R-squared
+# Create null model with no response variables
+null_model <- glm(V21 ~ 1, data = data, family = binomial(link = "logit"))
+# Take 1 minus ratio of model deviance
+pseudo_r2 <- 1 - (model$deviance / null_model$deviance)
+cat("Pseudo R-squared:", pseudo_r2)
+```
+
+The resulting Pseudo R-squared value was closer to 0 with a value
+of 0.266762.
+This shows that the model formed on the original data is not very
+good, which is expected because there was no data splitting or
+cross-validation.
+
+## Solution: Part II
+
+### Threshold
+
+To determine a good threshold probability for classifying applicants
+as "good risk" or "bad risk", consider that misclassifying a "bad risk"
+is 5 times worse. The classification threshold needs to be adjusted to
+reflect the imbalance. Considering that the cost ratio is 5,
+we can use a threshold that minimizes expected cost such as:
+
+$$
+  \mathrm{Threshold} = \frac{1}{1 + \mathrm{Cost \, Ratio}} = \frac{1}{1+5} = 0.1667 
+$$
+
+### Adjusted Predictions with Threshold
+
+To apply the adjusted threshold, the equation is defined as
+`1 / (1 + cost_ratio)`. Then using our predicted probabilities,
+we can adjust them but stating that probabilities must be greater than
+the threshold, defined as `predictions_adjusted`. Using the adjusted
+predictions, the accuracy can be recalculated.
+
+```{r, message=FALSE}
+# Set the threshold based on cost ratio
+cost_ratio <- 5
+threshold <- 1 / (1 + cost_ratio)
+
+# Predict probabilities
+probabilities <- predict(model, type = "response")
+
+# Classify using the adjusted threshold
+predictions_adjusted <- ifelse(probabilities > threshold, 1, 0)
+
+# Calculate the accuracy of the adjusted threshold
+accuracy_adjusted <- mean(predictions_adjusted == data$V21)
+cat("Accuracy with adjusted threshold:", accuracy_adjusted, "\n")
+```
+
+The accuracy with the adjusted threshold decreased from 0.786 to 0.653.
+Even with a lower accuracy it is important to focus on the reduction of
+false negatives, which can be observed by checking the changes in
+classification looking at the confusion matrix.
+
+### Comparing Confusion Matrices
+
+**Confusion Matrix Before Threshold:**
+```{r, message=FALSE}
+# Confusion matrix
+table(Predicted = predictions, Actual = data$V21)
+```
+
+**Confusion Matrix After Threshold:**
+```{r, message=FALSE}
+# Confusion matrix
+table(Predicted = predictions_adjusted, Actual = data$V21)
+```
+
+Comparing the confusion matrices, you can see the increase in 
+"bad risks" labeled as 1 with the threshold adjusted predictions.
+
+\newpage
+# References
