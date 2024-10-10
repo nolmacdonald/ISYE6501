@@ -22,7 +22,7 @@ rmd_files:
   - "m7-time-series-models.Rmd"
   - "m8-basic-regression.Rmd"
   - "m9-data-prep-pca.Rmd"
-  - "m10-advanced-regression.Rmd"
+  - "m10.Rmd"
   - "appendix-a-discussions.Rmd"
   - "appendix-b-glossary.Rmd"
   
