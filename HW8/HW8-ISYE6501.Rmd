@@ -1,0 +1,100 @@
+---
+title: "Homework 8: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+urlcolor: blue
+# date: "2024-10-02"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Question 11.1
+
+### Prompt
+
+Using the crime data set `uscrime.txt` from Questions 8.2, 9.1, and 10.1, 
+build a regression model using:
+
+1.	Stepwise regression
+2.	Lasso
+3.	Elastic net
+
+For Parts 2 and 3, remember to scale the data first – otherwise, the 
+regression coefficients will be on different scales and the constraint won’t 
+have the desired effect.
+
+For Parts 2 and 3, use the `glmnet` function in R.  
+
+Notes on R:
+
+- For the elastic net model, what we called λ in the videos, `glmnet` calls 
+“alpha”; you can get a range of results by varying alpha from 1 (lasso) to 
+0 (ridge regression) [and, of course, other values of alpha in between].
+- In a function call like `glmnet(x,y,family=”mgaussian”,alpha=1)` the 
+predictors x need to be in R’s matrix format, rather than data frame format.  
+You can convert a data frame to a matrix using `as.matrix` – for example, 
+`x <- as.matrix(data[,1:n-1])`
+- Rather than specifying a value of T, `glmnet` returns models for a variety of 
+values of T.
+
+
+### Solution
+
+
+For part 2 and 3, `glmnet` is used to fit a generalized linear model
+with lasso or elastic net regularization [@glmnetFunction].
+
+
+### Stepwise Regression
+
+Stepwise regression is a combination of forward selection and backward
+elimination.
+
+```{r, message=FALSE}
+# Load packages
+
+# Set seed so results are reproducible
+set.seed(123)
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW8")
+
+# Load the US crime data data into a table
+data <- read.table("data/uscrime.txt", stringsAsFactors = FALSE, header = TRUE)
+cat(paste("\nUS Crime Data:\n"))
+print(head(data, 5))
+```
+
+268
+
+### Lasso
+
+The LASSO method adds a constraint to the standard regression equation.
+Lasso regression is utilized in an effort to choose coefficients $a_1,\dots,a_n$
+to minimize total error defined by:
+
+$$
+  \sum_{i=1}^m \bigg(y_i - (a_0+\sum^n_{j=1}a_j x_{ij})\bigg)^2
+$$
+Lasso regression is restricted to solutions where:
+
+$$
+  \sum_{j=1}^n |a_j| \leq \tau_{Lasso}
+$$
+
+The data must be scaled.
+
+### Elastic Net
+
+Elastic net constrains a combination of absolute value of coefficients
+and their squares.
+
+The data must be scaled.
+
+
+
+\newpage
+# References
