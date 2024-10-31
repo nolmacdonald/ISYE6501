@@ -27,3 +27,16 @@ are time-consuming to run, you may cache them  -->
 <!-- ```{r important-computing, cache=TRUE} -->
 
 <!-- Setup code chunk to set current working directory -->
+
+# Table of Contents
+
+- [Module 1: Introduction](module-1---introduction.html)
+- [Module 2: Classification](module-2---classification.html)
+- [Module 3: Validation](module-3---validation.html)
+- [Module 4: Clustering](module-4---clustering.html)
+- [Module 5: Basic Data Preparation](module-5---basic-data-preparation.html)
+- [Module 6: Change Detection](module-6---change-detection.html)
+- [Module 7: Time Series Models](module-7---time-series-models.html)
+- [Module 8: Basics of Regression](module-8---basics-of-regression.html)
+- [Module 9: Data Preparation and PCA](module-9---data-preparation-and-principle-component-analysis-pca.html)
+- [Module 10: Advanced Regression](module-10---advanced-regression.html)

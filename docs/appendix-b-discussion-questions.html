@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>12 Appendix B: Discussion Questions | Course Notes - Introduction to Analytics Modeling</title>
+  <meta name="description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="12 Appendix B: Discussion Questions | Course Notes - Introduction to Analytics Modeling" />
+  <meta property="og:type" content="book" />
+  
+  <meta property="og:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="12 Appendix B: Discussion Questions | Course Notes - Introduction to Analytics Modeling" />
+  
+  <meta name="twitter:description" content="Course notes for Introduction to Analytics Modeling (ISYE 6501)" />
+  
+
+<meta name="author" content="Nolan MacDonald" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="module-10---advanced-regression.html"/>
+<link rel="next" href="appendix-b-glossary.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+<style type="text/css">
+/* Used with Pandoc 2.11+ new --citeproc when CSL is used */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Table of Contents</a></li>
+<li class="chapter" data-level="2" data-path="module-1---introduction.html"><a href="module-1---introduction.html"><i class="fa fa-check"></i><b>2</b> Module 1 - Introduction</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l1---course-overview"><i class="fa fa-check"></i><b>2.1</b> M1L1 - Course Overview</a></li>
+<li class="chapter" data-level="2.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2---course-structure"><i class="fa fa-check"></i><b>2.2</b> M1L2 - Course Structure</a></li>
+<li class="chapter" data-level="2.3" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l2a---homework-grading-and-qa"><i class="fa fa-check"></i><b>2.3</b> M1L2a - Homework Grading and Q&amp;A</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="module-1---introduction.html"><a href="module-1---introduction.html#homework-format"><i class="fa fa-check"></i><b>2.3.1</b> Homework Format</a></li>
+<li class="chapter" data-level="2.3.2" data-path="module-1---introduction.html"><a href="module-1---introduction.html#grading-homeworks"><i class="fa fa-check"></i><b>2.3.2</b> Grading Homeworks</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="module-1---introduction.html"><a href="module-1---introduction.html#m1l3---modeling"><i class="fa fa-check"></i><b>2.4</b> M1L3 - Modeling</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="module-2---classification.html"><a href="module-2---classification.html"><i class="fa fa-check"></i><b>3</b> Module 2 - Classification</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l1---introduction-to-classification"><i class="fa fa-check"></i><b>3.1</b> M2L1 - Introduction to Classification</a></li>
+<li class="chapter" data-level="3.2" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l2---choosing-a-classifier"><i class="fa fa-check"></i><b>3.2</b> M2L2 - Choosing a Classifier</a></li>
+<li class="chapter" data-level="3.3" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l3---data-definitions"><i class="fa fa-check"></i><b>3.3</b> M2L3 - Data Definitions</a></li>
+<li class="chapter" data-level="3.4" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l4---support-vector-machines-svms"><i class="fa fa-check"></i><b>3.4</b> M2L4 - Support Vector Machines (SVMs)</a></li>
+<li class="chapter" data-level="3.5" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l5---svm-what-the-name-means"><i class="fa fa-check"></i><b>3.5</b> M2L5 - SVM: What the Name Means</a></li>
+<li class="chapter" data-level="3.6" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l6---advanced-support-vector-machines"><i class="fa fa-check"></i><b>3.6</b> M2L6 - Advanced Support Vector Machines</a></li>
+<li class="chapter" data-level="3.7" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l7---scaling-and-standardization"><i class="fa fa-check"></i><b>3.7</b> M2L7 - Scaling and Standardization</a></li>
+<li class="chapter" data-level="3.8" data-path="module-2---classification.html"><a href="module-2---classification.html#m2l8---k-nearest-neighbor-knn-algorithm"><i class="fa fa-check"></i><b>3.8</b> M2L8 - K-Nearest-Neighbor (KNN) Algorithm</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="module-3---validation.html"><a href="module-3---validation.html"><i class="fa fa-check"></i><b>4</b> Module 3 - Validation</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="module-3---validation.html"><a href="module-3---validation.html#overview"><i class="fa fa-check"></i><b>4.1</b> Overview</a></li>
+<li class="chapter" data-level="4.2" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---introduction-to-validation"><i class="fa fa-check"></i><b>4.2</b> M3L1 - Introduction to Validation</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l1---summary"><i class="fa fa-check"></i><b>4.2.1</b> M3L1 - Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.3" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l2---validation-and-test-data-sets"><i class="fa fa-check"></i><b>4.3</b> M3L2 - Validation and Test Data Sets</a>
+<ul>
+<li class="chapter" data-level="4.3.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary"><i class="fa fa-check"></i><b>4.3.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.4" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l3---splitting-data"><i class="fa fa-check"></i><b>4.4</b> M3L3 - Splitting Data</a>
+<ul>
+<li class="chapter" data-level="4.4.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-1"><i class="fa fa-check"></i><b>4.4.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="4.5" data-path="module-3---validation.html"><a href="module-3---validation.html#m3l4---cross-validations"><i class="fa fa-check"></i><b>4.5</b> M3L4 - Cross-Validations</a>
+<ul>
+<li class="chapter" data-level="4.5.1" data-path="module-3---validation.html"><a href="module-3---validation.html#summary-2"><i class="fa fa-check"></i><b>4.5.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="module-4---clustering.html"><a href="module-4---clustering.html"><i class="fa fa-check"></i><b>5</b> Module 4 - Clustering</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#overview-1"><i class="fa fa-check"></i><b>5.1</b> Overview</a></li>
+<li class="chapter" data-level="5.2" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l1---introduction-to-clustering"><i class="fa fa-check"></i><b>5.2</b> M4L1 - Introduction to Clustering</a></li>
+<li class="chapter" data-level="5.3" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l2---distance-norms"><i class="fa fa-check"></i><b>5.3</b> M4L2 - Distance Norms</a></li>
+<li class="chapter" data-level="5.4" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l3---k-means-clustering"><i class="fa fa-check"></i><b>5.4</b> M4L3 - K-Means Clustering</a></li>
+<li class="chapter" data-level="5.5" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l4---practical-details-for-k-means"><i class="fa fa-check"></i><b>5.5</b> M4L4 - Practical Details for K-Means</a>
+<ul>
+<li class="chapter" data-level="5.5.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-3"><i class="fa fa-check"></i><b>5.5.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="5.6" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l5---clustering-for-prediction"><i class="fa fa-check"></i><b>5.6</b> M4L5 - Clustering for Prediction</a>
+<ul>
+<li class="chapter" data-level="5.6.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-4"><i class="fa fa-check"></i><b>5.6.1</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="5.7" data-path="module-4---clustering.html"><a href="module-4---clustering.html#m4l6---clustering-v.-classification"><i class="fa fa-check"></i><b>5.7</b> M4L6 - Clustering v. Classification</a>
+<ul>
+<li class="chapter" data-level="5.7.1" data-path="module-4---clustering.html"><a href="module-4---clustering.html#summary-5"><i class="fa fa-check"></i><b>5.7.1</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html"><i class="fa fa-check"></i><b>6</b> Module 5 - Basic Data Preparation</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#overview-2"><i class="fa fa-check"></i><b>6.1</b> Overview</a></li>
+<li class="chapter" data-level="6.2" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l1---data-prep---intro"><i class="fa fa-check"></i><b>6.2</b> M5L1 - Data Prep - Intro</a>
+<ul>
+<li class="chapter" data-level="6.2.1" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#data-preparation"><i class="fa fa-check"></i><b>6.2.1</b> Data Preparation</a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l2---outlier-detection"><i class="fa fa-check"></i><b>6.3</b> M5L2 - Outlier Detection</a></li>
+<li class="chapter" data-level="6.4" data-path="module-5---basic-data-preparation.html"><a href="module-5---basic-data-preparation.html#m5l3---dealing-with-outliers"><i class="fa fa-check"></i><b>6.4</b> M5L3 - Dealing with Outliers</a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html"><i class="fa fa-check"></i><b>7</b> Module 6 - Change Detection</a>
+<ul>
+<li class="chapter" data-level="7.1" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#overview-3"><i class="fa fa-check"></i><b>7.1</b> Overview</a></li>
+<li class="chapter" data-level="7.2" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l1---intro-to-change-detection"><i class="fa fa-check"></i><b>7.2</b> M6L1 - Intro to Change Detection</a></li>
+<li class="chapter" data-level="7.3" data-path="module-6---change-detection.html"><a href="module-6---change-detection.html#m6l2---cumulative-sum-cusum-for-change-detection"><i class="fa fa-check"></i><b>7.3</b> M6L2 - Cumulative Sum (CUSUM) for Change Detection</a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html"><i class="fa fa-check"></i><b>8</b> Module 7 - Time Series Models</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l1---introduction-to-exponential-smoothing"><i class="fa fa-check"></i><b>8.1</b> M7L1 - Introduction to Exponential Smoothing</a>
+<ul>
+<li class="chapter" data-level="8.1.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#time-series-data"><i class="fa fa-check"></i><b>8.1.1</b> Time Series Data</a></li>
+<li class="chapter" data-level="8.1.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method"><i class="fa fa-check"></i><b>8.1.2</b> Exponential Smoothing Method</a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l2---trend-and-cyclic-effects"><i class="fa fa-check"></i><b>8.2</b> M7L2 - Trend and Cyclic Effects</a>
+<ul>
+<li class="chapter" data-level="8.2.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#exponential-smoothing-method-1"><i class="fa fa-check"></i><b>8.2.1</b> Exponential Smoothing Method</a></li>
+<li class="chapter" data-level="8.2.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#trends"><i class="fa fa-check"></i><b>8.2.2</b> Trends</a></li>
+<li class="chapter" data-level="8.2.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#cylic-patterns"><i class="fa fa-check"></i><b>8.2.3</b> Cylic Patterns</a></li>
+<li class="chapter" data-level="8.2.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#models"><i class="fa fa-check"></i><b>8.2.4</b> Models</a></li>
+</ul></li>
+<li class="chapter" data-level="8.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l3---exponential-smoothing---what-the-name-means"><i class="fa fa-check"></i><b>8.3</b> M7L3 - Exponential Smoothing - What the Name Means</a>
+<ul>
+<li class="chapter" data-level="8.3.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#basic-single-exponential-smoothing"><i class="fa fa-check"></i><b>8.3.1</b> Basic single exponential smoothing</a></li>
+</ul></li>
+<li class="chapter" data-level="8.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l4---forcasting"><i class="fa fa-check"></i><b>8.4</b> M7L4 - Forcasting</a>
+<ul>
+<li class="chapter" data-level="8.4.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting"><i class="fa fa-check"></i><b>8.4.1</b> Forecasting</a></li>
+<li class="chapter" data-level="8.4.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-trend"><i class="fa fa-check"></i><b>8.4.2</b> Forecasting with Trend</a></li>
+<li class="chapter" data-level="8.4.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#forecasting-with-multiplicative-seasonality"><i class="fa fa-check"></i><b>8.4.3</b> Forecasting with Multiplicative Seasonality</a></li>
+<li class="chapter" data-level="8.4.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#future"><i class="fa fa-check"></i><b>8.4.4</b> Future</a></li>
+</ul></li>
+<li class="chapter" data-level="8.5" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l5---arima"><i class="fa fa-check"></i><b>8.5</b> M7L5 - ARIMA</a>
+<ul>
+<li class="chapter" data-level="8.5.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#arima"><i class="fa fa-check"></i><b>8.5.1</b> ARIMA</a></li>
+<li class="chapter" data-level="8.5.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-i---differences"><i class="fa fa-check"></i><b>8.5.2</b> Part I - Differences</a></li>
+<li class="chapter" data-level="8.5.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-ii---autoregression"><i class="fa fa-check"></i><b>8.5.3</b> Part II - Autoregression</a></li>
+<li class="chapter" data-level="8.5.4" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#part-iii---moving-average"><i class="fa fa-check"></i><b>8.5.4</b> Part III - Moving Average</a></li>
+</ul></li>
+<li class="chapter" data-level="8.6" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#m7l6---garch"><i class="fa fa-check"></i><b>8.6</b> M7L6 - GARCH</a>
+<ul>
+<li class="chapter" data-level="8.6.1" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance"><i class="fa fa-check"></i><b>8.6.1</b> Variance</a></li>
+<li class="chapter" data-level="8.6.2" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#variance-estimation"><i class="fa fa-check"></i><b>8.6.2</b> Variance Estimation</a></li>
+<li class="chapter" data-level="8.6.3" data-path="module-7---time-series-models.html"><a href="module-7---time-series-models.html#summary-6"><i class="fa fa-check"></i><b>8.6.3</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html"><i class="fa fa-check"></i><b>9</b> Module 8 - Basics of Regression</a>
+<ul>
+<li class="chapter" data-level="9.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l1---introduction-to-regression"><i class="fa fa-check"></i><b>9.1</b> M8L1 - Introduction to Regression</a>
+<ul>
+<li class="chapter" data-level="9.1.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#regression"><i class="fa fa-check"></i><b>9.1.1</b> Regression</a></li>
+<li class="chapter" data-level="9.1.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#simple-linear-regression-slr"><i class="fa fa-check"></i><b>9.1.2</b> Simple Linear Regression (SLR)</a></li>
+<li class="chapter" data-level="9.1.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-7"><i class="fa fa-check"></i><b>9.1.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l2---maximum-likelihood-and-information-criteria"><i class="fa fa-check"></i><b>9.2</b> M8L2 - Maximum Likelihood and Information Criteria</a>
+<ul>
+<li class="chapter" data-level="9.2.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#likelihood"><i class="fa fa-check"></i><b>9.2.1</b> Likelihood</a></li>
+<li class="chapter" data-level="9.2.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-example"><i class="fa fa-check"></i><b>9.2.2</b> Maximum Likelihood Example</a></li>
+<li class="chapter" data-level="9.2.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#maximum-likelihood-fitting"><i class="fa fa-check"></i><b>9.2.3</b> Maximum Likelihood Fitting</a></li>
+<li class="chapter" data-level="9.2.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#akaike-information-criterion-aic"><i class="fa fa-check"></i><b>9.2.4</b> Akaike Information Criterion (AIC)</a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#aic-example"><i class="fa fa-check"></i><b>9.3</b> AIC Example</a>
+<ul>
+<li class="chapter" data-level="9.3.1" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#corrected-aic-aic_c"><i class="fa fa-check"></i><b>9.3.1</b> Corrected AIC (<span class="math inline">\(AIC_C\)</span>)</a></li>
+<li class="chapter" data-level="9.3.2" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#bayesian-information-criterion-bic"><i class="fa fa-check"></i><b>9.3.2</b> Bayesian Information Criterion (BIC)</a></li>
+<li class="chapter" data-level="9.3.3" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#summary-8"><i class="fa fa-check"></i><b>9.3.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="9.4" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l3---using-regression"><i class="fa fa-check"></i><b>9.4</b> M8L3 - Using Regression</a></li>
+<li class="chapter" data-level="9.5" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l4---causation-vs.-correlation"><i class="fa fa-check"></i><b>9.5</b> M8L4 - Causation vs. Correlation</a></li>
+<li class="chapter" data-level="9.6" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l5---transformations-and-interactions"><i class="fa fa-check"></i><b>9.6</b> M8L5 - Transformations and Interactions</a></li>
+<li class="chapter" data-level="9.7" data-path="module-8---basics-of-regression.html"><a href="module-8---basics-of-regression.html#m8l6---output"><i class="fa fa-check"></i><b>9.7</b> M8L6 - Output</a></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html"><i class="fa fa-check"></i><b>10</b> Module 9 - Data Preparation and Principle Component Analysis (PCA)</a>
+<ul>
+<li class="chapter" data-level="10.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l1---box-cox-transformations"><i class="fa fa-check"></i><b>10.1</b> M9L1 - Box-Cox Transformations</a>
+<ul>
+<li class="chapter" data-level="10.1.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#normality-assumption"><i class="fa fa-check"></i><b>10.1.1</b> Normality Assumption</a></li>
+<li class="chapter" data-level="10.1.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#dealing-with-heteroscedasticity"><i class="fa fa-check"></i><b>10.1.2</b> Dealing with Heteroscedasticity</a></li>
+<li class="chapter" data-level="10.1.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-9"><i class="fa fa-check"></i><b>10.1.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l2---detrending"><i class="fa fa-check"></i><b>10.2</b> M9L2 - Detrending</a>
+<ul>
+<li class="chapter" data-level="10.2.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#detrending-data"><i class="fa fa-check"></i><b>10.2.1</b> Detrending Data</a></li>
+<li class="chapter" data-level="10.2.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#how-to-detrend"><i class="fa fa-check"></i><b>10.2.2</b> How to Detrend</a></li>
+<li class="chapter" data-level="10.2.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-10"><i class="fa fa-check"></i><b>10.2.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l3---intro-to-principal-component-analysis"><i class="fa fa-check"></i><b>10.3</b> M9L3 - Intro to Principal Component Analysis</a>
+<ul>
+<li class="chapter" data-level="10.3.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example"><i class="fa fa-check"></i><b>10.3.1</b> Motivational Example</a></li>
+<li class="chapter" data-level="10.3.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#motivational-example---potential-issues"><i class="fa fa-check"></i><b>10.3.2</b> Motivational Example - Potential Issues</a></li>
+<li class="chapter" data-level="10.3.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principal-component-analysis-pca"><i class="fa fa-check"></i><b>10.3.3</b> Principal Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="10.3.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-11"><i class="fa fa-check"></i><b>10.3.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l4---using-principal-component-analysis"><i class="fa fa-check"></i><b>10.4</b> M9L4 - Using Principal Component Analysis</a>
+<ul>
+<li class="chapter" data-level="10.4.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca"><i class="fa fa-check"></i><b>10.4.1</b> Principle Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="10.4.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---linear-transformation"><i class="fa fa-check"></i><b>10.4.2</b> PCA - Linear Transformation</a></li>
+<li class="chapter" data-level="10.4.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca---regression"><i class="fa fa-check"></i><b>10.4.3</b> PCA - Regression</a></li>
+<li class="chapter" data-level="10.4.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-12"><i class="fa fa-check"></i><b>10.4.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10.5" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l5---eigenvalues-and-eigenvectors"><i class="fa fa-check"></i><b>10.5</b> M9L5 - Eigenvalues and Eigenvectors</a>
+<ul>
+<li class="chapter" data-level="10.5.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#eigenvalues-and-eigenvectors"><i class="fa fa-check"></i><b>10.5.1</b> Eigenvalues and Eigenvectors</a></li>
+<li class="chapter" data-level="10.5.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#principle-component-analysis-pca-1"><i class="fa fa-check"></i><b>10.5.2</b> Principle Component Analysis (PCA)</a></li>
+<li class="chapter" data-level="10.5.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-13"><i class="fa fa-check"></i><b>10.5.3</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="10.6" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#m9l6---pca-the-good-and-bad"><i class="fa fa-check"></i><b>10.6</b> M9L6 - PCA: The Good and Bad</a>
+<ul>
+<li class="chapter" data-level="10.6.1" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#pca-review"><i class="fa fa-check"></i><b>10.6.1</b> PCA Review</a></li>
+<li class="chapter" data-level="10.6.2" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-is-good"><i class="fa fa-check"></i><b>10.6.2</b> Example: PCA is Good</a></li>
+<li class="chapter" data-level="10.6.3" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#example-pca-can-also-be-bad"><i class="fa fa-check"></i><b>10.6.3</b> Example: PCA Can Also Be Bad</a></li>
+<li class="chapter" data-level="10.6.4" data-path="module-9---data-preparation-and-principle-component-analysis-pca.html"><a href="module-9---data-preparation-and-principle-component-analysis-pca.html#summary-14"><i class="fa fa-check"></i><b>10.6.4</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="11" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html"><i class="fa fa-check"></i><b>11</b> Module 10 - Advanced Regression</a>
+<ul>
+<li class="chapter" data-level="11.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l1---introduction-to-cart"><i class="fa fa-check"></i><b>11.1</b> M10L1 - Introduction to CART</a>
+<ul>
+<li class="chapter" data-level="11.1.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-4"><i class="fa fa-check"></i><b>11.1.1</b> Overview</a></li>
+<li class="chapter" data-level="11.1.2" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#trees-in-regression"><i class="fa fa-check"></i><b>11.1.2</b> Trees in Regression</a></li>
+<li class="chapter" data-level="11.1.3" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#regression-formula-in-trees"><i class="fa fa-check"></i><b>11.1.3</b> Regression Formula in Trees</a></li>
+<li class="chapter" data-level="11.1.4" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#final-comments"><i class="fa fa-check"></i><b>11.1.4</b> Final Comments</a></li>
+</ul></li>
+<li class="chapter" data-level="11.2" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l2---branching"><i class="fa fa-check"></i><b>11.2</b> M10L2 - Branching</a>
+<ul>
+<li class="chapter" data-level="11.2.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-5"><i class="fa fa-check"></i><b>11.2.1</b> Overview</a></li>
+<li class="chapter" data-level="11.2.2" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#branching"><i class="fa fa-check"></i><b>11.2.2</b> Branching</a></li>
+<li class="chapter" data-level="11.2.3" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#branching-methods"><i class="fa fa-check"></i><b>11.2.3</b> Branching Methods</a></li>
+<li class="chapter" data-level="11.2.4" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#summary-15"><i class="fa fa-check"></i><b>11.2.4</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11.3" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l3---random-forests"><i class="fa fa-check"></i><b>11.3</b> M10L3 - Random Forests</a>
+<ul>
+<li class="chapter" data-level="11.3.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-6"><i class="fa fa-check"></i><b>11.3.1</b> Overview</a></li>
+<li class="chapter" data-level="11.3.2" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#tree-branchind"><i class="fa fa-check"></i><b>11.3.2</b> Tree Branchind</a></li>
+<li class="chapter" data-level="11.3.3" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#random-forests"><i class="fa fa-check"></i><b>11.3.3</b> Random Forests</a></li>
+<li class="chapter" data-level="11.3.4" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#introducing-randomness"><i class="fa fa-check"></i><b>11.3.4</b> Introducing Randomness</a></li>
+<li class="chapter" data-level="11.3.5" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#random-forests-1"><i class="fa fa-check"></i><b>11.3.5</b> Random Forests</a></li>
+<li class="chapter" data-level="11.3.6" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#summary-16"><i class="fa fa-check"></i><b>11.3.6</b> Summary</a></li>
+</ul></li>
+<li class="chapter" data-level="11.4" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l3a---explainabilityinterpretability"><i class="fa fa-check"></i><b>11.4</b> M10L3A - Explainability/Interpretability</a>
+<ul>
+<li class="chapter" data-level="11.4.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-7"><i class="fa fa-check"></i><b>11.4.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="11.5" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l4---logistic-regression"><i class="fa fa-check"></i><b>11.5</b> M10L4 - Logistic Regression</a>
+<ul>
+<li class="chapter" data-level="11.5.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-8"><i class="fa fa-check"></i><b>11.5.1</b> Overview</a></li>
+<li class="chapter" data-level="11.5.2" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-9"><i class="fa fa-check"></i><b>11.5.2</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="11.6" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l5---confusion-matrices"><i class="fa fa-check"></i><b>11.6</b> M10L5 - Confusion Matrices</a>
+<ul>
+<li class="chapter" data-level="11.6.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-10"><i class="fa fa-check"></i><b>11.6.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="11.7" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l6---situationally-driven-comparison"><i class="fa fa-check"></i><b>11.7</b> M10L6 - Situationally-Driven Comparison</a>
+<ul>
+<li class="chapter" data-level="11.7.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-11"><i class="fa fa-check"></i><b>11.7.1</b> Overview</a></li>
+</ul></li>
+<li class="chapter" data-level="11.8" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#m10l7---advanced-topics-in-regression"><i class="fa fa-check"></i><b>11.8</b> M10L7 - Advanced Topics in Regression</a>
+<ul>
+<li class="chapter" data-level="11.8.1" data-path="module-10---advanced-regression.html"><a href="module-10---advanced-regression.html#overview-12"><i class="fa fa-check"></i><b>11.8.1</b> Overview</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="12" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html"><i class="fa fa-check"></i><b>12</b> Appendix B: Discussion Questions</a>
+<ul>
+<li class="chapter" data-level="12.1" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-1.1"><i class="fa fa-check"></i><b>12.1</b> Discussion Question 1.1</a></li>
+<li class="chapter" data-level="12.2" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-1.2"><i class="fa fa-check"></i><b>12.2</b> Discussion Question 1.2</a></li>
+<li class="chapter" data-level="12.3" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-1.3"><i class="fa fa-check"></i><b>12.3</b> Discussion Question 1.3</a></li>
+<li class="chapter" data-level="12.4" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-1.4"><i class="fa fa-check"></i><b>12.4</b> Discussion Question 1.4</a></li>
+<li class="chapter" data-level="12.5" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-2.1"><i class="fa fa-check"></i><b>12.5</b> Discussion Question 2.1</a></li>
+<li class="chapter" data-level="12.6" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-2.2"><i class="fa fa-check"></i><b>12.6</b> Discussion Question 2.2</a></li>
+<li class="chapter" data-level="12.7" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-2.3"><i class="fa fa-check"></i><b>12.7</b> Discussion Question 2.3</a></li>
+<li class="chapter" data-level="12.8" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-3.1"><i class="fa fa-check"></i><b>12.8</b> Discussion Question 3.1</a></li>
+<li class="chapter" data-level="12.9" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-3.2"><i class="fa fa-check"></i><b>12.9</b> Discussion Question 3.2</a></li>
+<li class="chapter" data-level="12.10" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-3.3"><i class="fa fa-check"></i><b>12.10</b> Discussion Question 3.3</a></li>
+<li class="chapter" data-level="12.11" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-3.4"><i class="fa fa-check"></i><b>12.11</b> Discussion Question 3.4</a></li>
+<li class="chapter" data-level="12.12" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-4.1"><i class="fa fa-check"></i><b>12.12</b> Discussion Question 4.1</a></li>
+<li class="chapter" data-level="12.13" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-4.2"><i class="fa fa-check"></i><b>12.13</b> Discussion Question 4.2</a></li>
+<li class="chapter" data-level="12.14" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-4.3"><i class="fa fa-check"></i><b>12.14</b> Discussion Question 4.3</a></li>
+<li class="chapter" data-level="12.15" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-5.1"><i class="fa fa-check"></i><b>12.15</b> Discussion Question 5.1</a></li>
+<li class="chapter" data-level="12.16" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-5.2"><i class="fa fa-check"></i><b>12.16</b> Discussion Question 5.2</a></li>
+<li class="chapter" data-level="12.17" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-5.3"><i class="fa fa-check"></i><b>12.17</b> Discussion Question 5.3</a></li>
+<li class="chapter" data-level="12.18" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-6.1"><i class="fa fa-check"></i><b>12.18</b> Discussion Question 6.1</a></li>
+<li class="chapter" data-level="12.19" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-6.2"><i class="fa fa-check"></i><b>12.19</b> Discussion Question 6.2</a></li>
+<li class="chapter" data-level="12.20" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-6.3"><i class="fa fa-check"></i><b>12.20</b> Discussion Question 6.3</a></li>
+<li class="chapter" data-level="12.21" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-7.1"><i class="fa fa-check"></i><b>12.21</b> Discussion Question 7.1</a></li>
+<li class="chapter" data-level="12.22" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-7.2"><i class="fa fa-check"></i><b>12.22</b> Discussion Question 7.2</a></li>
+<li class="chapter" data-level="12.23" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-7.3"><i class="fa fa-check"></i><b>12.23</b> Discussion Question 7.3</a></li>
+<li class="chapter" data-level="12.24" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-7.4"><i class="fa fa-check"></i><b>12.24</b> Discussion Question 7.4</a></li>
+<li class="chapter" data-level="12.25" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-8.1"><i class="fa fa-check"></i><b>12.25</b> Discussion Question 8.1</a></li>
+<li class="chapter" data-level="12.26" data-path="appendix-b-discussion-questions.html"><a href="appendix-b-discussion-questions.html#discussion-question-8.2"><i class="fa fa-check"></i><b>12.26</b> Discussion Question 8.2</a></li>
+</ul></li>
+<li class="chapter" data-level="13" data-path="appendix-b-glossary.html"><a href="appendix-b-glossary.html"><i class="fa fa-check"></i><b>13</b> Appendix B: Glossary</a>
+<ul>
+<li class="chapter" data-level="13.1" data-path="appendix-b-glossary.html"><a href="appendix-b-glossary.html#basic-machine-learning"><i class="fa fa-check"></i><b>13.1</b> Basic Machine Learning</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Course Notes - Introduction to Analytics Modeling</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="appendix-b-discussion-questions" class="section level1 hasAnchor" number="12">
+<h1><span class="header-section-number">12</span> Appendix B: Discussion Questions<a href="appendix-b-discussion-questions.html#appendix-b-discussion-questions" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="discussion-question-1.1" class="section level2 hasAnchor" number="12.1">
+<h2><span class="header-section-number">12.1</span> Discussion Question 1.1<a href="appendix-b-discussion-questions.html#discussion-question-1.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Why do we prefer a larger margin in hard-classification SVM?
+(Among other reasons, think about the correctness and certainty of data).
+What about in a soft-classification setting: what’s the benefit of a bigger
+margin (possibly with more error in classifying your known data) vs. a smaller
+margin (possibly with less error in classifying your known data), and
+what’s the benefit in the opposite direction (smaller margin)?</p>
+</div>
+<div id="discussion-question-1.2" class="section level2 hasAnchor" number="12.2">
+<h2><span class="header-section-number">12.2</span> Discussion Question 1.2<a href="appendix-b-discussion-questions.html#discussion-question-1.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Give examples of some situations where would you suggest scaling
+(where there are set minimum and maximum possible values) and some where you
+would suggest standardization (where, as a normal distribution,
+there isn’t a set minimum and maximum possible value).
+[Note: the terms “scaling” and “standardization” are unfortunately not
+standardized themselves! Some people use “scaling” to refer to a normal
+distribution, and some people use “standardization” to refer to scaling on
+an interval. Unfortunately, there’s nothing we can do about that.]</p>
+</div>
+<div id="discussion-question-1.3" class="section level2 hasAnchor" number="12.3">
+<h2><span class="header-section-number">12.3</span> Discussion Question 1.3<a href="appendix-b-discussion-questions.html#discussion-question-1.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In what sort of situations would SVM be better than KNN (and why), and in what
+sort of situations would KNN be better than SVM (and why)?
+Please think about this yourself, and discuss your own thoughts –
+I don’t just want someone to do a Google (or DuckDuckGo, etc.) search
+for an answer!</p>
+<p>Some possible things to think about:</p>
+<ul>
+<li>Think about how data points might be clustered.</li>
+<li>What if one class of point is much more common than the other in the data
+you’re using to build the model? [Preview: this data is called the
+“training data”, as we’ll see soon.]</li>
+<li>What does it mean (for KNN and for SVM) if you see that the classification of
+your points is very mixed (lots of red scattered within blue, and lots of blue scattered within red)?</li>
+<li>What do you think the SVM/KNN implications are if part of what you want
+to get out of a model is how likely it is that the classification of a new
+data point is correct?</li>
+</ul>
+</div>
+<div id="discussion-question-1.4" class="section level2 hasAnchor" number="12.4">
+<h2><span class="header-section-number">12.4</span> Discussion Question 1.4<a href="appendix-b-discussion-questions.html#discussion-question-1.4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Why is scaling helpful before using KNN?</p>
+</div>
+<div id="discussion-question-2.1" class="section level2 hasAnchor" number="12.5">
+<h2><span class="header-section-number">12.5</span> Discussion Question 2.1<a href="appendix-b-discussion-questions.html#discussion-question-2.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>If several models of almost-equal predictive quality are evaluated on the same
+set of validation data in order to select the model that performs best,
+is it likely that the truly best-predictive model will be chosen?</p>
+</div>
+<div id="discussion-question-2.2" class="section level2 hasAnchor" number="12.6">
+<h2><span class="header-section-number">12.6</span> Discussion Question 2.2<a href="appendix-b-discussion-questions.html#discussion-question-2.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose you’ve run a bunch of models on validation data and you’ve picked the
+one that does best.
+Then you use test data to estimate how good that model is.</p>
+<p>A. Why is it likely that the goodness estimate from the test data isn’t as
+good as the validation data suggests?</p>
+<p>B. What if you run all of the models on the test data, and a different one
+looks best; should you switch your decision about which model to use?</p>
+</div>
+<div id="discussion-question-2.3" class="section level2 hasAnchor" number="12.7">
+<h2><span class="header-section-number">12.7</span> Discussion Question 2.3<a href="appendix-b-discussion-questions.html#discussion-question-2.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What is the fundamental difference between classification and clustering?
+Give an example of when to use each.</p>
+</div>
+<div id="discussion-question-3.1" class="section level2 hasAnchor" number="12.8">
+<h2><span class="header-section-number">12.8</span> Discussion Question 3.1<a href="appendix-b-discussion-questions.html#discussion-question-3.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>What do you think is the hardest type of outlier to identify, and why?</p>
+</div>
+<div id="discussion-question-3.2" class="section level2 hasAnchor" number="12.9">
+<h2><span class="header-section-number">12.9</span> Discussion Question 3.2<a href="appendix-b-discussion-questions.html#discussion-question-3.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Once you’ve determined that a point is an outlier, it can be important to try to determine whether the outlier is (1) bad/incorrect data, and should be thrown out; (2) good/correct data but not relevant to the question at and and can be thrown out; or (3) good/correct data that is relevant to the question and therefore should be retained.
+Give examples of all three types of data.</p>
+</div>
+<div id="discussion-question-3.3" class="section level2 hasAnchor" number="12.10">
+<h2><span class="header-section-number">12.10</span> Discussion Question 3.3<a href="appendix-b-discussion-questions.html#discussion-question-3.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When using CUSUM, when might you want to use higher or lower values of C?
+When might you want to use higher or lower values of T?</p>
+</div>
+<div id="discussion-question-3.4" class="section level2 hasAnchor" number="12.11">
+<h2><span class="header-section-number">12.11</span> Discussion Question 3.4<a href="appendix-b-discussion-questions.html#discussion-question-3.4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Give examples of when you might use a change-detection model.</p>
+</div>
+<div id="discussion-question-4.1" class="section level2 hasAnchor" number="12.12">
+<h2><span class="header-section-number">12.12</span> Discussion Question 4.1<a href="appendix-b-discussion-questions.html#discussion-question-4.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Give examples of time-series data
+(including ones that you might’ve dealt with at work).</p>
+</div>
+<div id="discussion-question-4.2" class="section level2 hasAnchor" number="12.13">
+<h2><span class="header-section-number">12.13</span> Discussion Question 4.2<a href="appendix-b-discussion-questions.html#discussion-question-4.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>When would it be important to predict the variance of something?
+Give specific examples.</p>
+</div>
+<div id="discussion-question-4.3" class="section level2 hasAnchor" number="12.14">
+<h2><span class="header-section-number">12.14</span> Discussion Question 4.3<a href="appendix-b-discussion-questions.html#discussion-question-4.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>How far in advance is an exponential-smoothing model accurate for forecasting?
+Explain.</p>
+</div>
+<div id="discussion-question-5.1" class="section level2 hasAnchor" number="12.15">
+<h2><span class="header-section-number">12.15</span> Discussion Question 5.1<a href="appendix-b-discussion-questions.html#discussion-question-5.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Regression and SVM lines have the same sort of formula:
+<span class="math display">\[
+  y = a_0 + a_1x_1 + a_2x_2+\dots
+\]</span>
+For which of these models is the line affected more by points close to the line,
+and for which is the line affected more by points farther from the line?
+As a followup, can you think of pairs of similar situations where in one case
+you’d care more about the points closer to the line, and in the other case
+you’d care more about points farther from the line?</p>
+</div>
+<div id="discussion-question-5.2" class="section level2 hasAnchor" number="12.16">
+<h2><span class="header-section-number">12.16</span> Discussion Question 5.2<a href="appendix-b-discussion-questions.html#discussion-question-5.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Consider two regression models: one designed to estimate something
+involving physical properties and one designed to estimate something
+involving human behavior.
+Which do you expect to have a higher R-squared?</p>
+</div>
+<div id="discussion-question-5.3" class="section level2 hasAnchor" number="12.17">
+<h2><span class="header-section-number">12.17</span> Discussion Question 5.3<a href="appendix-b-discussion-questions.html#discussion-question-5.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>How might you go about checking to see if a predictor has a
+linear or nonlinear relationship with the response?</p>
+</div>
+<div id="discussion-question-6.1" class="section level2 hasAnchor" number="12.18">
+<h2><span class="header-section-number">12.18</span> Discussion Question 6.1<a href="appendix-b-discussion-questions.html#discussion-question-6.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Give some examples of when you might want to detrend data.</p>
+</div>
+<div id="discussion-question-6.2" class="section level2 hasAnchor" number="12.19">
+<h2><span class="header-section-number">12.19</span> Discussion Question 6.2<a href="appendix-b-discussion-questions.html#discussion-question-6.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose you start with a dataset that has predictor variables
+<span class="math inline">\(x_1, x_2, \dots, x_m\)</span> and you use PCA to transform them to variables
+<span class="math inline">\(z_1, z_2, \dots, z_m\)</span>.
+If you run a linear regression on the original <span class="math inline">\(x\)</span>-variables to get a
+predictive model <span class="math inline">\(y_x = a_0 + a_1x_1 + a_2x_2 + \dots + a_mx_m\)</span>
+and you run another linear regression on the transformed variables to get
+another predictive model <span class="math inline">\(y_z = b_0 + b_1z_1 + b_2z_2 + \dots + b_mz_m\)</span>,
+which, if either, linear regression model will have a hhigher <span class="math inline">\(R^2\)</span> and why?</p>
+</div>
+<div id="discussion-question-6.3" class="section level2 hasAnchor" number="12.20">
+<h2><span class="header-section-number">12.20</span> Discussion Question 6.3<a href="appendix-b-discussion-questions.html#discussion-question-6.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Suppose, before building a model (use linear regression as an example),
+you use PCA to identify the first principal component of your data,
+and use just that one component in your model.
+Explain (1) why you <em>have not</em> reduced the number of original features
+you’re using in the model, (2) why you <em>have</em> reduced the dimension of the data
+you’re using in the model, and
+(3) why you might want use just one principal component.</p>
+</div>
+<div id="discussion-question-7.1" class="section level2 hasAnchor" number="12.21">
+<h2><span class="header-section-number">12.21</span> Discussion Question 7.1<a href="appendix-b-discussion-questions.html#discussion-question-7.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In practice, software doesn’t fit a full model at each node of the trees (it would take too long); instead, it might just take the average value of all the data points at the node.  In the case of a regression tree, how is that similar to using a regression with no predictor variables?</p>
+</div>
+<div id="discussion-question-7.2" class="section level2 hasAnchor" number="12.22">
+<h2><span class="header-section-number">12.22</span> Discussion Question 7.2<a href="appendix-b-discussion-questions.html#discussion-question-7.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Consider these examples of three types of questions:</p>
+<ul>
+<li>Classification: Will it rain tomorrow? (We might use SVM or KNN)</li>
+<li>Probability estimation: What’s the probability it will rain tomorrow? (We might use logistic regression)</li>
+<li>Amount estimation: How much rain will there be tomorrow (We might use linear regression)</li>
+</ul>
+<p>Give more examples of three related questions, one where we might use SVM,
+one where we might use logistic regression, and one where we might use
+linear regression.</p>
+</div>
+<div id="discussion-question-7.3" class="section level2 hasAnchor" number="12.23">
+<h2><span class="header-section-number">12.23</span> Discussion Question 7.3<a href="appendix-b-discussion-questions.html#discussion-question-7.3" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Just like in the previous question, consider these three types of questions: </p>
+<ul>
+<li>Classification: Will it rain tomorrow? (We might use SVM or KNN)</li>
+<li>Probability estimation: What’s the probability it will rain tomorrow?
+(We might use logistic regression)</li>
+<li>Amount estimation: How much rain will there be tomorrow (We might use linear regression)</li>
+</ul>
+<p>Think about the response variable in the input data, and about the model output.</p>
+<p>In classification, the response for each input data point will be either
+“yes” or “no” (or, 0 or 1, or some other binary pair of values).
+The output of an SVM or KNN classification model will be the same: either
+“yes” or “no”.</p>
+<p>In amount estimation, the response for each input data point will be an amount
+of something.
+The output of a linear regression model will be the same sort of information.</p>
+<p>But for probability estimation, there’s a difference: the output of a
+logistic regression model will be a probability between 0 and 1, but the
+response for each input data point will be either “1” (it happened) or
+“0” (it didn’t happen).
+For example, the training/test/validation data for a model asking
+“what’s the probability it will rain?” will all be past days where
+it either did rain (1) or didn’t rain (0).</p>
+<p>What do you think the implications are of the input data and the output data
+being different types?
+[This is a harder question than the previous one;
+try to reason through together piece by piece.]</p>
+</div>
+<div id="discussion-question-7.4" class="section level2 hasAnchor" number="12.24">
+<h2><span class="header-section-number">12.24</span> Discussion Question 7.4<a href="appendix-b-discussion-questions.html#discussion-question-7.4" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>There’s an inherent tradeoff between models that fit more closely to data
+and models that fit less closely to data.
+Think back to the lessons on validation, where we saw that every model fits
+to both real patterns in the data (which are the same in other data) and
+random patterns (which are different in other data).</p>
+<p>If your model fits more to the data, you’re getting stronger fits to the
+real patterns, but you’re also getting more fits to random patterns
+(“overfitting”).
+On the other hand, if your model fits less to the data, you’re getting
+less-strong fits to the real patterns (“underfitting”),
+but you’re also getting less fit to random patterns.</p>
+<p>Suppose you have a model that performs much worse on validation data than on
+training data. Suggest some ways you could address the problem
+(some might relate to the mini-summary above, and some might not).</p>
+</div>
+<div id="discussion-question-8.1" class="section level2 hasAnchor" number="12.25">
+<h2><span class="header-section-number">12.25</span> Discussion Question 8.1<a href="appendix-b-discussion-questions.html#discussion-question-8.1" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Which is more likely to be overfit, linear regression or ridge regression,
+and why?</p>
+</div>
+<div id="discussion-question-8.2" class="section level2 hasAnchor" number="12.26">
+<h2><span class="header-section-number">12.26</span> Discussion Question 8.2<a href="appendix-b-discussion-questions.html#discussion-question-8.2" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>In what sort of situation(s) is variable selection necessary,
+instead of just using all available variables?</p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="module-10---advanced-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="appendix-b-glossary.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["ISYE6501-Notes-Fall2024.pdf"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/latest.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

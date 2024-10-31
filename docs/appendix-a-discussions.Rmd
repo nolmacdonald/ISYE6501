@@ -217,3 +217,15 @@ but you're also getting less fit to random patterns.
 Suppose you have a model that performs much worse on validation data than on 
 training data. Suggest some ways you could address the problem 
 (some might relate to the mini-summary above, and some might not).
+
+## Discussion Question 8.1
+
+Which is more likely to be overfit, linear regression or ridge regression, 
+and why?
+
+## Discussion Question 8.2
+
+In what sort of situation(s) is variable selection necessary, 
+instead of just using all available variables?
+
+

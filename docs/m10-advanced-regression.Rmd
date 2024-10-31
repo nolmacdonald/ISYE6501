@@ -37,15 +37,17 @@ knitr::include_graphics("figures/m10-trees-in-regression.png")
 - Regression for "25 years old or younger"
 
 \begin{equation}
-  \text{Money Spent} = 50 + 13.75[\text{Number of Children}] + \\
-  0[\text{Income over $30,000}] + \dots
+  \mathrm{Money \, Spent} = \\ 50 +
+  13.75[\mathrm{Number \, of \, Children}] +
+  0[\mathrm{Income \, over \,} \$30,000] + \dots
 \end{equation}
 
 - Regression for "Older than 25"
 
 \begin{equation}
-  \text{Money Spent} = 32 + 28.13[\text{Number of Children}] + \\
-  7.13[\text{Income over $30,000}] + \dots
+  \mathrm{Money \, Spent} = \\ 
+  32 + 28.13[\mathrm{Number \, of \, Children}] +
+  7.13[\mathrm{Income \, over \,} \$30,000] + \dots
 \end{equation}
 
 ```{r, fig.show='hold', fig.cap="Trees in Regression with Leaves", out.width="50%", fig.align='center', echo=FALSE}
@@ -65,17 +67,79 @@ knitr::include_graphics("figures/m10-regression-tree.png")
   - $y = a_0 + a_1x_1 + a_2x_2 + \dots + a_nx_n$
 
 
+**Regression in Trees:** $y = a_0$
+
+\begin{equation}
+  a_0 = \frac{\sum_i \mathrm{in \, node \,} y_i}{\mathrm{Number \, of \, data \, points \, in \, node}}
+\end{equation}
+
+- **Quick Derivation of Best Fit:**
+  - $\underset{a_0}{\min} \sum_i (y_i-a_o)^2$
+- **Set Derivative to Zero:**
+  - $2 \sum_i (y_i - a_0) = 0$
+  - $\sum_i y_i = k a_0$
+  - $a_0 = \frac{\sum_i y_i}{k}$
+
+### Final Comments
+
+- Other places to use trees
+  - Logistic regression models
+    - Fraction of node's data points with "true" response
+  - Classification models
+    - Most common classification among node's data points
+  - Decision models
+    - Ex: Each leaf is the decision to "Do I send a marketing email?"
+
+**Common Questions:**
+
+- How do we choose what branches to put into a tree?
+- When do we stop branching?
+- Why is this method called a Regression "Tree"?
+
 ## M10L2 - Branching
 
 *Lecture 2 - Branching (3:42)*
 
 ### Overview
 
+- **Previously:**
+  - What is tree-based analysis
+  - Why should we consider making different models for different data subsets
+- **This Lesson:**
+  - A tree's branches
+    - Specifying
+    - Stopping conditions
+
+### Branching
+
+### Branching Methods
+
+### Summary
+
+- How to perform branching
+- When should a branch be kept in the model
+
 ## M10L3 - Random Forests
 
 *Lecture 3 - Random Forests (3:58)*
 
 ### Overview
+
+- **Previously:**
+  - What is tree-based analysis
+  - Why should we consider making different models for different data subsets
+- **This Lesson:**
+  - Random Forest Method
+
+### Tree Branchind
+
+### Random Forests
+
+### Introducing Randomness
+
+### Random Forests
+
+### Summary
 
 ## M10L3A - Explainability/Interpretability
 

@@ -7,6 +7,14 @@ language:
     tab: "Table "
     eq: "Equation "
     thm: "Theorem "
+site: bookdown::bookdown_site
+output:
+  bookdown::gitbook:
+    toc: true
+    number_sections: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
 
 bibliography: ["references/references.bib"]
 csl: "references/ieee.csl"
@@ -22,7 +30,7 @@ rmd_files:
   - "m7-time-series-models.Rmd"
   - "m8-basic-regression.Rmd"
   - "m9-data-prep-pca.Rmd"
-  - "m10.Rmd"
+  - "m10-advanced-regression.Rmd"
   - "appendix-a-discussions.Rmd"
   - "appendix-b-glossary.Rmd"
   
