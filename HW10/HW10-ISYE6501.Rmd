@@ -1,0 +1,316 @@
+---
+title: "Homework 10: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+urlcolor: blue
+# date: "2024-10-02"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Question 14.1
+
+### Prompt
+
+The breast cancer data set `breast-cancer-wisconsin.data.txt`
+from http://archive.ics.uci.edu/ml/machine-learning-databases/breast-cancer-wisconsin/  
+(description at http://archive.ics.uci.edu/ml/datasets/Breast+Cancer+Wisconsin+%28Original%29 ) has missing values.
+
+1.	Use the mean/mode imputation method to impute values for the missing data.
+2.	Use regression to impute values for the missing data.
+3.	Use regression with perturbation to impute values for the missing data.
+4.	(Optional) Compare the results and quality of classification models (e.g., SVM, KNN) build using 
+    (1) the data sets from questions 1,2,3; 
+    (2) the data that remains after data points with missing values are removed; and 
+    (3) the data set when a binary variable is introduced to indicate missing values.
+
+### Solution
+
+The data provided is the Diagnostic Wisconsin Breast Cancer Database provided
+by the UCI Machine Learning Repository [@wisconsinbreastcancer].
+
+- `Sample_code_number`: (ID, categorical)
+- `Clump_thickness`: (feature, integer)
+- `Uniformity of cell`: size (feature, integer)
+- `Uniformity of cell`: shape (feature, integer)
+- `Marginal adhesion`: (feature, integer)
+- `Single epithelial cell size`: (feature, integer)
+- `Bare nucleai`: (feature, integer)
+- `Bland chromatin`: (feature, integer)
+- `Normal nucleoli`: (feature, integer)
+- `Mitoses`: (feature, integer)
+- `Class` (Target) Binary 2 = benign 4 = malignant
+
+## Load Data Set
+
+The first step is to load the data.
+A few packages are loaded for basic data wrangling.
+A seed is set so the results are reproducible.
+The working directory is defined as the `HW10` folder so that the
+data can be loaded for this assignment.
+The provided data from `breast-cancer-wisconsin.data.txt` is loaded
+into a table and the first few rows are printed to confirm the data has
+loaded properly.
+
+```{r, message=FALSE}
+# Load packages
+library(dplyr)
+library(tidyr)
+
+# Set seed so results are reproducible
+set.seed(123)
+
+# Set the working directory
+setwd("~/projects/ISYE6501/HW10")
+
+# Load the Wisconsin breast cancer database (original)
+data <- read.table("data/breast-cancer-wisconsin.data.txt",
+    stringsAsFactors = FALSE, header = FALSE, sep = ","
+)
+
+cat(paste("\nWisconsin Breaast Cancer Data:\n"))
+head(data, 5)
+```
+
+## Inspect the Data
+
+After inspecting the data, there are a few rows initially spotted that do
+not contain integers and have values of `?`.
+To determine the number of rows with missing values in data
+the first approach is to look at the sum of all rows that contain `?`
+in each column.
+To confirm these findings, the second approach is to print the rows that
+have values with `?`.
+Since we can see that the only `?` values are in the `V7` column, 
+we can look for all rows that contain the value and print each row.
+If you count the rows, there are 16, which matches the first approach
+that shows `V7` has 16 rows with `?`.
+
+```{r, message=FALSE}
+# Inspect the data (contains "?" values)
+# Counting missing values that are "?" in each column
+missing_values_count <- sapply(data, function(x) sum(x == "?", na.rm = TRUE))
+cat(paste("\nNumber of Missing Values by Column:\n"))
+print(missing_values_count)
+
+# To confirm the missin values in V7 print the missing value rows (16)
+cat(paste("\nRows with Missing Values:\n"))
+print(data[which(data$V7 == "?"), ])
+```
+
+Inspecting the data with missing values, we must consider two things.
+
+The first is bias. 
+It does not seem there is 
+bias occurring when `V7` has a missing value.
+None of the features have all the same values and 
+leads to my assumption that the data does not indicate a bias.
+
+The second is amount of missing data.
+The number of observations is 699 and there are 16 missing values.
+This would be about 2% of all observations missing data, 
+which is assumed to be acceptable to perform data imputation.
+
+```{r, message=FALSE}
+missing_percentage <- (nrow(data[which(data$V7 == "?"),]) / nrow(data)) * 100
+print(missing_percentage)
+```
+
+Finally, to wrap it up, we determine the location of the missing values 
+prior to resolving the issue.
+
+```{r, message=FALSE}
+# Store location of missing values
+missing <- which(data$V7 == "?", arr.ind = TRUE)
+missing
+```
+
+## Part A: Mean/Mode Imputation
+
+The 9 features (`V2` through `V10`) in the data set have values between
+1 and 10.
+This means that `V7` is a categorical variable with encoding to use with
+numerical values.
+Missing values in categorical variables can be imputed using the **mode**.
+
+```{r, message=FALSE}
+# Function to find the mode for a vector, v
+get_mode <- function(v) {
+    # Store only the unique values from the vector
+    uniqv <- unique(v)
+    # Find mode with which.max() using the tabulated counts of unique values
+    uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+
+# Impute missing values with duplicate data set
+data_imputed <- data
+# Replace "?" with NA in the entire dataset
+data_imputed[data_imputed == "?"] <- NA
+
+# Calculate and print the mode for the V7column
+mode_V7 <- get_mode(data_imputed$V7)
+cat("V7 Mode after imputation:", mode_V7, "\n")
+```
+
+A mode value of 1 means that 1 is the most common value in `V7`,
+appearing more frequently than any value in the range of 1 to 10.
+
+The final step is to use data imputation to replace rows
+with missing data for `V7` with values from `mode_V7`.
+
+```{r, message=FALSE}
+data_imputed[data_imputed == "NA"] <- mode_V7
+data_imputed$V7 <- as.integer(data_imputed$V7)
+```
+
+## Part B: Regression Imputation
+
+To prepare the data for regression imputation, the data must be modified.
+The data set should only include features, or V2 to V10 (`2:10`). 
+We must also consider removing the rows where `V7` has missing values.
+
+Next, an initial linear model is developed to predict `V7` using
+all potential predictors V2 to V10.e
+
+```{r, message=FALSE}
+# Prepare modified data without response variable or ID 
+# removing rows where there are missing values
+data_modified <- data[-missing, 2:10]
+# Discrete response variable
+data_modified$V7 <- as.integer(data_modified$V7)
+
+# Build initial linear model
+initial_model <- lm(V7 ~ V2 + V3 + V4 + V5 + V6 + V8 + V9 + V10, data = data_modified)
+summary(initial_model)
+```
+
+After reviewing the initial model, a backward stepwise regression approach
+is implemented.
+Using `step()` refines the model and allows for selection of significant
+predictors.
+
+```{r, message=FALSE}
+# Use backward stepwise regression for variable selection
+model_selected <- step(initial_model)
+```
+
+Last, the final model is built by using only a few select predictors.
+The selected predictors are `V2`, `V4`, `V5`, and `V8`.
+
+```{r, message=FALSE}
+# Build refined model based on selected variables
+final_model <- lm(V7 ~ V2 + V4 + V5 + V8, data = data_modified)
+summary(final_model)
+```
+
+The `DAAG` package is loaded consider cross-validation.
+Using 5-fold cross-validation, the R-Squared value is obtained.
+
+```{r, message=FALSE}
+# Load packages
+library(DAAG)
+
+# cv model 5-fold
+model_cv <- cv.lm(data_modified, final_model, m = 5)
+# Calculate SST
+SST <- sum((as.numeric(data[-missing,]$V7) - mean(as.numeric(data[-missing,]$V7)))^2)
+# R-squared
+R2_cv <- 1 - attr(model_cv, "ms") * nrow(data[-missing,]) / SST
+R2_cv
+```
+
+Next we obtain the predictions for missing V7 values.
+
+```{r, message=FALSE}
+# Get predictions for missing V7 values.
+V7_hat <- predict(final_model, newdata = data[missing,])
+V7_hat
+```
+
+Finally, data imputation is performed.
+
+```{r, message=FALSE}
+# Copy of original data set
+reg_imputation <- data
+# Replace the missing values with the predicted value and round for int
+reg_imputation[missing,]$V7 <- round(V7_hat)
+# Determine values are numeric
+reg_imputation$V7 <- as.numeric(reg_imputation$V7)
+
+# Maintain V7 values stay within the original range [1, 10]
+reg_imputation$V7 <- pmin(pmax(reg_imputation$V7, 1), 10)
+```
+
+## Part C: Regression with Perturbation
+
+Regression with perturbation is for perturbing the predicted values for `V7`.
+A random normal distribution is used and the standard deviation is of the
+predicted value.
+
+```{r, message=FALSE}
+# Perturb missing V7 value predictions
+# Use random normal distribution std. dev. of predicted value
+V7_hat_pert <- rnorm(nrow(data[missing,]), V7_hat, sd(V7_hat))
+V7_hat_pert
+```
+
+Finally, data imputation is performed.
+
+```{r, message=FALSE}
+# Copy of original data set
+reg_imputation_pert <- data
+# Replace the missing values with the predicted value and round for int
+reg_imputation_pert[missing,]$V7 <- round(V7_hat_pert)
+reg_imputation_pert$V7 <- as.numeric(reg_imputation_pert$V7)
+
+# Maintain V7 values stay within the original range [1, 10]
+reg_imputation_pert$V7 <- pmin(pmax(reg_imputation_pert$V7, 1), 10)
+```
+
+
+\newpage
+# Question 15.1
+
+### Prompt
+
+Describe a situation or problem from your job, everyday life, current 
+events, etc., for which optimization would be appropriate. 
+What data would you need? 
+
+### Solution
+
+Optimization is very important in the National Football League (NFL).
+Given a game scenario, it may be important to consider the optimal
+play-calling strategy. NFL coaches must determine which play to call
+considering game clock, down and distance, score, and field position.
+The play call could be a number of variations, whether run or pass.
+The run could be inside, outside, sweeps, etc.
+The pass could be a screen pass, short pass, long pass, etc.
+Optimization would be useful to maximize the likelihood of scoring or
+game control.
+
+**Data Needed:**
+
+- **Play-by-Play Data:** Historical play-by-play data can be obtained
+through the R package, `nflfastR`. The data includes details such as down,
+distance, play type, yards gained and success.
+- **Player Performance Data:** This would include player performance metrics
+for an individual. For example, running backs would consider yards per carry,
+yards after catch and catch percentage. This would help determine likely outcomes
+of certain plays based on player personnel currently on the field.
+- **Game Scenario Data:** Previous game scenario data will help inform models
+similar to the current situation and identify what the most effective play types
+were under those specific conditions.
+- **Defensive Metrics for Opposing Team:** Defensive stats about the upcoming
+opponent to assist in identifying weaknesses. This could include  efficiency
+metrics for the defense in different situations like run, pass, blitz, etc.
+- **Player Injury or Health Status:** Exposing weaker opponent matchups
+could allow for big success plays especially further in the game for fatigued
+players.
+
+
+\newpage
+# References
