@@ -1,0 +1,21 @@
+name: isye6501
+channels:
+  - conda-forge
+dependencies:
+  - python
+  - autopep8
+  - black
+  - ipython
+  - matplotlib
+  - nb_conda_kernels
+  - notebook
+  - numpy
+  - pandas
+  - pillow
+  - pip
+  - pulp
+  - requests
+  - r-languageserver
+  - scikit-learn
+  - scipy
+  - xlrd
