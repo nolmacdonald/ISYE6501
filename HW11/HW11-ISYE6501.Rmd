@@ -1,0 +1,269 @@
+---
+title: "Homework 11: ISYE 6501 - Introduction to Analytics Modeling"
+output: pdf_document
+bibliography: docs/references.bib
+csl: docs/ieee.csl
+urlcolor: blue
+# date: "2024-10-02"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = FALSE)
+library(reticulate)
+use_condaenv("isye6501", conda = "/Users/nmacdonald/mambaforge3/bin/conda")
+```
+
+# Question 14.1
+
+### Prompt
+
+In the videos, we saw the “diet problem”. 
+(The diet problem is one of the first large-scale optimization
+problems to be studied in practice. 
+Back in the 1930’s and 40’s, the Army wanted to meet the nutritional
+requirements of its soldiers while minimizing the cost.) 
+In this homework you get to solve a diet problem with real data. 
+The data is given in the file `diet.xls`. 
+
+1\. Formulate an optimization model (a linear program) to find the cheapest 
+diet that satisfies the maximum and minimum daily nutrition constraints, 
+and solve it using PuLP.  
+Turn in your code and the solution. (The optimal solution should be a diet of 
+air-popped popcorn, poached eggs, oranges, raw iceberg lettuce, raw celery, 
+and frozen broccoli. UGH!)
+
+2\. Please add to your model the following constraints (which might require 
+adding more variables) and solve the new model:
+
+  a. If a food is selected, then a minimum of 1/10 serving must be chosen. 
+(Hint: now you will need two variables for each food i: whether it is chosen, 
+and how much is part of the diet. You’ll also need to write a constraint 
+to link them.)
+
+  b. Many people dislike celery and frozen broccoli. 
+So at most one, but not both, can be selected.
+
+  c. To get day-to-day variety in protein, at least 3 kinds of 
+meat/poultry/fish/eggs must be selected. 
+[If something is ambiguous 
+(e.g., should bean-and-bacon soup be considered meat?), 
+just call it whatever you think is appropriate – 
+I want you to learn how to write this type of constraint, 
+but I don’t really care whether we agree on how to classify foods!]
+
+If you want to see what a more full-sized problem would look like, 
+try solving your models for the file `diet_large.xls`, which is a 
+low-cholesterol diet model (rather than minimizing cost, the goal is to 
+minimize cholesterol intake).  I don’t know anyone who’d want to eat this diet 
+– the optimal solution includes dried chrysanthemum garland, raw beluga whale 
+flipper, freeze-dried parsley, etc. – which shows why it’s necessary to 
+add additional constraints beyond the basic ones we saw in the video!
+[Note: there are many optimal solutions, all with zero cholesterol, 
+so you might get a different one.  
+It probably won’t be much more appetizing than mine.]
+
+\newpage
+# 14.1 Part 1: Optimize Cheapest Diet
+
+- Optimization model (a linear program)
+- Find the cheapest diet that satisfies the maximum and minimum daily nutrition
+constraints
+- Solve using **PuLP**
+- Solution: Optimal solution diet contains air-popped popcorn, poached eggs, 
+oranges, raw iceberg lettuce, raw celery, and frozen broccoli
+
+PuLP is an linear and mixed integer programming modeler written in Python
+
+PuLP is an LP modeler written in python. 
+PuLP can generate MPS or LP files and call GLPK, COIN CLP/CBC, CPLEX, and 
+GUROBI to solve linear problems.
+
+For optimization, a linear program is developed.
+A linear program is the simplest type of mathematical program.
+To determine the mathematical program is a linear program the decision variables
+must be real variables, the objective must be a linear expression, and the
+constraints must be linear expressions.
+<!-- https://coin-or.github.io/pulp/main/optimisation_concepts.html -->
+
+## Load and Inspect Data
+
+```{python, session="shared"}
+import pandas as pd
+
+# Load the diet data into a DataFrame
+diet_data_path = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(diet_data_path)
+
+# Get the column names of the dataframe
+keys = diet_data.keys()
+print(f"Number of columns (keys): {len(keys)}\n{keys}")
+
+# Print first 5 rows of data
+diet_data.head(5)
+```
+
+At first glance, the data looks adequate.
+Check if there are any missing values and output 
+the quantity missing for each column.
+
+```{python, session="shared"}
+# Check for nan values in the diet data
+nan_vals = diet_data.isna().sum()
+print(nan_vals)
+```
+
+## Define Decision Variables
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+# Create a list of food items
+foods = diet_data["Foods"].tolist()
+
+# Create a dictionary of costs for each food item
+costs = dict(zip(foods, diet_data["Price/ Serving"]))
+
+# Create a dictionary of nutritional information for each food item
+nutrition = diet_data.set_index("Foods").T.to_dict()
+
+# Define the decision variables
+food_vars = LpVariable.dicts("Food", foods, lowBound=0, cat="Continuous")
+
+# Print for confirmation how many of each (rows)
+print(f"\nDefine the decision variables:")
+print(f"foods: ({len(foods)})")
+print(f"costs: ({len(costs)})")
+print(f"nutrition: ({len(nutrition)})")
+print(f"food_vars: ({len(food_vars)})")
+```
+
+## Setup Objective Function
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+# Define the problem
+prob = LpProblem("Cheapest_Diet", LpMinimize)
+
+# Objective function: Minimize the total cost of the diet
+prob += lpSum([costs[i] * food_vars[i] for i in foods]), "Total Cost of Diet"
+```
+
+## Define Constraints
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+# Define the minimum and maximum daily nutrition constraints
+min_nutrition = {
+    'Calories': 1500,
+    'Cholesterol mg': 30,
+    'Total_Fat g': 20,
+    'Sodium mg': 800,
+    'Carbohydrates g': 130,
+    'Dietary_Fiber g': 125,
+    'Protein g': 60,
+    'Vit_A IU': 1000,
+    'Vit_C IU': 400,
+    'Calcium mg': 700,
+    'Iron mg': 10
+}
+
+max_nutrition = {
+    'Calories': 2500,
+    'Cholesterol mg': 240,
+    'Total_Fat g': 70,
+    'Sodium mg': 2000,
+    'Carbohydrates g': 450,
+    'Dietary_Fiber g': 250,
+    'Protein g': 100,
+    'Vit_A IU': 10000,
+    'Vit_C IU': 5000,
+    'Calcium mg': 1500,
+    'Iron mg': 40
+}
+
+# Add constraints for each nutrient
+print(f"\nAdd constraints for each nutrient (min/max):")
+for nutrient, min_val in min_nutrition.items():
+    prob += lpSum([nutrition[i][nutrient] * food_vars[i] for i in foods]) >= min_val, f"Min_{nutrient}"
+
+for nutrient, max_val in max_nutrition.items():
+    prob += lpSum([nutrition[i][nutrient] * food_vars[i] for i in foods]) <= max_val, f"Max_{nutrient}"
+```
+
+## Solve Linear Program
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+# Solve the problem
+prob.solve()
+
+# Print the status of the solution
+print(f"Status: {LpStatus[prob.status]}")
+```
+
+## Results
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+# Print the optimal diet and its cost
+print("Optimal Diet:")
+for v in prob.variables():
+    if v.varValue > 0:
+        print(f"{v.name}: {v.varValue}")
+
+# Print the total cost of the diet
+print(f"Total Cost of Diet: ${value(prob.objective):.2f}")
+```
+
+
+
+
+```{python, session="shared", eval=FALSE, echo=FALSE}
+
+df = diet_data
+# Print rows with missing values for each column
+for column in df.columns:
+    if df[column].isna().sum() > 0:
+        print(f"\nRows with missing values in column '{column}':")
+        print(df[df[column].isna()])
+```
+
+```{r, eval=FALSE, echo=FALSE}
+df = py$diet_data
+df
+```
+
+
+
+
+## Part 2: Optimize Cheapest Diet with Constraints
+
+
+## Part 2a: Linking Two Variables with Constraint
+
+- If food is selected, then a minimum of 1/10 serving must be chosen.
+- Variables: Was it chosen (y/n), How much nutrition (quantity)
+- Write a constraint to link the variables
+
+## Part 2b: Celery or Broccoli Not Both
+
+- Many people dislike celery and frozen broccoli. So at most one, but not both,
+can be selected.
+
+## Part 2c:
+
+- Day-to-day variety in protein, at least 3 kinds of 
+meat/poultry/fish/eggs must be selected.
+  - If ambiguous, make an assumption (e.g., bean and bacon soup)
+
+
+
+
+
+
+
+
+
+# References
+
+
+
+
+
+
+
+
