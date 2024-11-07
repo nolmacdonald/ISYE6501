@@ -65,16 +65,7 @@ It probably won’t be much more appetizing than mine.]
 \newpage
 # 14.1 Part 1: Optimize Cheapest Diet
 
-- Optimization model (a linear program)
-- Find the cheapest diet that satisfies the maximum and minimum daily nutrition
-constraints
-- Solve using **PuLP**
-- Solution: Optimal solution diet contains air-popped popcorn, poached eggs, 
-oranges, raw iceberg lettuce, raw celery, and frozen broccoli
-
-PuLP is an linear and mixed integer programming modeler written in Python
-
-PuLP is an LP modeler written in python. 
+PuLP is an linear and mixed integer programming modeler written in Python [@pythonPulp].
 PuLP can generate MPS or LP files and call GLPK, COIN CLP/CBC, CPLEX, and 
 GUROBI to solve linear problems.
 
@@ -89,16 +80,13 @@ constraints must be linear expressions.
 
 ```{python, session="shared"}
 import pandas as pd
+from pulp import *
 
 # Load the diet data into a DataFrame
-diet_data_path = "~/projects/ISYE6501/HW11/data/diet.xls"
-diet_data = pd.read_excel(diet_data_path)
+path_data = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(path_data)
 
-# Get the column names of the dataframe
-keys = diet_data.keys()
-print(f"Number of columns (keys): {len(keys)}\n{keys}")
-
-# Print first 5 rows of data
+# Show first few rows
 diet_data.head(5)
 ```
 
@@ -106,158 +94,855 @@ At first glance, the data looks adequate.
 Check if there are any missing values and output 
 the quantity missing for each column.
 
+The first 5 values look good (Index 0-4).
+Look at the last 5 rows.
+We can see that `Foods` are only listed for 64 rows (0-63).
+
 ```{python, session="shared"}
 # Check for nan values in the diet data
 nan_vals = diet_data.isna().sum()
 print(nan_vals)
+
+diet_data.tail(5)
+```
+
+The diet data needs to be parsed since it is not in an adequate format to form a model.
+First, keep only the valid data from rows 0 to 63.
+
+```{python, session="shared"}
+# Keep only the 64 data points with no missing values
+diet_data_clean = diet_data[0:64]
+print(f"Number of rows in the diet data: {len(diet_data_clean)}")
+diet_data_clean.head(5)
+```
+
+Looking for missing values this time returns 0 since the data was cleaned.
+The code should return 0 missing values.
+
+```{python, session="shared"}
+# Check for nan values in the diet data
+nan_vals_clean = diet_data_clean.isna().sum()
+print(nan_vals_clean)
 ```
 
 ## Define Decision Variables
 
-```{python, session="shared", eval=FALSE, echo=FALSE}
-# Create a list of food items
-foods = diet_data["Foods"].tolist()
+Create an LP problem with `LPProblem(name, sense)`.
+The name of the problem is defined to use in the output file, `cheapest_diet.lp`.
+The second argument is `sense` of the LP problem objective, which can be defined either as `LPMinimize` (Default) or `LPMaximize`.
 
-# Create a dictionary of costs for each food item
-costs = dict(zip(foods, diet_data["Price/ Serving"]))
+```{python, session="shared"}
+# Initialize by creating an LP problem
+diet_prob = LpProblem("cheapest_diet", LpMinimize)
+```
 
-# Create a dictionary of nutritional information for each food item
-nutrition = diet_data.set_index("Foods").T.to_dict()
+A list is generated with all of the food names.
+A nested list is also created of all diet data that has been cleaned.
 
-# Define the decision variables
-food_vars = LpVariable.dicts("Food", foods, lowBound=0, cat="Continuous")
+```{python, session="shared"}
+# Unique list of foods
+foods = []
+for each in diet_data_clean["Foods"]:
+    foods.append(each)
+print(foods)
 
-# Print for confirmation how many of each (rows)
-print(f"\nDefine the decision variables:")
-print(f"foods: ({len(foods)})")
-print(f"costs: ({len(costs)})")
-print(f"nutrition: ({len(nutrition)})")
-print(f"food_vars: ({len(food_vars)})")
+# Create a nested list of diet data values
+list_data = diet_data_clean.values.tolist()
+```
+
+Our objective is to find the cheapest diet.
+This means that the problem needs the data for each parameter that has data that
+is quantitative in either an integer or float.
+This does not include `Foods` or `Serving Size` as these columns contain
+non-numerical values.
+Create dictionaries with each parameter and the corresponding values.
+
+```{python, session="shared"}
+# Create dictionaries using dictionary comprehensions
+# "Price/ Serving"
+cost_dict = {each[0]: each[1] for each in list_data}
+# "Calories"
+cals_dict = {each[0]: each[3] for each in list_data}
+# "Cholesterol mg"
+choles_dict = {each[0]: each[4] for each in list_data}
+# "Total_Fat g"
+fat_dict = {each[0]: each[5] for each in list_data}
+# "Sodium mg"
+sod_dict = {each[0]: each[6] for each in list_data}
+# "Carbohydrates g"
+carb_dict = {each[0]: each[7] for each in list_data}
+# "Dietary_Fiber g"
+fiber_dict = {each[0]: each[8] for each in list_data}
+# "Protein g"
+pro_dict = {each[0]: each[9] for each in list_data}
+# "Vit_A IU"
+VA_dict = {each[0]: each[10] for each in list_data}
+# "Vit_C IU"
+VC_dict = {each[0]: each[11] for each in list_data}
+# "Calcium mg"
+calc_dict = {each[0]: each[12] for each in list_data}
+# "Iron mg"
+iron_dict = {each[0]: each[13] for each in list_data}
 ```
 
 ## Setup Objective Function
 
-```{python, session="shared", eval=FALSE, echo=FALSE}
-# Define the problem
-prob = LpProblem("Cheapest_Diet", LpMinimize)
+```{python, session="shared"}
+# Dictionary ‘food_vars’ is created to contain the referenced Variables
+food_vars = LpVariable.dicts("Foods",foods,0)
 
-# Objective function: Minimize the total cost of the diet
-prob += lpSum([costs[i] * food_vars[i] for i in foods]), "Total Cost of Diet"
+# Objective function is added to diet_prob
+diet_prob += lpSum([cost_dict[i]*food_vars[i] for i in foods]), "Total Food Cost"
 ```
 
 ## Define Constraints
 
-```{python, session="shared", eval=FALSE, echo=FALSE}
-# Define the minimum and maximum daily nutrition constraints
-min_nutrition = {
-    'Calories': 1500,
-    'Cholesterol mg': 30,
-    'Total_Fat g': 20,
-    'Sodium mg': 800,
-    'Carbohydrates g': 130,
-    'Dietary_Fiber g': 125,
-    'Protein g': 60,
-    'Vit_A IU': 1000,
-    'Vit_C IU': 400,
-    'Calcium mg': 700,
-    'Iron mg': 10
-}
-
-max_nutrition = {
-    'Calories': 2500,
-    'Cholesterol mg': 240,
-    'Total_Fat g': 70,
-    'Sodium mg': 2000,
-    'Carbohydrates g': 450,
-    'Dietary_Fiber g': 250,
-    'Protein g': 100,
-    'Vit_A IU': 10000,
-    'Vit_C IU': 5000,
-    'Calcium mg': 1500,
-    'Iron mg': 40
-}
-
-# Add constraints for each nutrient
-print(f"\nAdd constraints for each nutrient (min/max):")
-for nutrient, min_val in min_nutrition.items():
-    prob += lpSum([nutrition[i][nutrient] * food_vars[i] for i in foods]) >= min_val, f"Min_{nutrient}"
-
-for nutrient, max_val in max_nutrition.items():
-    prob += lpSum([nutrition[i][nutrient] * food_vars[i] for i in foods]) <= max_val, f"Max_{nutrient}"
+```{python, session="shared"}
+# Diet constraints
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) >= 1500, "Min_Calorie_Requirement"
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) <= 2500, "Max_Calorie_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) >= 30, "Min_Cholesterol_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) <= 240, "Max_Cholesterol_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) >= 20, "Min_Fat_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) <= 70, "Max_Fat_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) >= 800, "Min_Sodium_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) <= 2000, "Max_Sodium_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) >= 130, "Min_Carb_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) <= 450, "Max_Carb_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) >= 125, "Min_Fiber_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) <= 250, "Max_Fiber_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) >= 60, "Min_Protein_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) <= 100, "Max_Protein_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) >= 1000, "Min_VA_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) <= 10000, "Max_VA_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) >= 400, "Min_VC_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) <= 5000, "Max_VC_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) >= 700, "Min_Calcium_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) <= 1500, "Max_Calcium_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) >= 10, "Min_Iron_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) <= 40, "Max_Iron_Requirement"
 ```
 
 ## Solve Linear Program
 
-```{python, session="shared", eval=FALSE, echo=FALSE}
-# Solve the problem
-prob.solve()
+```{python, session="shared"}
+# write the problem to an LP file
+diet_prob.writeLP("cheapest_diet.lp")
 
-# Print the status of the solution
-print(f"Status: {LpStatus[prob.status]}")
+# call the solver and check the status
+diet_prob.solve()
+
+print("Status:", LpStatus[diet_prob.status])
+print(f"\nTotal Cost of the Cheapest Nutritional Diet: ${value(diet_prob.objective):.2f}")
 ```
 
 ## Results
 
-```{python, session="shared", eval=FALSE, echo=FALSE}
-# Print the optimal diet and its cost
-print("Optimal Diet:")
-for v in prob.variables():
+```{python, session="shared"}
+# Print the main foods of the diet
+results = {}
+for v in diet_prob.variables():
     if v.varValue > 0:
         print(f"{v.name}: {v.varValue}")
+        # Save the results in a dictionary
+        results[v.name] = v.varValue
 
-# Print the total cost of the diet
-print(f"Total Cost of Diet: ${value(prob.objective):.2f}")
+# Create a DataFrame from the dictionary
+results_df = pd.DataFrame(list(results.items()), columns=['Food', 'Servings'])
+results_df
 ```
 
+| Food                     | Servings    |
+|--------------------------|-------------|
+| Foods_Celery,_Raw        | 52.643710   |
+| Foods_Frozen_Broccoli    | 0.259607    |
+| Foods_Lettuce,Iceberg,Raw| 63.988506   |
+| Foods_Oranges            | 2.292939    |
+| Foods_Poached_Eggs       | 0.141844    |
+| Foods_Popcorn,Air_Popped | 13.8693226  |
 
+Table: Part 1. Cheapest Cost $4.34
 
-
-```{python, session="shared", eval=FALSE, echo=FALSE}
-
-df = diet_data
-# Print rows with missing values for each column
-for column in df.columns:
-    if df[column].isna().sum() > 0:
-        print(f"\nRows with missing values in column '{column}':")
-        print(df[df[column].isna()])
-```
-
-```{r, eval=FALSE, echo=FALSE}
-df = py$diet_data
-df
-```
-
-
-
-
+\newpage
 ## Part 2: Optimize Cheapest Diet with Constraints
-
 
 ## Part 2a: Linking Two Variables with Constraint
 
-- If food is selected, then a minimum of 1/10 serving must be chosen.
-- Variables: Was it chosen (y/n), How much nutrition (quantity)
-- Write a constraint to link the variables
+If food is selected, then a minimum of 1/10 serving must be chosen.
 
+For this portion of the problem, a second dictionary is added that adds
+in the binary variable `Selected` if the food is selected.
+A constraint is added considering you must eat at least 0.1 servings
+and if food is eaten, binary value is 1.
+*Only a snippet of the code is shown below, the full code is in the appendix.*
+
+```{python, session="shared", eval=FALSE}
+# Part 2a: Constraint
+
+# Dictionary called ‘food_vars’ is created to contain the referenced Variables
+food_vars = LpVariable.dicts("Foods",foods,0)
+
+# Constraint A
+# Binary variable if food is selected
+food_vars_selected = LpVariable.dicts("Selected",foods,0,1,LpBinary)
+
+# If a food is eaten, must eat at least 0.1 serving
+for food in foods:
+    diet_prob += food_vars[food] >= 0.1 * food_vars_selected[food]
+    
+# If any of a food is eaten, its binary variable must be 1
+for food in foods:
+    diet_prob += food_vars_selected[food] >= food_vars[food]*0.0000001
+```
+
+```{python, session="shared", echo=FALSE}
+import pandas as pd
+from pulp import *
+
+# Load the diet data into a DataFrame
+path_data = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(path_data)
+
+# Keep only the 64 data points with no missing values
+diet_data_clean = diet_data[0:64]
+
+# Model -----------------------------------------------------------------------
+# Initialize by creating an LP problem
+diet_prob = LpProblem("cheapest_diet", LpMinimize)
+
+# Unique list of foods
+foods = []
+for each in diet_data_clean["Foods"]:
+    foods.append(each)
+
+# Create a nested list of diet data values
+list_data = diet_data_clean.values.tolist()
+
+# Create dictionaries using dictionary comprehensions
+# "Price/ Serving"
+cost_dict = {each[0]: each[1] for each in list_data}
+# "Calories"
+cals_dict = {each[0]: each[3] for each in list_data}
+# "Cholesterol mg"
+choles_dict = {each[0]: each[4] for each in list_data}
+# "Total_Fat g"
+fat_dict = {each[0]: each[5] for each in list_data}
+# "Sodium mg"
+sod_dict = {each[0]: each[6] for each in list_data}
+# "Carbohydrates g"
+carb_dict = {each[0]: each[7] for each in list_data}
+# "Dietary_Fiber g"
+fiber_dict = {each[0]: each[8] for each in list_data}
+# "Protein g"
+pro_dict = {each[0]: each[9] for each in list_data}
+# "Vit_A IU"
+VA_dict = {each[0]: each[10] for each in list_data}
+# "Vit_C IU"
+VC_dict = {each[0]: each[11] for each in list_data}
+# "Calcium mg"
+calc_dict = {each[0]: each[12] for each in list_data}
+# "Iron mg"
+iron_dict = {each[0]: each[13] for each in list_data}
+
+# Dictionary ‘food_vars’ contains the optimization variables
+food_vars = LpVariable.dicts("Foods",foods,0)
+
+# First, the objective function is added to the problem
+diet_prob += lpSum([cost_dict[i]*food_vars[i] for i in foods]), "Total Food Cost"
+
+# Constraint A
+# Add binary variable for the constraint of selecting a food
+food_vars_selected = LpVariable.dicts("Selected",foods,0,1,LpBinary)
+
+# If a food is eaten, must eat at least 0.1 serving
+for food in foods:
+    diet_prob += food_vars[food] >= 0.1 * food_vars_selected[food]
+    
+# If any of a food is eaten, its binary variable must be 1
+for food in foods:
+    diet_prob += food_vars_selected[food] >= food_vars[food]*0.0000001
+
+# Diet constraints
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) >= 1500, "Min_Calorie_Requirement"
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) <= 2500, "Max_Calorie_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) >= 30, "Min_Cholesterol_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) <= 240, "Max_Cholesterol_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) >= 20, "Min_Fat_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) <= 70, "Max_Fat_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) >= 800, "Min_Sodium_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) <= 2000, "Max_Sodium_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) >= 130, "Min_Carb_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) <= 450, "Max_Carb_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) >= 125, "Min_Fiber_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) <= 250, "Max_Fiber_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) >= 60, "Min_Protein_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) <= 100, "Max_Protein_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) >= 1000, "Min_VA_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) <= 10000, "Max_VA_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) >= 400, "Min_VC_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) <= 5000, "Max_VC_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) >= 700, "Min_Calcium_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) <= 1500, "Max_Calcium_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) >= 10, "Min_Iron_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) <= 40, "Max_Iron_Requirement"
+
+# write the problem to an LP file
+diet_prob.writeLP("cheapest_diet.lp")
+
+# call the solver and check the status
+diet_prob.solve()
+
+print("Status:", LpStatus[diet_prob.status])
+
+print(f"\nTotal Cost of the Cheapest Nutritional Diet: ${value(diet_prob.objective):.2f}")
+
+# Print the main foods of the diet
+results = {}
+for v in diet_prob.variables():
+    if v.varValue > 0:
+        print(f"{v.name}: {v.varValue}")
+        # Save the results in a dictionary
+        results[v.name] = v.varValue
+
+# Create a DataFrame from the dictionary
+results_df = pd.DataFrame(list(results.items()), columns=['Food', 'Servings'])
+
+results_df
+```
+
+| Food                     | Servings   |
+|--------------------------|------------|
+| Foods_Lettuce,Iceberg,Raw| 63.988506  |
+| Foods_Oranges            | 2.292939   |
+| Foods_Poached_Eggs       | 0.141844   |
+| Foods_Popcorn,Air_Popped | 13.869322  |
+
+Table: Part 2a. Cheapest Cost $4.34
+
+\newpage
 ## Part 2b: Celery or Broccoli Not Both
 
-- Many people dislike celery and frozen broccoli. So at most one, but not both,
+Many people dislike celery and frozen broccoli. So at most one, but not both,
 can be selected.
 
-## Part 2c:
+For this portion of the problem, a constraint of either frozen
+broccoli or raw celery is added.
+*Only a snippet of the code is shown below, the full code is in the appendix.*
 
-- Day-to-day variety in protein, at least 3 kinds of 
+```{python, session="shared", eval=FALSE}
+# Part 2b: Celery or Broccoli
+
+# Constraint B
+# Include at most 1 of celery and frozen broccoli 
+diet_prob += food_vars_selected['Frozen Broccoli'] + food_vars_selected['Celery, Raw'] <= 1 
+```
+
+```{python, session="shared", echo=FALSE}
+import pandas as pd
+from pulp import *
+
+# Load the diet data into a DataFrame
+path_data = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(path_data)
+
+# Keep only the 64 data points with no missing values
+diet_data_clean = diet_data[0:64]
+
+# Model -----------------------------------------------------------------------
+# Initialize by creating an LP problem
+diet_prob = LpProblem("cheapest_diet", LpMinimize)
+
+# Unique list of foods
+foods = []
+for each in diet_data_clean["Foods"]:
+    foods.append(each)
+
+# Create a nested list of diet data values
+list_data = diet_data_clean.values.tolist()
+
+# Create dictionaries using dictionary comprehensions
+# "Price/ Serving"
+cost_dict = {each[0]: each[1] for each in list_data}
+# "Calories"
+cals_dict = {each[0]: each[3] for each in list_data}
+# "Cholesterol mg"
+choles_dict = {each[0]: each[4] for each in list_data}
+# "Total_Fat g"
+fat_dict = {each[0]: each[5] for each in list_data}
+# "Sodium mg"
+sod_dict = {each[0]: each[6] for each in list_data}
+# "Carbohydrates g"
+carb_dict = {each[0]: each[7] for each in list_data}
+# "Dietary_Fiber g"
+fiber_dict = {each[0]: each[8] for each in list_data}
+# "Protein g"
+pro_dict = {each[0]: each[9] for each in list_data}
+# "Vit_A IU"
+VA_dict = {each[0]: each[10] for each in list_data}
+# "Vit_C IU"
+VC_dict = {each[0]: each[11] for each in list_data}
+# "Calcium mg"
+calc_dict = {each[0]: each[12] for each in list_data}
+# "Iron mg"
+iron_dict = {each[0]: each[13] for each in list_data}
+
+# Dictionary ‘food_vars’ contains the optimization variables
+food_vars = LpVariable.dicts("Foods",foods,0)
+
+# First, the objective function is added to the problem
+diet_prob += lpSum([cost_dict[i]*food_vars[i] for i in foods]), "Total Food Cost"
+
+# Constraint A
+# Add binary variable for the constraint of selecting a food
+food_vars_selected = LpVariable.dicts("Selected",foods,0,1,LpBinary)
+
+# If a food is eaten, must eat at least 0.1 serving
+for food in foods:
+    diet_prob += food_vars[food] >= 0.1 * food_vars_selected[food]
+    
+# If any of a food is eaten, its binary variable must be 1
+for food in foods:
+    diet_prob += food_vars_selected[food] >= food_vars[food]*0.0000001 
+
+# Constraint B
+# Include at most 1 of celery and frozen broccoli 
+diet_prob += food_vars_selected['Frozen Broccoli'] + food_vars_selected['Celery, Raw'] <= 1 
+
+# Diet constraints
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) >= 1500, "Min_Calorie_Requirement"
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) <= 2500, "Max_Calorie_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) >= 30, "Min_Cholesterol_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) <= 240, "Max_Cholesterol_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) >= 20, "Min_Fat_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) <= 70, "Max_Fat_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) >= 800, "Min_Sodium_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) <= 2000, "Max_Sodium_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) >= 130, "Min_Carb_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) <= 450, "Max_Carb_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) >= 125, "Min_Fiber_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) <= 250, "Max_Fiber_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) >= 60, "Min_Protein_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) <= 100, "Max_Protein_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) >= 1000, "Min_VA_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) <= 10000, "Max_VA_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) >= 400, "Min_VC_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) <= 5000, "Max_VC_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) >= 700, "Min_Calcium_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) <= 1500, "Max_Calcium_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) >= 10, "Min_Iron_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) <= 40, "Max_Iron_Requirement"
+
+# write the problem to an LP file
+diet_prob.writeLP("cheapest_diet.lp")
+
+# call the solver and check the status
+diet_prob.solve()
+
+print("Status:", LpStatus[diet_prob.status])
+
+print(f"\nTotal Cost of the Cheapest Nutritional Diet: ${value(diet_prob.objective):.2f}")
+
+# Print the main foods of the diet
+results = {}
+for v in diet_prob.variables():
+    if v.varValue > 0:
+        print(f"{v.name}: {v.varValue}")
+        # Save the results in a dictionary
+        results[v.name] = v.varValue
+
+# Create a DataFrame from the dictionary
+results_df = pd.DataFrame(list(results.items()), columns=['Food', 'Servings'])
+
+results_df
+```
+
+| Food                     | Servings   |
+|--------------------------|------------|
+| Foods_Celery,_Raw        | 43.154119  |
+| Foods_Lettuce,Iceberg,Raw| 80.919121  |
+| Foods_Oranges            | 3.076516   |
+| Foods_Peanut_Butter      | 2.046457   |
+| Foods_Popcorn,Air_Popped | 13.181772  |
+
+Table: Part 2b. Cheapest Cost $4.49
+
+\newpage
+## Part 2c: Protein Variety
+
+For a day-to-day variety in protein, at least 3 kinds of 
 meat/poultry/fish/eggs must be selected.
-  - If ambiguous, make an assumption (e.g., bean and bacon soup)
+If ambiguous, make an assumption (e.g., bean and bacon soup).
+
+For this portion of the problem, meat/poultry/fish/eggs
+were added to the constraints portion of the code.
+*Only a snippet of the code is shown below, the full code is in the appendix.*
+
+```{python, session="shared", eval=FALSE}
+# Part 2c: 3 kinds of protein
+
+# Constraint C
+# At least 3 kinds of meat/poultry/fish/eggs
+diet_prob += food_vars_selected['Roasted Chicken'] \
+        + food_vars_selected['Poached Eggs'] \
+        + food_vars_selected['Scrambled Eggs'] \
+        + food_vars_selected['Bologna,Turkey'] \
+        + food_vars_selected['Frankfurter, Beef'] \
+        + food_vars_selected['Ham,Sliced,Extralean'] \
+        + food_vars_selected['Kielbasa,Prk'] \
+        + food_vars_selected['Pizza W/Pepperoni'] \
+        + food_vars_selected['Hamburger W/Toppings'] \
+        + food_vars_selected['Hotdog, Plain'] \
+        + food_vars_selected['Pork'] \
+        + food_vars_selected['Sardines in Oil'] \
+        + food_vars_selected['White Tuna in Water'] \
+        + food_vars_selected['Chicknoodl Soup'] \
+        + food_vars_selected['Splt Pea&Hamsoup'] \
+        + food_vars_selected['Vegetbeef Soup'] \
+        + food_vars_selected['Neweng Clamchwd'] \
+        + food_vars_selected['New E Clamchwd,W/Mlk'] \
+        + food_vars_selected['Beanbacn Soup,W/Watr'] >= 3
+```
+
+```{python, session="shared", echo=FALSE}
+import pandas as pd
+from pulp import *
+
+# Load the diet data into a DataFrame
+path_data = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(path_data)
+
+# Keep only the 64 data points with no missing values
+diet_data_clean = diet_data[0:64]
+
+# Model -----------------------------------------------------------------------
+# Initialize by creating an LP problem
+diet_prob = LpProblem("cheapest_diet", LpMinimize)
+
+# Unique list of foods
+foods = []
+for each in diet_data_clean["Foods"]:
+    foods.append(each)
+
+# Create a nested list of diet data values
+list_data = diet_data_clean.values.tolist()
+
+# Create dictionaries using dictionary comprehensions
+# "Price/ Serving"
+cost_dict = {each[0]: each[1] for each in list_data}
+# "Calories"
+cals_dict = {each[0]: each[3] for each in list_data}
+# "Cholesterol mg"
+choles_dict = {each[0]: each[4] for each in list_data}
+# "Total_Fat g"
+fat_dict = {each[0]: each[5] for each in list_data}
+# "Sodium mg"
+sod_dict = {each[0]: each[6] for each in list_data}
+# "Carbohydrates g"
+carb_dict = {each[0]: each[7] for each in list_data}
+# "Dietary_Fiber g"
+fiber_dict = {each[0]: each[8] for each in list_data}
+# "Protein g"
+pro_dict = {each[0]: each[9] for each in list_data}
+# "Vit_A IU"
+VA_dict = {each[0]: each[10] for each in list_data}
+# "Vit_C IU"
+VC_dict = {each[0]: each[11] for each in list_data}
+# "Calcium mg"
+calc_dict = {each[0]: each[12] for each in list_data}
+# "Iron mg"
+iron_dict = {each[0]: each[13] for each in list_data}
+
+# Dictionary ‘food_vars’ contains the optimization variables
+food_vars = LpVariable.dicts("Foods",foods,0)
+
+# First, the objective function is added to the problem
+diet_prob += lpSum([cost_dict[i]*food_vars[i] for i in foods]), "Total Food Cost"
+
+# Constraint A
+# Add binary variable for the constraint of selecting a food
+food_vars_selected = LpVariable.dicts("Selected",foods,0,1,LpBinary)
+
+# If a food is eaten, must eat at least 0.1 serving
+for food in foods:
+    diet_prob += food_vars[food] >= 0.1 * food_vars_selected[food]
+    
+# If any of a food is eaten, its binary variable must be 1
+for food in foods:
+    diet_prob += food_vars_selected[food] >= food_vars[food]*0.0000001 
+
+# Constraint B
+# Include at most 1 of celery and frozen broccoli 
+diet_prob += food_vars_selected['Frozen Broccoli'] + food_vars_selected['Celery, Raw'] <= 1 
+
+# Constraint C
+# At least 3 kinds of meat/poultry/fish/eggs
+diet_prob += food_vars_selected['Roasted Chicken'] \
+        + food_vars_selected['Poached Eggs'] \
+        + food_vars_selected['Scrambled Eggs'] \
+        + food_vars_selected['Bologna,Turkey'] \
+        + food_vars_selected['Frankfurter, Beef'] \
+        + food_vars_selected['Ham,Sliced,Extralean'] \
+        + food_vars_selected['Kielbasa,Prk'] \
+        + food_vars_selected['Pizza W/Pepperoni'] \
+        + food_vars_selected['Hamburger W/Toppings'] \
+        + food_vars_selected['Hotdog, Plain'] \
+        + food_vars_selected['Pork'] \
+        + food_vars_selected['Sardines in Oil'] \
+        + food_vars_selected['White Tuna in Water'] \
+        + food_vars_selected['Chicknoodl Soup'] \
+        + food_vars_selected['Splt Pea&Hamsoup'] \
+        + food_vars_selected['Vegetbeef Soup'] \
+        + food_vars_selected['Neweng Clamchwd'] \
+        + food_vars_selected['New E Clamchwd,W/Mlk'] \
+        + food_vars_selected['Beanbacn Soup,W/Watr'] >= 3
+
+# Diet constraints
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) >= 1500, "Min_Calorie_Requirement"
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) <= 2500, "Max_Calorie_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) >= 30, "Min_Cholesterol_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) <= 240, "Max_Cholesterol_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) >= 20, "Min_Fat_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) <= 70, "Max_Fat_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) >= 800, "Min_Sodium_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) <= 2000, "Max_Sodium_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) >= 130, "Min_Carb_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) <= 450, "Max_Carb_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) >= 125, "Min_Fiber_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) <= 250, "Max_Fiber_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) >= 60, "Min_Protein_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) <= 100, "Max_Protein_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) >= 1000, "Min_VA_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) <= 10000, "Max_VA_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) >= 400, "Min_VC_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) <= 5000, "Max_VC_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) >= 700, "Min_Calcium_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) <= 1500, "Max_Calcium_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) >= 10, "Min_Iron_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) <= 40, "Max_Iron_Requirement"
+
+# write the problem to an LP file
+diet_prob.writeLP("cheapest_diet.lp")
+
+# call the solver and check the status
+diet_prob.solve()
+
+print("Status:", LpStatus[diet_prob.status])
+
+print(f"\nTotal Cost of the Cheapest Nutritional Diet: ${value(diet_prob.objective):.2f}")
+
+# Print the main foods of the diet
+results = {}
+for v in diet_prob.variables():
+    if v.varValue > 0:
+        print(f"{v.name}: {v.varValue}")
+        # Save the results in a dictionary
+        results[v.name] = v.varValue
+
+# Create a DataFrame from the dictionary
+results_df = pd.DataFrame(list(results.items()), columns=['Food', 'Servings'])
+
+results_df
+```
+
+| Food                     | Servings   |
+|--------------------------|------------|
+| Foods_Celery,_Raw        | 42.399358  |
+| Foods_Kielbasa,Prk       | 0.100000   |
+| Foods_Lettuce,Iceberg,Raw| 82.802586  |
+| Foods_Oranges            | 3.077184   |
+| Foods_Peanut_Butter      | 1.942972   |
+| Foods_Poached_Eggs       | 0.100000   |
+| Foods_Popcorn,Air_Popped | 13.223294  |
+| Foods_Scrambled_Eggs     | 0.100000   |
+
+\newpage
+# Solution
+
+| Food                     | Part 1 Servings | Part 2a Servings | Part 2b Servings | Part 2c Servings |
+|--------------------------|-----------------|------------------|------------------|------------------|
+| Foods_Celery,_Raw        | 52.643710       |                  | 43.154119       | 42.399358       |
+| Foods_Frozen_Broccoli    | 0.259607        |                  |                 |                 |
+| Foods_Lettuce,Iceberg,Raw| 63.988506       | 63.988506       | 80.919121       | 82.802586       |
+| Foods_Oranges            | 2.292939        | 2.292939        | 3.076516        | 3.077184        |
+| Foods_Peanut_Butter      |                 |                 | 2.046457        | 1.942972        |
+| Foods_Poached_Eggs       | 0.141844        | 0.141844        |                 | 0.100000        |
+| Foods_Popcorn,Air_Popped | 13.8693226      | 13.869322       | 13.181772       | 13.223294       |
+| Foods_Kielbasa,Prk       |                 |                 |                 | 0.100000        |
+| Foods_Scrambled_Eggs     |                 |                 |                 | 0.100000        |
+| **Cost**                 | **$4.34**       | **$4.34**       | **$4.49**       | **$4.51**       |
+
+*Table: Comparison of food items for cheapest diet with Part 1, 2a, 2b, 2c, constraints.*
 
 
 
+\newpage
+# Appendix A: Full Code
+
+The code below is the full code used to solve Question 14.1.
+There is a comment above each constraint.
+The first set of constraints are standard diet constraints for Part 1.
+Constraints a, b, and c correspond to Part 2a, 2b, and 2c.
+
+You can run this code but change your directory path for the data.
+If you want to perform a specific portion of Question 14.1, 
+remove the unecessary constraints. For example, if you want to model without
+the broccoli or celery constraint, remove:
+
+```{python, session="shared", eval=FALSE}
+# Constraint B
+# Include at most 1 of celery and frozen broccoli 
+diet_prob += food_vars_selected['Frozen Broccoli'] + food_vars_selected['Celery, Raw'] <= 1 
+```
 
 
+```{python, session="shared", eval=FALSE}
+import pandas as pd
+from pulp import *
 
+# Load the diet data into a DataFrame
+path_data = "~/projects/ISYE6501/HW11/data/diet.xls"
+diet_data = pd.read_excel(path_data)
 
+# Check for nan values in the diet data
+nan_vals = diet_data.isna().sum()
+print(f"Number of Missing Values by Column:\n{len(diet_data)}")
+print(f"Number of rows in the diet data: {len(diet_data)}")
 
+# Keep only the 64 data points with no missing values
+diet_data_clean = diet_data[0:64]
+print(f"Number of rows in the diet data: {len(diet_data_clean)}")
 
+# Model --------------------------------------------------------------------------------
+# Initialize by creating an LP problem
+diet_prob = LpProblem("cheapest_diet", LpMinimize)
+
+# Unique list of foods
+foods = []
+for each in diet_data_clean["Foods"]:
+    foods.append(each)
+
+# Create a nested list of diet data values
+list_data = diet_data_clean.values.tolist()
+
+# Create dictionaries using dictionary comprehensions
+# "Price/ Serving"
+cost_dict = {each[0]: each[1] for each in list_data}
+# "Calories"
+cals_dict = {each[0]: each[3] for each in list_data}
+# "Cholesterol mg"
+choles_dict = {each[0]: each[4] for each in list_data}
+# "Total_Fat g"
+fat_dict = {each[0]: each[5] for each in list_data}
+# "Sodium mg"
+sod_dict = {each[0]: each[6] for each in list_data}
+# "Carbohydrates g"
+carb_dict = {each[0]: each[7] for each in list_data}
+# "Dietary_Fiber g"
+fiber_dict = {each[0]: each[8] for each in list_data}
+# "Protein g"
+pro_dict = {each[0]: each[9] for each in list_data}
+# "Vit_A IU"
+VA_dict = {each[0]: each[10] for each in list_data}
+# "Vit_C IU"
+VC_dict = {each[0]: each[11] for each in list_data}
+# "Calcium mg"
+calc_dict = {each[0]: each[12] for each in list_data}
+# "Iron mg"
+iron_dict = {each[0]: each[13] for each in list_data}
+
+# Dictionary ‘food_vars’ contains the optimization variables
+food_vars = LpVariable.dicts("Foods",foods,0)
+
+# First, the objective function is added to the problem
+diet_prob += lpSum([cost_dict[i]*food_vars[i] for i in foods]), "Total Food Cost"
+
+# Diet constraints
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) >= 1500, "Min_Calorie_Requirement"
+diet_prob += lpSum([cals_dict[i] * food_vars[i] for i in foods]) <= 2500, "Max_Calorie_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) >= 30, "Min_Cholesterol_Requirement"
+diet_prob += lpSum([choles_dict[i] * food_vars[i] for i in foods]) <= 240, "Max_Cholesterol_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) >= 20, "Min_Fat_Requirement"
+diet_prob += lpSum([fat_dict[i] * food_vars[i] for i in foods]) <= 70, "Max_Fat_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) >= 800, "Min_Sodium_Requirement"
+diet_prob += lpSum([sod_dict[i] * food_vars[i] for i in foods]) <= 2000, "Max_Sodium_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) >= 130, "Min_Carb_Requirement"
+diet_prob += lpSum([carb_dict[i] * food_vars[i] for i in foods]) <= 450, "Max_Carb_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) >= 125, "Min_Fiber_Requirement"
+diet_prob += lpSum([fiber_dict[i] * food_vars[i] for i in foods]) <= 250, "Max_Fiber_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) >= 60, "Min_Protein_Requirement"
+diet_prob += lpSum([pro_dict[i] * food_vars[i] for i in foods]) <= 100, "Max_Protein_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) >= 1000, "Min_VA_Requirement"
+diet_prob += lpSum([VA_dict[i] * food_vars[i] for i in foods]) <= 10000, "Max_VA_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) >= 400, "Min_VC_Requirement"
+diet_prob += lpSum([VC_dict[i] * food_vars[i] for i in foods]) <= 5000, "Max_VC_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) >= 700, "Min_Calcium_Requirement"
+diet_prob += lpSum([calc_dict[i] * food_vars[i] for i in foods]) <= 1500, "Max_Calcium_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) >= 10, "Min_Iron_Requirement"
+diet_prob += lpSum([iron_dict[i] * food_vars[i] for i in foods]) <= 40, "Max_Iron_Requirement"
+
+# Constraint A
+# Add binary variable for the constraint of selecting a food
+food_vars_selected = LpVariable.dicts("Selected",foods,0,1,LpBinary)
+
+# If a food is eaten, must eat at least 0.1 serving
+for food in foods:
+    diet_prob += food_vars[food] >= 0.1 * food_vars_selected[food]
+    
+# If any of a food is eaten, its binary variable must be 1
+for food in foods:
+    diet_prob += food_vars_selected[food] >= food_vars[food]*0.0000001 
+
+# Constraint B
+# Include at most 1 of celery and frozen broccoli 
+diet_prob += food_vars_selected['Frozen Broccoli'] + food_vars_selected['Celery, Raw'] <= 1 
+
+# Constraint C
+# At least 3 kinds of meat/poultry/fish/eggs
+diet_prob += food_vars_selected['Roasted Chicken'] \
+        + food_vars_selected['Poached Eggs'] \
+        + food_vars_selected['Scrambled Eggs'] \
+        + food_vars_selected['Bologna,Turkey'] \
+        + food_vars_selected['Frankfurter, Beef'] \
+        + food_vars_selected['Ham,Sliced,Extralean'] \
+        + food_vars_selected['Kielbasa,Prk'] \
+        + food_vars_selected['Pizza W/Pepperoni'] \
+        + food_vars_selected['Hamburger W/Toppings'] \
+        + food_vars_selected['Hotdog, Plain'] \
+        + food_vars_selected['Pork'] \
+        + food_vars_selected['Sardines in Oil'] \
+        + food_vars_selected['White Tuna in Water'] \
+        + food_vars_selected['Chicknoodl Soup'] \
+        + food_vars_selected['Splt Pea&Hamsoup'] \
+        + food_vars_selected['Vegetbeef Soup'] \
+        + food_vars_selected['Neweng Clamchwd'] \
+        + food_vars_selected['New E Clamchwd,W/Mlk'] \
+        + food_vars_selected['Beanbacn Soup,W/Watr'] >= 3
+
+# write the problem to an LP file
+diet_prob.writeLP("cheapest_diet.lp")
+
+# call the solver and check the status
+diet_prob.solve()
+
+print("Status:", LpStatus[diet_prob.status])
+
+print(f"\nTotal Cost of the Cheapest Nutritional Diet: ${value(diet_prob.objective):.2f}")
+
+# Print the main foods of the diet
+results = {}
+for v in diet_prob.variables():
+    if v.varValue > 0:
+        print(f"{v.name}: {v.varValue}")
+        # Save the results in a dictionary
+        results[v.name] = v.varValue
+
+# Create a DataFrame from the dictionary
+results_df = pd.DataFrame(list(results.items()), columns=['Food', 'Servings'])
+
+results_df
+```
+
+\newpage
 # References
 
 
