@@ -1,0 +1,34 @@
+---
+title: "ISYE 6501 - Introduction to Analytics Modeling: Course Project"
+output: pdf_document
+bibliography: references/references.bib
+csl: references/ieee.csl
+urlcolor: blue
+# date: "2024-11-28"
+---
+
+```{r setup, include=FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+# Outline
+
+Pick a project for which you think at least three different Analytics models might have been
+combined to create the solution.
+
+Think carefully and critically about what models might be used to create the solution, how they
+would be combined, what specific data might be needed to use the models, how it might be
+collected, and how often it might need to be refreshed and the models re-run. <ins>***DO NOT find a
+description online (or elsewhere) of what the company or organization actually did.***</ins> I want
+this project to be about your ideas, not about reading what someone else did.
+
+Write a short report describing your answers to the above questions.
+
+- Peer-graded 
+- Before you dive into it, I recommend watching at least the Week 13 lecture videos, 
+because you'll get a much clearer idea of what Dr. Sokol expects with the case study model 
+(TA Start of Week 13 Announcement on Piazza).
+    - Actually is Week 12 on Canvas 
+    - Module 17 (Case Format)
+    - Module 18 (Power Company Case Study)
+

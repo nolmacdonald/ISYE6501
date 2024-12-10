@@ -37,3 +37,22 @@ setwd("~/projects/ISYE6501/docs")
 bookdown::render_book("index.Rmd", "bookdown::gitbook")
 bookdown::render_book("index.Rmd", "bookdown::pdf_book")
 ```
+
+## Important Dates
+
+ISYE 6501 Midterm 1: 
+- Available: October 3, 2024 at 2:00 AM ET
+- Due: October 14, 2024 at 2:00 AM ET
+- Homework 1-7
+- Modules 1-10
+
+ISYE 6501 Midterm 2: 
+- Due: November 18, 2024 at 2:00 AM ET
+- Available: November 7, 2024 at 2:00 AM ET
+- 48 questions
+- Homework 8-12
+- Modules 11-18
+
+Course Project
+- Available: November 9, 2024 at 9:00 AM ET
+- Due: November 28, 2024 at 2:00 AM ET
